@@ -1,0 +1,21 @@
+project
+
+import (
+    lib/unwind
+)
+
+src := $(CWD)
+
+files (
+    ($(headers.abi)) ⇒ $(headers→outinc)
+    (atomic_support.h refstring.h) ⇒ $(src)/include
+    (\
+     mach-o/compact_unwind_encoding.h \
+     __libunwind_config.h \
+     libunwind.h \
+     unwind.h \
+    ) ⇒ $(unwind→srcinc)
+    (\
+     __config memory stdexcept new \
+    ) ⇒ $(root)/source/projects/libcxx/include
+)
