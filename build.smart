@@ -1,1 +1,6 @@
 project extc++
+
+import (
+    ./test
+)
+
