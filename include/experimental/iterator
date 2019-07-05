@@ -6,11 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_EXPERIMENTAL_ITERATOR
-#define _LIBCPP_EXPERIMENTAL_ITERATOR
-
-/*
+#if defined(iterator_synopsis)
 namespace std {
   namespace experimental {
     inline namespace fundamentals_v2 {
@@ -49,8 +48,7 @@ namespace std {
     } // inline namespace fundamentals_v2
   } // namespace experimental
 } // namespace std
-
-*/
+#endif // iterator_synopsis
 
 #include <experimental/__config>
 
@@ -90,9 +88,9 @@ public:
         return *this;
     }
 
-    ostream_joiner& operator*()     _NOEXCEPT { return *this; }
-    ostream_joiner& operator++()    _NOEXCEPT { return *this; }
-    ostream_joiner& operator++(int) _NOEXCEPT { return *this; }
+    ostream_joiner& operator*()     noexcept { return *this; }
+    ostream_joiner& operator++()    noexcept { return *this; }
+    ostream_joiner& operator++(int) noexcept { return *this; }
 
 private:
     ostream_type*   __output_iter;
@@ -109,5 +107,3 @@ make_ostream_joiner(basic_ostream<_CharT, _Traits>& __os, _Delim && __d)
 _LIBCPP_END_NAMESPACE_LFTS
 
 #endif /* _LIBCPP_STD_VER > 11 */
-
-#endif // _LIBCPP_EXPERIMENTAL_ITERATOR

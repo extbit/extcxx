@@ -1,3 +1,4 @@
+// -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -5,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_NEWLIB_XLOCALE_H
-#define _LIBCPP_SUPPORT_NEWLIB_XLOCALE_H
+#pragma once
+#pragma GCC system_header
 
 #if defined(_NEWLIB_VERSION)
 
@@ -23,5 +23,3 @@
 #endif
 
 #endif // _NEWLIB_VERSION
-
-#endif

@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_EXCEPTION
-#define _LIBCPP_EXCEPTION
+#pragma once
+#pragma GCC system_header
 
 /*
     exception synopsis
@@ -86,10 +85,6 @@ template <class E> void rethrow_if_nested(const E& e);
 #include <vcruntime_exception.h>
 #endif
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 namespace std  // purposefully not using versioning namespace
 {
 
@@ -97,18 +92,18 @@ namespace std  // purposefully not using versioning namespace
 class _LIBCPP_EXCEPTION_ABI exception
 {
 public:
-    _LIBCPP_INLINE_VISIBILITY exception() _NOEXCEPT {}
-    virtual ~exception() _NOEXCEPT;
-    virtual const char* what() const _NOEXCEPT;
+    _LIBCPP_INLINE_VISIBILITY exception() noexcept {}
+    virtual ~exception() noexcept;
+    virtual const char* what() const noexcept;
 };
 
 class _LIBCPP_EXCEPTION_ABI bad_exception
     : public exception
 {
 public:
-    _LIBCPP_INLINE_VISIBILITY bad_exception() _NOEXCEPT {}
-    virtual ~bad_exception() _NOEXCEPT;
-    virtual const char* what() const _NOEXCEPT;
+    _LIBCPP_INLINE_VISIBILITY bad_exception() noexcept {}
+    virtual ~bad_exception() noexcept;
+    virtual const char* what() const noexcept;
 };
 #endif // !_LIBCPP_ABI_VCRUNTIME
 
@@ -116,23 +111,23 @@ public:
     || defined(_LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS) \
     || defined(_LIBCPP_BUILDING_LIBRARY)
 typedef void (*unexpected_handler)();
-_LIBCPP_FUNC_VIS unexpected_handler set_unexpected(unexpected_handler) _NOEXCEPT;
-_LIBCPP_FUNC_VIS unexpected_handler get_unexpected() _NOEXCEPT;
-_LIBCPP_NORETURN _LIBCPP_FUNC_VIS void unexpected();
+_LIBCPP_FUNC_VIS unexpected_handler set_unexpected(unexpected_handler) noexcept;
+_LIBCPP_FUNC_VIS unexpected_handler get_unexpected() noexcept;
+[[noreturn]] _LIBCPP_FUNC_VIS void unexpected();
 #endif
 
 typedef void (*terminate_handler)();
-_LIBCPP_FUNC_VIS terminate_handler set_terminate(terminate_handler) _NOEXCEPT;
-_LIBCPP_FUNC_VIS terminate_handler get_terminate() _NOEXCEPT;
-_LIBCPP_NORETURN _LIBCPP_FUNC_VIS void terminate() _NOEXCEPT;
+_LIBCPP_FUNC_VIS terminate_handler set_terminate(terminate_handler) noexcept;
+_LIBCPP_FUNC_VIS terminate_handler get_terminate() noexcept;
+[[noreturn]] _LIBCPP_FUNC_VIS void terminate() noexcept;
 
-_LIBCPP_FUNC_VIS bool uncaught_exception() _NOEXCEPT;
-_LIBCPP_FUNC_VIS _LIBCPP_AVAILABILITY_UNCAUGHT_EXCEPTIONS int uncaught_exceptions() _NOEXCEPT;
+_LIBCPP_FUNC_VIS bool uncaught_exception() noexcept;
+_LIBCPP_FUNC_VIS _LIBCPP_AVAILABILITY_UNCAUGHT_EXCEPTIONS int uncaught_exceptions() noexcept;
 
 class _LIBCPP_TYPE_VIS exception_ptr;
 
-_LIBCPP_FUNC_VIS exception_ptr current_exception() _NOEXCEPT;
-_LIBCPP_NORETURN _LIBCPP_FUNC_VIS void rethrow_exception(exception_ptr);
+_LIBCPP_FUNC_VIS exception_ptr current_exception() noexcept;
+[[noreturn]] _LIBCPP_FUNC_VIS void rethrow_exception(exception_ptr);
 
 #ifndef _LIBCPP_ABI_MICROSOFT
 
@@ -140,31 +135,31 @@ class _LIBCPP_TYPE_VIS exception_ptr
 {
     void* __ptr_;
 public:
-    _LIBCPP_INLINE_VISIBILITY exception_ptr() _NOEXCEPT : __ptr_() {}
-    _LIBCPP_INLINE_VISIBILITY exception_ptr(nullptr_t) _NOEXCEPT : __ptr_() {}
+    _LIBCPP_INLINE_VISIBILITY exception_ptr() noexcept : __ptr_() {}
+    _LIBCPP_INLINE_VISIBILITY exception_ptr(nullptr_t) noexcept : __ptr_() {}
 
-    exception_ptr(const exception_ptr&) _NOEXCEPT;
-    exception_ptr& operator=(const exception_ptr&) _NOEXCEPT;
-    ~exception_ptr() _NOEXCEPT;
+    exception_ptr(const exception_ptr&) noexcept;
+    exception_ptr& operator=(const exception_ptr&) noexcept;
+    ~exception_ptr() noexcept;
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_EXPLICIT operator bool() const _NOEXCEPT
+    _LIBCPP_INLINE_VISIBILITY explicit operator bool() const noexcept
     {return __ptr_ != nullptr;}
 
     friend _LIBCPP_INLINE_VISIBILITY
-    bool operator==(const exception_ptr& __x, const exception_ptr& __y) _NOEXCEPT
+    bool operator==(const exception_ptr& __x, const exception_ptr& __y) noexcept
         {return __x.__ptr_ == __y.__ptr_;}
 
     friend _LIBCPP_INLINE_VISIBILITY
-    bool operator!=(const exception_ptr& __x, const exception_ptr& __y) _NOEXCEPT
+    bool operator!=(const exception_ptr& __x, const exception_ptr& __y) noexcept
         {return !(__x == __y);}
 
-    friend _LIBCPP_FUNC_VIS exception_ptr current_exception() _NOEXCEPT;
+    friend _LIBCPP_FUNC_VIS exception_ptr current_exception() noexcept;
     friend _LIBCPP_FUNC_VIS void rethrow_exception(exception_ptr);
 };
 
 template<class _Ep>
 _LIBCPP_INLINE_VISIBILITY exception_ptr
-make_exception_ptr(_Ep __e) _NOEXCEPT
+make_exception_ptr(_Ep __e) noexcept
 {
 #ifndef _LIBCPP_NO_EXCEPTIONS
     try
@@ -195,27 +190,27 @@ class _LIBCPP_TYPE_VIS exception_ptr
 #pragma clang diagnostic pop
 #endif
 public:
-    exception_ptr() _NOEXCEPT;
-    exception_ptr(nullptr_t) _NOEXCEPT;
-    exception_ptr(const exception_ptr& __other) _NOEXCEPT;
-    exception_ptr& operator=(const exception_ptr& __other) _NOEXCEPT;
-    exception_ptr& operator=(nullptr_t) _NOEXCEPT;
-    ~exception_ptr() _NOEXCEPT;
-    _LIBCPP_EXPLICIT operator bool() const _NOEXCEPT;
+    exception_ptr() noexcept;
+    exception_ptr(nullptr_t) noexcept;
+    exception_ptr(const exception_ptr& __other) noexcept;
+    exception_ptr& operator=(const exception_ptr& __other) noexcept;
+    exception_ptr& operator=(nullptr_t) noexcept;
+    ~exception_ptr() noexcept;
+    explicit operator bool() const noexcept;
 };
 
 _LIBCPP_FUNC_VIS
-bool operator==(const exception_ptr& __x, const exception_ptr& __y) _NOEXCEPT;
+bool operator==(const exception_ptr& __x, const exception_ptr& __y) noexcept;
 
 inline _LIBCPP_INLINE_VISIBILITY
-bool operator!=(const exception_ptr& __x, const exception_ptr& __y) _NOEXCEPT
+bool operator!=(const exception_ptr& __x, const exception_ptr& __y) noexcept
     {return !(__x == __y);}
 
-_LIBCPP_FUNC_VIS void swap(exception_ptr&, exception_ptr&) _NOEXCEPT;
+_LIBCPP_FUNC_VIS void swap(exception_ptr&, exception_ptr&) noexcept;
 
 _LIBCPP_FUNC_VIS exception_ptr __copy_exception_ptr(void *__except, const void* __ptr);
-_LIBCPP_FUNC_VIS exception_ptr current_exception() _NOEXCEPT;
-_LIBCPP_NORETURN _LIBCPP_FUNC_VIS void rethrow_exception(exception_ptr p);
+_LIBCPP_FUNC_VIS exception_ptr current_exception() noexcept;
+[[noreturn]] _LIBCPP_FUNC_VIS void rethrow_exception(exception_ptr p);
 
 // This is a built-in template function which automagically extracts the required
 // information.
@@ -223,7 +218,7 @@ template <class _E> void *__GetExceptionInfo(_E);
 
 template<class _Ep>
 _LIBCPP_INLINE_VISIBILITY exception_ptr
-make_exception_ptr(_Ep __e) _NOEXCEPT
+make_exception_ptr(_Ep __e) noexcept
 {
   return __copy_exception_ptr(_VSTD::addressof(__e), __GetExceptionInfo(__e));
 }
@@ -235,14 +230,14 @@ class _LIBCPP_EXCEPTION_ABI nested_exception
 {
     exception_ptr __ptr_;
 public:
-    nested_exception() _NOEXCEPT;
+    nested_exception() noexcept;
 //     nested_exception(const nested_exception&) noexcept = default;
 //     nested_exception& operator=(const nested_exception&) noexcept = default;
-    virtual ~nested_exception() _NOEXCEPT;
+    virtual ~nested_exception() noexcept;
 
     // access functions
-    _LIBCPP_NORETURN void rethrow_nested() const;
-    _LIBCPP_INLINE_VISIBILITY exception_ptr nested_ptr() const _NOEXCEPT {return __ptr_;}
+    [[noreturn]] void rethrow_nested() const;
+    _LIBCPP_INLINE_VISIBILITY exception_ptr nested_ptr() const noexcept {return __ptr_;}
 };
 
 template <class _Tp>
@@ -259,7 +254,7 @@ struct __throw_with_nested;
 
 template <class _Tp, class _Up>
 struct __throw_with_nested<_Tp, _Up, true> {
-    _LIBCPP_NORETURN static inline _LIBCPP_INLINE_VISIBILITY void
+    [[noreturn]] static inline _LIBCPP_INLINE_VISIBILITY void
     __do_throw(_Tp&& __t)
     {
         throw __nested<_Up>(_VSTD::forward<_Tp>(__t));
@@ -268,7 +263,7 @@ struct __throw_with_nested<_Tp, _Up, true> {
 
 template <class _Tp, class _Up>
 struct __throw_with_nested<_Tp, _Up, false> {
-    _LIBCPP_NORETURN static inline _LIBCPP_INLINE_VISIBILITY void
+    [[noreturn]] static inline _LIBCPP_INLINE_VISIBILITY void
 #ifndef _LIBCPP_CXX03_LANG
     __do_throw(_Tp&& __t)
 #else
@@ -281,7 +276,7 @@ struct __throw_with_nested<_Tp, _Up, false> {
 #endif
 
 template <class _Tp>
-_LIBCPP_NORETURN
+[[noreturn]]
 void
 throw_with_nested(_Tp&& __t)
 {
@@ -325,5 +320,3 @@ rethrow_if_nested(const _Ep&,
 }
 
 }  // std
-
-#endif  // _LIBCPP_EXCEPTION

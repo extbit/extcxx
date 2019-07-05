@@ -6,13 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_CHARCONV
-#define _LIBCPP_CHARCONV
-
-/*
-    charconv synopsis
-
+#if defined(charconv_synopsis)
 namespace std {
 
   // floating-point format for primitive numerical conversion
@@ -70,8 +67,7 @@ namespace std {
                                chars_format fmt = chars_format::general);
 
 } // namespace std
-
-*/
+#endif // charconv_synopsis
 
 #include <__errc>
 #include <type_traits>
@@ -81,13 +77,6 @@ namespace std {
 #include <math.h>
 
 #include <__debug>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -124,7 +113,7 @@ void from_chars(const char*, const char*, bool, int = 10) = delete;
 namespace __itoa
 {
 
-static _LIBCPP_CONSTEXPR uint64_t __pow10_64[] = {
+static constexpr uint64_t __pow10_64[] = {
     UINT64_C(0),
     UINT64_C(10),
     UINT64_C(100),
@@ -147,7 +136,7 @@ static _LIBCPP_CONSTEXPR uint64_t __pow10_64[] = {
     UINT64_C(10000000000000000000),
 };
 
-static _LIBCPP_CONSTEXPR uint32_t __pow10_32[] = {
+static constexpr uint32_t __pow10_32[] = {
     UINT32_C(0),          UINT32_C(10),       UINT32_C(100),
     UINT32_C(1000),       UINT32_C(10000),    UINT32_C(100000),
     UINT32_C(1000000),    UINT32_C(10000000), UINT32_C(100000000),
@@ -239,7 +228,7 @@ __mul_overflowed(_Tp __a, _Up __b, _Tp& __r)
 template <typename _Tp>
 struct _LIBCPP_HIDDEN __traits : __traits_base<_Tp>
 {
-    static _LIBCPP_CONSTEXPR int digits = numeric_limits<_Tp>::digits10 + 1;
+    static constexpr int digits = numeric_limits<_Tp>::digits10 + 1;
     using __traits_base<_Tp>::__pow;
     using typename __traits_base<_Tp>::type;
 
@@ -610,7 +599,3 @@ from_chars(const char* __first, const char* __last, _Tp& __value, int __base)
 #endif  // _LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_CHARCONV

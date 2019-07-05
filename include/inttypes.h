@@ -6,22 +6,19 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_INTTYPES_H
 // AIX system headers need inttypes.h to be re-enterable while _STD_TYPES_T
 // is defined until an inclusion of it without _STD_TYPES_T occurs, in which
 // case the header guard macro is defined.
 #if !defined(_AIX) || !defined(_STD_TYPES_T)
-#define _LIBCPP_INTTYPES_H
+#pragma once
 #endif // _STD_TYPES_T
+#pragma GCC system_header
 
-/*
-    inttypes.h synopsis
+#if defined(inttypes_h_synopsis)
 
-This entire header is C99 / C++0X
-
+// This entire header is C99 / C++0X
 #include <stdint.h>  // <cinttypes> includes <cstdint>
-
+/*
 Macros:
 
     PRId8
@@ -225,21 +222,16 @@ Macros:
 Types:
 
     imaxdiv_t
-
+*/
 intmax_t  imaxabs(intmax_t j);
 imaxdiv_t imaxdiv(intmax_t numer, intmax_t denom);
 intmax_t  strtoimax(const char* restrict nptr, char** restrict endptr, int base);
 uintmax_t strtoumax(const char* restrict nptr, char** restrict endptr, int base);
 intmax_t  wcstoimax(const wchar_t* restrict nptr, wchar_t** restrict endptr, int base);
 uintmax_t wcstoumax(const wchar_t* restrict nptr, wchar_t** restrict endptr, int base);
-
-*/
+#endif // inttypes_h_synopsis
 
 #include <__config>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 /* C99 stdlib (e.g. glibc < 2.18) does not provide format macros needed
    for C++11 unless __STDC_FORMAT_MACROS is defined
@@ -258,5 +250,3 @@ uintmax_t wcstoumax(const wchar_t* restrict nptr, wchar_t** restrict endptr, int
 #undef imaxdiv
 
 #endif // __cplusplus
-
-#endif  // _LIBCPP_INTTYPES_H

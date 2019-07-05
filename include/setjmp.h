@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SETJMP_H
-#define _LIBCPP_SETJMP_H
-
+#pragma once
+#pragma GCC system_header
 /*
     setjmp.h synopsis
 
@@ -27,10 +25,6 @@ void longjmp(jmp_buf env, int val);
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 #include_next <setjmp.h>
 
 #ifdef __cplusplus
@@ -40,5 +34,3 @@ void longjmp(jmp_buf env, int val);
 #endif
 
 #endif // __cplusplus
-
-#endif  // _LIBCPP_SETJMP_H

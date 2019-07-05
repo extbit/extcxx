@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CSTDIO
-#define _LIBCPP_CSTDIO
+#pragma once
+#pragma GCC system_header
 
 /*
     cstdio synopsis
@@ -98,10 +97,6 @@ void perror(const char* s);
 #include <__config>
 #include <stdio.h>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 using ::FILE;
@@ -167,5 +162,3 @@ using ::vprintf;
 #endif
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_CSTDIO

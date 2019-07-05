@@ -6,18 +6,16 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_FSTREAM
-#define _LIBCPP_FSTREAM
-
-/*
-    fstream synopsis
-
-template <class charT, class traits = char_traits<charT> >
-class basic_filebuf
+#if defined(fstream_synopsis)
+namespace std {
+  template <class charT, class traits = char_traits<charT> >
+  class basic_filebuf
     : public basic_streambuf<charT, traits>
-{
-public:
+  {
+  public:
     typedef charT                          char_type;
     typedef traits                         traits_type;
     typedef typename traits_type::int_type int_type;
@@ -40,7 +38,7 @@ public:
     basic_filebuf* open(const filesystem::path& p, ios_base::openmode mode); // C++17
     basic_filebuf* close();
 
-protected:
+  protected:
     // 27.9.1.5 Overridden virtual functions:
     virtual streamsize showmanyc();
     virtual int_type underflow();
@@ -54,20 +52,20 @@ protected:
                              ios_base::openmode which = ios_base::in | ios_base::out);
     virtual int sync();
     virtual void imbue(const locale& loc);
-};
+  };
 
-template <class charT, class traits>
+  template <class charT, class traits>
   void
   swap(basic_filebuf<charT, traits>& x, basic_filebuf<charT, traits>& y);
 
-typedef basic_filebuf<char>    filebuf;
-typedef basic_filebuf<wchar_t> wfilebuf;
+  typedef basic_filebuf<char>    filebuf;
+  typedef basic_filebuf<wchar_t> wfilebuf;
 
-template <class charT, class traits = char_traits<charT> >
-class basic_ifstream
+  template <class charT, class traits = char_traits<charT> >
+  class basic_ifstream
     : public basic_istream<charT,traits>
-{
-public:
+  {
+  public:
     typedef charT                          char_type;
     typedef traits                         traits_type;
     typedef typename traits_type::int_type int_type;
@@ -91,20 +89,20 @@ public:
     void open(const filesystem::path& s, ios_base::openmode mode = ios_base::in); // C++17
 
     void close();
-};
+  };
 
-template <class charT, class traits>
+  template <class charT, class traits>
   void
   swap(basic_ifstream<charT, traits>& x, basic_ifstream<charT, traits>& y);
 
-typedef basic_ifstream<char>    ifstream;
-typedef basic_ifstream<wchar_t> wifstream;
+  typedef basic_ifstream<char>    ifstream;
+  typedef basic_ifstream<wchar_t> wifstream;
 
-template <class charT, class traits = char_traits<charT> >
-class basic_ofstream
+  template <class charT, class traits = char_traits<charT> >
+  class basic_ofstream
     : public basic_ostream<charT,traits>
-{
-public:
+  {
+  public:
     typedef charT                          char_type;
     typedef traits                         traits_type;
     typedef typename traits_type::int_type int_type;
@@ -129,20 +127,20 @@ public:
               ios_base::openmode mode = ios_base::out); // C++17
 
     void close();
-};
+  };
 
-template <class charT, class traits>
+  template <class charT, class traits>
   void
   swap(basic_ofstream<charT, traits>& x, basic_ofstream<charT, traits>& y);
 
-typedef basic_ofstream<char>    ofstream;
-typedef basic_ofstream<wchar_t> wofstream;
+  typedef basic_ofstream<char>    ofstream;
+  typedef basic_ofstream<wchar_t> wofstream;
 
-template <class charT, class traits=char_traits<charT> >
-class basic_fstream
+  template <class charT, class traits=char_traits<charT> >
+  class basic_fstream
     : public basic_iostream<charT,traits>
-{
-public:
+  {
+  public:
     typedef charT                          char_type;
     typedef traits                         traits_type;
     typedef typename traits_type::int_type int_type;
@@ -154,7 +152,7 @@ public:
     explicit basic_fstream(const string& s, ios_base::openmode mode = ios_base::in|ios_base::out);
     explicit basic_fstream(const filesystem::path& p,
                            ios_base::openmode mode = ios_base::in|ios_base::out); C++17
-    basic_fstream(basic_fstream&& rhs);
+                           basic_fstream(basic_fstream&& rhs);
 
     basic_fstream& operator=(basic_fstream&& rhs);
     void swap(basic_fstream& rhs);
@@ -167,17 +165,16 @@ public:
               ios_base::openmode mode = ios_base::in|ios_base::out); // C++17
 
     void close();
-};
+  };
 
-template <class charT, class traits>
+  template <class charT, class traits>
   void swap(basic_fstream<charT, traits>& x, basic_fstream<charT, traits>& y);
 
-typedef basic_fstream<char>    fstream;
-typedef basic_fstream<wchar_t> wfstream;
+  typedef basic_fstream<char>    fstream;
+  typedef basic_fstream<wchar_t> wfstream;
 
 }  // std
-
-*/
+#endif // fstream_synopsis
 
 #include <__config>
 #include <ostream>
@@ -186,14 +183,6 @@ typedef basic_fstream<wchar_t> wfstream;
 #include <cstdio>
 #include <cstdlib>
 #include <filesystem>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -247,7 +236,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     inline static const char*
-    __make_mdstring(ios_base::openmode __mode) _NOEXCEPT;
+    __make_mdstring(ios_base::openmode __mode) noexcept;
 
   protected:
     // 27.9.1.5 Overridden virtual functions:
@@ -504,7 +493,7 @@ basic_filebuf<_CharT, _Traits>::is_open() const
 
 template <class _CharT, class _Traits>
 const char* basic_filebuf<_CharT, _Traits>::__make_mdstring(
-    ios_base::openmode __mode) _NOEXCEPT {
+    ios_base::openmode __mode) noexcept {
   switch (__mode & ~ios_base::ate) {
   case ios_base::out:
   case ios_base::out | ios_base::trunc:
@@ -1707,17 +1696,14 @@ basic_fstream<_CharT, _Traits>::rdbuf() const
 }
 
 template <class _CharT, class _Traits>
-inline
-bool
-basic_fstream<_CharT, _Traits>::is_open() const
+inline bool basic_fstream<_CharT, _Traits>::is_open() const
 {
     return __sb_.is_open();
 }
 
 #ifndef _LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
 template <class _CharT, class _Traits>
-void
-basic_fstream<_CharT, _Traits>::open(const char* __s, ios_base::openmode __mode)
+void basic_fstream<_CharT, _Traits>::open(const char* __s, ios_base::openmode __mode)
 {
     if (__sb_.open(__s, __mode))
         this->clear();
@@ -1727,8 +1713,7 @@ basic_fstream<_CharT, _Traits>::open(const char* __s, ios_base::openmode __mode)
 
 #ifdef _LIBCPP_HAS_OPEN_WITH_WCHAR
 template <class _CharT, class _Traits>
-void
-basic_fstream<_CharT, _Traits>::open(const wchar_t* __s, ios_base::openmode __mode)
+void basic_fstream<_CharT, _Traits>::open(const wchar_t* __s, ios_base::openmode __mode)
 {
     if (__sb_.open(__s, __mode))
         this->clear();
@@ -1738,8 +1723,7 @@ basic_fstream<_CharT, _Traits>::open(const wchar_t* __s, ios_base::openmode __mo
 #endif
 
 template <class _CharT, class _Traits>
-void
-basic_fstream<_CharT, _Traits>::open(const string& __s, ios_base::openmode __mode)
+void basic_fstream<_CharT, _Traits>::open(const string& __s, ios_base::openmode __mode)
 {
     if (__sb_.open(__s, __mode))
         this->clear();
@@ -1749,16 +1733,10 @@ basic_fstream<_CharT, _Traits>::open(const string& __s, ios_base::openmode __mod
 #endif
 
 template <class _CharT, class _Traits>
-inline
-void
-basic_fstream<_CharT, _Traits>::close()
+inline void basic_fstream<_CharT, _Traits>::close()
 {
     if (__sb_.close() == 0)
         this->setstate(ios_base::failbit);
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_FSTREAM

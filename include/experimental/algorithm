@@ -6,44 +6,28 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_EXPERIMENTAL_ALGORITHM
-#define _LIBCPP_EXPERIMENTAL_ALGORITHM
+#if defined(experimental_algorithm_synopsis)
+namespace std { namespace experimental { inline namespace fundamentals_v1 {
 
-/*
-   experimental/algorithm synopsis
+      template <class ForwardIterator, class Searcher>
+      ForwardIterator search(ForwardIterator first, ForwardIterator last,
+                             const Searcher &searcher);
 
-#include <algorithm>
+      // sample removed because it's now part of C++17
 
-namespace std {
-namespace experimental {
-inline namespace fundamentals_v1 {
-
-template <class ForwardIterator, class Searcher>
-ForwardIterator search(ForwardIterator first, ForwardIterator last,
-                       const Searcher &searcher);
-
-// sample removed because it's now part of C++17
-
-} // namespace fundamentals_v1
-} // namespace experimental
+    } // namespace fundamentals_v1
+  } // namespace experimental
 } // namespace std
-
-*/
+#endif experimental_algorithm_synopsis
 
 #include <experimental/__config>
 #include <algorithm>
 #include <type_traits>
 
 #include <__debug>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 
 _LIBCPP_BEGIN_NAMESPACE_LFTS
 
@@ -53,7 +37,3 @@ _ForwardIterator search(_ForwardIterator __f, _ForwardIterator __l, const _Searc
 { return __s(__f, __l).first; }
 
 _LIBCPP_END_NAMESPACE_LFTS
-
-_LIBCPP_POP_MACROS
-
-#endif /* _LIBCPP_EXPERIMENTAL_ALGORITHM */

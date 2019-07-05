@@ -6,17 +6,11 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#if defined(__need_FILE) || defined(__need___FILE)
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
-#endif
-
-#include_next <stdio.h>
-
-#elif !defined(_LIBCPP_STDIO_H)
-#define _LIBCPP_STDIO_H
+#if defined(__need_FILE) || defined(__need___FILE)
+#  include_next <stdio.h>
+#else
+#pragma once
 
 /*
     stdio.h synopsis
@@ -115,5 +109,4 @@ void perror(const char* s);
 #undef ferror
 
 #endif
-
-#endif  // _LIBCPP_STDIO_H
+#endif

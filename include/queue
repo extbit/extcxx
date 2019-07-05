@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_QUEUE
-#define _LIBCPP_QUEUE
+#pragma once
+#pragma GCC system_header
 
 /*
     queue synopsis
@@ -191,10 +190,6 @@ template <class T, class Container, class Compare>
 #include <functional>
 #include <algorithm>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _Tp, class _Container = deque<_Tp> > class _LIBCPP_TEMPLATE_VIS queue;
@@ -226,7 +221,7 @@ protected:
 public:
     _LIBCPP_INLINE_VISIBILITY
     queue()
-        _NOEXCEPT_(is_nothrow_default_constructible<container_type>::value)
+        noexcept(is_nothrow_default_constructible<container_type>::value)
         : c() {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -238,12 +233,12 @@ public:
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     queue(queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_constructible<container_type>::value)
+        noexcept(is_nothrow_move_constructible<container_type>::value)
         : c(_VSTD::move(__q.c)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     queue& operator=(queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_assignable<container_type>::value)
+        noexcept(is_nothrow_move_assignable<container_type>::value)
         {c = _VSTD::move(__q.c); return *this;}
 #endif  // _LIBCPP_CXX03_LANG
 
@@ -321,7 +316,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(queue& __q)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value)
+        noexcept(__is_nothrow_swappable<container_type>::value)
     {
         using _VSTD::swap;
         swap(c, __q.c);
@@ -411,7 +406,7 @@ typename enable_if<
     void
 >::type
 swap(queue<_Tp, _Container>& __x, queue<_Tp, _Container>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }
@@ -442,7 +437,7 @@ protected:
 public:
     _LIBCPP_INLINE_VISIBILITY
     priority_queue()
-        _NOEXCEPT_(is_nothrow_default_constructible<container_type>::value &&
+        noexcept(is_nothrow_default_constructible<container_type>::value &&
                    is_nothrow_default_constructible<value_compare>::value)
         : c(), comp() {}
 
@@ -456,13 +451,13 @@ public:
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     priority_queue(priority_queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_constructible<container_type>::value &&
+        noexcept(is_nothrow_move_constructible<container_type>::value &&
                    is_nothrow_move_constructible<value_compare>::value)
         : c(_VSTD::move(__q.c)), comp(_VSTD::move(__q.comp)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     priority_queue& operator=(priority_queue&& __q)
-        _NOEXCEPT_(is_nothrow_move_assignable<container_type>::value &&
+        noexcept(is_nothrow_move_assignable<container_type>::value &&
                    is_nothrow_move_assignable<value_compare>::value)
         {c = _VSTD::move(__q.c); comp = _VSTD::move(__q.comp); return *this;}
 #endif  // _LIBCPP_CXX03_LANG
@@ -546,7 +541,7 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(priority_queue& __q)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value &&
+        noexcept(__is_nothrow_swappable<container_type>::value &&
                    __is_nothrow_swappable<value_compare>::value);
 };
 
@@ -770,7 +765,7 @@ template <class _Tp, class _Container, class _Compare>
 inline
 void
 priority_queue<_Tp, _Container, _Compare>::swap(priority_queue& __q)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value &&
+        noexcept(__is_nothrow_swappable<container_type>::value &&
                    __is_nothrow_swappable<value_compare>::value)
 {
     using _VSTD::swap;
@@ -787,7 +782,7 @@ typename enable_if<
 >::type
 swap(priority_queue<_Tp, _Container, _Compare>& __x,
      priority_queue<_Tp, _Container, _Compare>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }
@@ -799,5 +794,3 @@ struct _LIBCPP_TEMPLATE_VIS uses_allocator<priority_queue<_Tp, _Container, _Comp
 };
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_QUEUE

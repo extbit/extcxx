@@ -6,12 +6,11 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCPP_EXPERIMENTAL_FILESYSTEM
-#define _LIBCPP_EXPERIMENTAL_FILESYSTEM
-/*
-    filesystem synopsis
+#pragma once
+#pragma GCC system_header
 
-    namespace std { namespace experimental { namespace filesystem { inline namespace v1 {
+#if defined(filesystem_synopsis)
+namespace std { namespace experimental { namespace filesystem { inline namespace v1 {
 
     class path;
 
@@ -226,18 +225,10 @@
 
 
 } } } }  // namespaces std::experimental::filesystem::v1
-
-*/
+#endif // filesystem_synopsis
 
 #include <experimental/__config>
 #include <filesystem>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
 
 #ifndef _LIBCPP_CXX03_LANG
 
@@ -250,7 +241,3 @@ using namespace _VSTD_FS;
 _LIBCPP_END_NAMESPACE_EXPERIMENTAL_FILESYSTEM
 
 #endif // !_LIBCPP_CXX03_LANG
-
-_LIBCPP_POP_MACROS
-
-#endif // _LIBCPP_EXPERIMENTAL_FILESYSTEM

@@ -11,9 +11,8 @@
 // extended locale support for libc's that normally don't have any (like
 // Android's bionic and Newlib).
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_XLOCALE_POSIX_L_FALLBACK_H
-#define _LIBCPP_SUPPORT_XLOCALE_POSIX_L_FALLBACK_H
+#pragma once
+#pragma GCC system_header
 
 #ifdef __cplusplus
 extern "C" {
@@ -160,5 +159,3 @@ inline _LIBCPP_INLINE_VISIBILITY size_t wcsxfrm_l(wchar_t *dest, const wchar_t *
 #ifdef __cplusplus
 }
 #endif
-
-#endif // _LIBCPP_SUPPORT_XLOCALE_POSIX_L_FALLBACK_H

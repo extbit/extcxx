@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_IBM_SUPPORT_H
-#define _LIBCPP_SUPPORT_IBM_SUPPORT_H
+#pragma once
+#pragma GCC system_header
 
 extern "builtin" int __popcnt4(unsigned int);
 extern "builtin" int __popcnt8(unsigned long long);
@@ -49,5 +48,3 @@ extern "builtin" unsigned int __cntlz8(unsigned long long);
 #else
 #define __SIZE_WIDTH__ 32
 #endif
-
-#endif // _LIBCPP_SUPPORT_IBM_SUPPORT_H

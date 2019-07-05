@@ -6,15 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_FUNCTIONAL_03
-#define _LIBCPP_FUNCTIONAL_03
+#pragma once
+#pragma GCC system_header
 
 // manual variadic expansion for <functional>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 namespace __function {
 
@@ -1587,5 +1582,3 @@ inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(function<_Fp>& __x, function<_Fp>& __y)
 {return __x.swap(__y);}
-
-#endif  // _LIBCPP_FUNCTIONAL_03

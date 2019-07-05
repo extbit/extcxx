@@ -6,23 +6,13 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP___MUTEX_BASE
-#define _LIBCPP___MUTEX_BASE
+#pragma once
+#pragma GCC system_header
 
 #include <__config>
 #include <chrono>
 #include <system_error>
 #include <__threading_support>
-
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -49,9 +39,9 @@ public:
 #ifndef _LIBCPP_CXX03_LANG
     constexpr mutex() = default;
 #else
-    mutex() _NOEXCEPT {__m_ = (__libcpp_mutex_t)_LIBCPP_MUTEX_INITIALIZER;}
+    mutex() noexcept {__m_ = (__libcpp_mutex_t)_LIBCPP_MUTEX_INITIALIZER;}
 #endif
-    ~mutex() _NOEXCEPT;
+    ~mutex() noexcept;
 
 private:
     mutex(const mutex&);// = delete;
@@ -59,8 +49,8 @@ private:
 
 public:
     void lock() _LIBCPP_THREAD_SAFETY_ANNOTATION(acquire_capability());
-    bool try_lock() _NOEXCEPT _LIBCPP_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true));
-    void unlock() _NOEXCEPT _LIBCPP_THREAD_SAFETY_ANNOTATION(release_capability());
+    bool try_lock() noexcept _LIBCPP_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true));
+    void unlock() noexcept _LIBCPP_THREAD_SAFETY_ANNOTATION(release_capability());
 
     typedef __libcpp_mutex_t* native_handle_type;
     _LIBCPP_INLINE_VISIBILITY native_handle_type native_handle() {return &__m_;}
@@ -108,8 +98,8 @@ public:
     ~lock_guard() _LIBCPP_THREAD_SAFETY_ANNOTATION(release_capability()) {__m_.unlock();}
 
 private:
-    lock_guard(lock_guard const&) _LIBCPP_EQUAL_DELETE;
-    lock_guard& operator=(lock_guard const&) _LIBCPP_EQUAL_DELETE;
+    lock_guard(lock_guard const&) = delete;
+    lock_guard& operator=(lock_guard const&) = delete;
 };
 
 template <class _Mutex>
@@ -124,12 +114,12 @@ private:
 
 public:
     _LIBCPP_INLINE_VISIBILITY
-    unique_lock() _NOEXCEPT : __m_(nullptr), __owns_(false) {}
+    unique_lock() noexcept : __m_(nullptr), __owns_(false) {}
     _LIBCPP_INLINE_VISIBILITY
     explicit unique_lock(mutex_type& __m)
         : __m_(_VSTD::addressof(__m)), __owns_(true) {__m_->lock();}
     _LIBCPP_INLINE_VISIBILITY
-    unique_lock(mutex_type& __m, defer_lock_t) _NOEXCEPT
+    unique_lock(mutex_type& __m, defer_lock_t) noexcept
         : __m_(_VSTD::addressof(__m)), __owns_(false) {}
     _LIBCPP_INLINE_VISIBILITY
     unique_lock(mutex_type& __m, try_to_lock_t)
@@ -159,11 +149,11 @@ private:
 public:
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
-    unique_lock(unique_lock&& __u) _NOEXCEPT
+    unique_lock(unique_lock&& __u) noexcept
         : __m_(__u.__m_), __owns_(__u.__owns_)
         {__u.__m_ = nullptr; __u.__owns_ = false;}
     _LIBCPP_INLINE_VISIBILITY
-    unique_lock& operator=(unique_lock&& __u) _NOEXCEPT
+    unique_lock& operator=(unique_lock&& __u) noexcept
         {
             if (__owns_)
                 __m_->unlock();
@@ -187,13 +177,13 @@ public:
     void unlock();
 
     _LIBCPP_INLINE_VISIBILITY
-    void swap(unique_lock& __u) _NOEXCEPT
+    void swap(unique_lock& __u) noexcept
     {
         _VSTD::swap(__m_, __u.__m_);
         _VSTD::swap(__owns_, __u.__owns_);
     }
     _LIBCPP_INLINE_VISIBILITY
-    mutex_type* release() _NOEXCEPT
+    mutex_type* release() noexcept
     {
         mutex_type* __m = __m_;
         __m_ = nullptr;
@@ -202,12 +192,11 @@ public:
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    bool owns_lock() const _NOEXCEPT {return __owns_;}
+    bool owns_lock() const noexcept {return __owns_;}
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_EXPLICIT
-        operator bool () const _NOEXCEPT {return __owns_;}
+    explicit operator bool () const noexcept {return __owns_;}
     _LIBCPP_INLINE_VISIBILITY
-    mutex_type* mutex() const _NOEXCEPT {return __m_;}
+    mutex_type* mutex() const noexcept {return __m_;}
 };
 
 template <class _Mutex>
@@ -273,7 +262,7 @@ unique_lock<_Mutex>::unlock()
 template <class _Mutex>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-swap(unique_lock<_Mutex>& __x, unique_lock<_Mutex>& __y) _NOEXCEPT
+swap(unique_lock<_Mutex>& __x, unique_lock<_Mutex>& __y) noexcept
     {__x.swap(__y);}
 
 //enum class cv_status
@@ -295,9 +284,9 @@ class _LIBCPP_TYPE_VIS condition_variable
 public:
     _LIBCPP_INLINE_VISIBILITY
 #ifndef _LIBCPP_CXX03_LANG
-    constexpr condition_variable() _NOEXCEPT = default;
+    constexpr condition_variable() noexcept = default;
 #else
-    condition_variable() _NOEXCEPT {__cv_ = (__libcpp_condvar_t)_LIBCPP_CONDVAR_INITIALIZER;}
+    condition_variable() noexcept {__cv_ = (__libcpp_condvar_t)_LIBCPP_CONDVAR_INITIALIZER;}
 #endif
     ~condition_variable();
 
@@ -306,10 +295,10 @@ private:
     condition_variable& operator=(const condition_variable&); // = delete;
 
 public:
-    void notify_one() _NOEXCEPT;
-    void notify_all() _NOEXCEPT;
+    void notify_one() noexcept;
+    void notify_all() noexcept;
 
-    void wait(unique_lock<mutex>& __lk) _NOEXCEPT;
+    void wait(unique_lock<mutex>& __lk) noexcept;
     template <class _Predicate>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         void wait(unique_lock<mutex>& __lk, _Predicate __pred);
@@ -345,7 +334,7 @@ public:
 
 private:
     void __do_timed_wait(unique_lock<mutex>& __lk,
-       chrono::time_point<chrono::system_clock, chrono::nanoseconds>) _NOEXCEPT;
+       chrono::time_point<chrono::system_clock, chrono::nanoseconds>) noexcept;
 };
 #endif // !_LIBCPP_HAS_NO_THREADS
 
@@ -433,7 +422,3 @@ condition_variable::wait_for(unique_lock<mutex>& __lk,
 #endif // !_LIBCPP_HAS_NO_THREADS
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP___MUTEX_BASE

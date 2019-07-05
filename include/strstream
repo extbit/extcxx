@@ -6,17 +6,16 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_STRSTREAM
-#define _LIBCPP_STRSTREAM
-
-/*
-    strstream synopsis
-
-class strstreambuf
-    : public basic_streambuf<char>
+#if defined(strstream_synopsis)
+namespace std
 {
-public:
+  class strstreambuf
+    : public basic_streambuf<char>
+  {
+  public:
     explicit strstreambuf(streamsize alsize_arg = 0);
     strstreambuf(void* (*palloc_arg)(size_t), void (*pfree_arg)(void*));
     strstreambuf(char* gnext_arg, streamsize n, char* pbeg_arg = 0);
@@ -38,7 +37,7 @@ public:
     char* str();
     int pcount() const;
 
-protected:
+  protected:
     virtual int_type overflow (int_type c = EOF);
     virtual int_type pbackfail(int_type c = EOF);
     virtual int_type underflow();
@@ -48,7 +47,7 @@ protected:
                              ios_base::openmode which = ios_base::in | ios_base::out);
     virtual streambuf* setbuf(char* s, streamsize n);
 
-private:
+  private:
     typedef T1 strstate;                // exposition only
     static const strstate allocated;    // exposition only
     static const strstate constant;     // exposition only
@@ -58,12 +57,12 @@ private:
     streamsize alsize;                  // exposition only
     void* (*palloc)(size_t);            // exposition only
     void (*pfree)(void*);               // exposition only
-};
+  };
 
-class istrstream
+  class istrstream
     : public basic_istream<char>
-{
-public:
+  {
+  public:
     explicit istrstream(const char* s);
     explicit istrstream(char* s);
     istrstream(const char* s, streamsize n);
@@ -74,14 +73,14 @@ public:
     strstreambuf* rdbuf() const;
     char *str();
 
-private:
+  private:
     strstreambuf sb; // exposition only
-};
+  };
 
-class ostrstream
+  class ostrstream
     : public basic_ostream<char>
-{
-public:
+  {
+  public:
     ostrstream();
     ostrstream(char* s, int n, ios_base::openmode mode = ios_base::out);
 
@@ -92,14 +91,14 @@ public:
     char* str();
     int pcount() const;
 
-private:
+  private:
     strstreambuf sb; // exposition only
-};
+  };
 
-class strstream
+  class strstream
     : public basic_iostream<char>
-{
-public:
+  {
+  public:
     // Types
     typedef char                        char_type;
     typedef char_traits<char>::int_type int_type;
@@ -118,21 +117,16 @@ public:
     int pcount() const;
     char* str();
 
-private:
+  private:
     strstreambuf sb; // exposition only
-};
+  };
 
 }  // std
-
-*/
+#endif // strstream_synopsis
 
 #include <__config>
 #include <ostream>
 #include <istream>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -395,5 +389,3 @@ private:
 };
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_STRSTREAM

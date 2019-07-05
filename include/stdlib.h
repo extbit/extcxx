@@ -6,44 +6,31 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#if defined(__need_malloc_and_calloc) || defined(_LIBCPP_STDLIB_INCLUDE_NEXT)
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#pragma once
 #pragma GCC system_header
-#endif
+#if defined(__need_malloc_and_calloc) || defined(_LIBCPP_STDLIB_INCLUDE_NEXT)
+#  if defined(_LIBCPP_STDLIB_INCLUDE_NEXT)
+#    undef _LIBCPP_STDLIB_INCLUDE_NEXT
+#  endif
+#  include_next <stdlib.h>
+#else
+#  if defined(stdlib_h_synopsis)
 
-#if defined(_LIBCPP_STDLIB_INCLUDE_NEXT)
-#undef _LIBCPP_STDLIB_INCLUDE_NEXT
-#endif
-
-#include_next <stdlib.h>
-
-#elif !defined(_LIBCPP_STDLIB_H)
-#define _LIBCPP_STDLIB_H
-
-/*
-    stdlib.h synopsis
-
-Macros:
-
-    EXIT_FAILURE
-    EXIT_SUCCESS
-    MB_CUR_MAX
-    NULL
-    RAND_MAX
-
-Types:
-
-    size_t
-    div_t
-    ldiv_t
-    lldiv_t                                                               // C99
-
+// Macros:
+//     EXIT_FAILURE
+//     EXIT_SUCCESS
+//     MB_CUR_MAX
+//     NULL
+//     RAND_MAX
+// Types:
+//     size_t
+//     div_t
+//     ldiv_t
+//     lldiv_t  // C99
 double    atof (const char* nptr);
 int       atoi (const char* nptr);
 long      atol (const char* nptr);
-long long atoll(const char* nptr);                                        // C99
+long long atoll(const char* nptr); // C99
 double             strtod  (const char* restrict nptr, char** restrict endptr);
 float              strtof  (const char* restrict nptr, char** restrict endptr); // C99
 long double        strtold (const char* restrict nptr, char** restrict endptr); // C99
@@ -86,18 +73,12 @@ int at_quick_exit(void (*func)(void))                                     // C++
 void quick_exit(int status);                                              // C++11
 void *aligned_alloc(size_t alignment, size_t size);                       // C11
 
-*/
+#  endif // stdlib_h_synopsis
 
-#include <__config>
+#  include <__config>
+#  include_next <stdlib.h>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
+#  ifdef __cplusplus
+#    include <math.h>
+#  endif  // __cplusplus
 #endif
-
-#include_next <stdlib.h>
-
-#ifdef __cplusplus
-#include <math.h>
-#endif  // __cplusplus
-
-#endif  // _LIBCPP_STDLIB_H

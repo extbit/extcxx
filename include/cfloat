@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CFLOAT
-#define _LIBCPP_CFLOAT
-
+#pragma once
+#pragma GCC system_header
 /*
     cfloat synopsis
 
@@ -71,9 +69,3 @@ Macros:
 
 #include <__config>
 #include <float.h>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-#endif  // _LIBCPP_CFLOAT

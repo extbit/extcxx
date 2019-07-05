@@ -1,3 +1,4 @@
+// -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -5,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CONFIG_SITE
-#define _LIBCPP_CONFIG_SITE
-
+#pragma once
+#pragma GCC system_header
 #cmakedefine _LIBCPP_ABI_VERSION @_LIBCPP_ABI_VERSION@
 #cmakedefine _LIBCPP_ABI_UNSTABLE
 #cmakedefine _LIBCPP_ABI_FORCE_ITANIUM
@@ -29,7 +28,4 @@
 #cmakedefine _LIBCPP_NO_VCRUNTIME
 #cmakedefine01 _LIBCPP_HAS_MERGED_TYPEINFO_NAMES_DEFAULT
 #cmakedefine _LIBCPP_ABI_NAMESPACE @_LIBCPP_ABI_NAMESPACE@
-
 @_LIBCPP_ABI_DEFINES@
-
-#endif // _LIBCPP_CONFIG_SITE

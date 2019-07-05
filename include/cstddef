@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CSTDDEF
-#define _LIBCPP_CSTDDEF
-
+#pragma once
+#pragma GCC system_header
 /*
     cstddef synopsis
 
@@ -35,10 +33,6 @@ Types:
 
 #include <__config>
 #include <version>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 // Don't include our own <stddef.h>; we don't want to declare ::nullptr_t.
 #include_next <stddef.h>
@@ -109,5 +103,3 @@ constexpr byte  operator~ (byte __b) noexcept
 
 #include <type_traits>  // rest of byte
 #endif
-
-#endif  // _LIBCPP_CSTDDEF

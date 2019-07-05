@@ -6,12 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_EXPERIMENTAL_UTILITY
-#define _LIBCPP_EXPERIMENTAL_UTILITY
-
-/*
-    experimental/utility synopsis
+#if defined(experimental_utility_synopsis)
 
 // C++1y
 
@@ -28,19 +26,13 @@ inline namespace fundamentals_v1 {
 } // namespace experimental
 } // namespace std
 
- */
+#endif // experimental_utility_synopsis
 
 #include <experimental/__config>
 #include <utility>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_LFTS
 
   struct _LIBCPP_TEMPLATE_VIS erased_type { };
 
 _LIBCPP_END_NAMESPACE_LFTS
-
-#endif /* _LIBCPP_EXPERIMENTAL_UTILITY */

@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
-#define _LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
+#pragma once
+#pragma GCC system_header
 
 #if !defined(_LIBCPP_MSVCRT)
 #error "This header complements the Microsoft C Runtime library, and should not be included otherwise."
@@ -67,5 +66,3 @@
 #define __builtin_huge_vall()    _LInf._Long_double
 #define __builtin_nanl(__dummmy) _LNan._Long_double
 #define __builtin_nansl(__dummy) _LSnan._Long_double
-
-#endif // _LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H

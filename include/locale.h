@@ -6,12 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_LOCALE_H
-#define _LIBCPP_LOCALE_H
-
-/*
-    locale.h synopsis
+#pragma once
+#pragma GCC system_header
+#if defined(locale_h_synopsis)
 
 Macros:
 
@@ -31,14 +28,8 @@ Functions:
    setlocale
    localeconv
 
-*/
+#endif // locale_h_synopsis
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 #include_next <locale.h>
-
-#endif  // _LIBCPP_LOCALE_H

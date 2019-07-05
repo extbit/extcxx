@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_INITIALIZER_LIST
-#define _LIBCPP_INITIALIZER_LIST
+#pragma once
+#pragma GCC system_header
 
 /*
     initializer_list synopsis
@@ -45,10 +44,6 @@ template<class E> const E* end(initializer_list<E> il) noexcept; // constexpr in
 #include <__config>
 #include <cstddef>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 namespace std  // purposefully not versioned
 {
 
@@ -61,8 +56,8 @@ class _LIBCPP_TEMPLATE_VIS initializer_list
     size_t    __size_;
 
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR_AFTER_CXX11
-    initializer_list(const _Ep* __b, size_t __s) _NOEXCEPT
+    constexpr
+    initializer_list(const _Ep* __b, size_t __s) noexcept
         : __begin_(__b),
           __size_(__s)
         {}
@@ -76,36 +71,36 @@ public:
     typedef const _Ep* const_iterator;
 
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR_AFTER_CXX11
-    initializer_list() _NOEXCEPT : __begin_(nullptr), __size_(0) {}
+    constexpr
+    initializer_list() noexcept : __begin_(nullptr), __size_(0) {}
 
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR_AFTER_CXX11
-    size_t    size()  const _NOEXCEPT {return __size_;}
+    constexpr
+    size_t    size()  const noexcept {return __size_;}
 
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR_AFTER_CXX11
-    const _Ep* begin() const _NOEXCEPT {return __begin_;}
+    constexpr
+    const _Ep* begin() const noexcept {return __begin_;}
 
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR_AFTER_CXX11
-    const _Ep* end()   const _NOEXCEPT {return __begin_ + __size_;}
+    constexpr
+    const _Ep* end()   const noexcept {return __begin_ + __size_;}
 };
 
 template<class _Ep>
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR_AFTER_CXX11
+constexpr
 const _Ep*
-begin(initializer_list<_Ep> __il) _NOEXCEPT
+begin(initializer_list<_Ep> __il) noexcept
 {
     return __il.begin();
 }
 
 template<class _Ep>
 inline _LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR_AFTER_CXX11
+constexpr
 const _Ep*
-end(initializer_list<_Ep> __il) _NOEXCEPT
+end(initializer_list<_Ep> __il) noexcept
 {
     return __il.end();
 }
@@ -113,5 +108,3 @@ end(initializer_list<_Ep> __il) _NOEXCEPT
 #endif  // !defined(_LIBCPP_CXX03_LANG)
 
 }  // std
-
-#endif  // _LIBCPP_INITIALIZER_LIST

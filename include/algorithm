@@ -6,634 +6,629 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_ALGORITHM
-#define _LIBCPP_ALGORITHM
-
-/*
-    algorithm synopsis
-
+#if defined(algorithm_synopsis)
 #include <initializer_list>
-
 namespace std
 {
 
-template <class InputIterator, class Predicate>
-    constexpr bool     // constexpr in C++20
-    all_of(InputIterator first, InputIterator last, Predicate pred);
+  template <class InputIterator, class Predicate>
+  constexpr bool     // constexpr in C++20
+  all_of(InputIterator first, InputIterator last, Predicate pred);
 
-template <class InputIterator, class Predicate>
-    constexpr bool     // constexpr in C++20
-    any_of(InputIterator first, InputIterator last, Predicate pred);
+  template <class InputIterator, class Predicate>
+  constexpr bool     // constexpr in C++20
+  any_of(InputIterator first, InputIterator last, Predicate pred);
 
-template <class InputIterator, class Predicate>
-    constexpr bool     // constexpr in C++20
-    none_of(InputIterator first, InputIterator last, Predicate pred);
+  template <class InputIterator, class Predicate>
+  constexpr bool     // constexpr in C++20
+  none_of(InputIterator first, InputIterator last, Predicate pred);
 
-template <class InputIterator, class Function>
-    constexpr Function          // constexpr in C++20
-    for_each(InputIterator first, InputIterator last, Function f);
+  template <class InputIterator, class Function>
+  constexpr Function          // constexpr in C++20
+  for_each(InputIterator first, InputIterator last, Function f);
 
-template<class InputIterator, class Size, class Function>
-    constexpr InputIterator     // constexpr in C++20
-    for_each_n(InputIterator first, Size n, Function f); // C++17
+  template<class InputIterator, class Size, class Function>
+  constexpr InputIterator     // constexpr in C++20
+  for_each_n(InputIterator first, Size n, Function f); // C++17
 
-template <class InputIterator, class T>
-    constexpr InputIterator     // constexpr in C++20
-    find(InputIterator first, InputIterator last, const T& value);
+  template <class InputIterator, class T>
+  constexpr InputIterator     // constexpr in C++20
+  find(InputIterator first, InputIterator last, const T& value);
 
-template <class InputIterator, class Predicate>
-    constexpr InputIterator     // constexpr in C++20
-    find_if(InputIterator first, InputIterator last, Predicate pred);
+  template <class InputIterator, class Predicate>
+  constexpr InputIterator     // constexpr in C++20
+  find_if(InputIterator first, InputIterator last, Predicate pred);
 
-template<class InputIterator, class Predicate>
-    InputIterator               // constexpr in C++20
-    find_if_not(InputIterator first, InputIterator last, Predicate pred);
+  template<class InputIterator, class Predicate>
+  InputIterator               // constexpr in C++20
+  find_if_not(InputIterator first, InputIterator last, Predicate pred);
 
-template <class ForwardIterator1, class ForwardIterator2>
-    ForwardIterator1            // constexpr in C++20
-    find_end(ForwardIterator1 first1, ForwardIterator1 last1,
-             ForwardIterator2 first2, ForwardIterator2 last2);
-
-template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-    ForwardIterator1            // constexpr in C++20
-    find_end(ForwardIterator1 first1, ForwardIterator1 last1,
-             ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred);
-
-template <class ForwardIterator1, class ForwardIterator2>
-    constexpr ForwardIterator1  // constexpr in C++20
-    find_first_of(ForwardIterator1 first1, ForwardIterator1 last1,
-                  ForwardIterator2 first2, ForwardIterator2 last2);
-
-template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-    constexpr ForwardIterator1  // constexpr in C++20
-    find_first_of(ForwardIterator1 first1, ForwardIterator1 last1,
-                  ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred);
-
-template <class ForwardIterator>
-    constexpr ForwardIterator   // constexpr in C++20
-    adjacent_find(ForwardIterator first, ForwardIterator last);
-
-template <class ForwardIterator, class BinaryPredicate>
-    constexpr ForwardIterator   // constexpr in C++20
-    adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate pred);
-
-template <class InputIterator, class T>
-    constexpr typename iterator_traits<InputIterator>::difference_type  // constexpr in C++20
-    count(InputIterator first, InputIterator last, const T& value);
-
-template <class InputIterator, class Predicate>
-    constexpr typename iterator_traits<InputIterator>::difference_type // constexpr in C++20
-    count_if(InputIterator first, InputIterator last, Predicate pred);
-
-template <class InputIterator1, class InputIterator2>
-    constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
-    mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2);
-
-template <class InputIterator1, class InputIterator2>
-    constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
-    mismatch(InputIterator1 first1, InputIterator1 last1,
-             InputIterator2 first2, InputIterator2 last2); // **C++14**
-
-template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-    constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
-    mismatch(InputIterator1 first1, InputIterator1 last1,
-             InputIterator2 first2, BinaryPredicate pred);
-
-template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-    constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
-    mismatch(InputIterator1 first1, InputIterator1 last1,
-             InputIterator2 first2, InputIterator2 last2,
-             BinaryPredicate pred); // **C++14**
-
-template <class InputIterator1, class InputIterator2>
-    constexpr bool      // constexpr in C++20
-    equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2);
-
-template <class InputIterator1, class InputIterator2>
-    constexpr bool      // constexpr in C++20
-    equal(InputIterator1 first1, InputIterator1 last1,
-          InputIterator2 first2, InputIterator2 last2); // **C++14**
-
-template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-    constexpr bool      // constexpr in C++20
-    equal(InputIterator1 first1, InputIterator1 last1,
-          InputIterator2 first2, BinaryPredicate pred);
-
-template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-    constexpr bool      // constexpr in C++20
-    equal(InputIterator1 first1, InputIterator1 last1,
-          InputIterator2 first2, InputIterator2 last2,
-          BinaryPredicate pred); // **C++14**
-
-template<class ForwardIterator1, class ForwardIterator2>
-    constexpr bool      // constexpr in C++20
-    is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
-                   ForwardIterator2 first2);
-
-template<class ForwardIterator1, class ForwardIterator2>
-    constexpr bool      // constexpr in C++20
-    is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
-                   ForwardIterator2 first2, ForwardIterator2 last2); // **C++14**
-
-template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-    constexpr bool      // constexpr in C++20
-    is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
-                   ForwardIterator2 first2, BinaryPredicate pred);
-
-template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-    constexpr bool      // constexpr in C++20
-    is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
-                   ForwardIterator2 first2, ForwardIterator2 last2,
-                   BinaryPredicate pred);  // **C++14**
-
-template <class ForwardIterator1, class ForwardIterator2>
-    constexpr ForwardIterator1      // constexpr in C++20
-    search(ForwardIterator1 first1, ForwardIterator1 last1,
+  template <class ForwardIterator1, class ForwardIterator2>
+  ForwardIterator1            // constexpr in C++20
+  find_end(ForwardIterator1 first1, ForwardIterator1 last1,
            ForwardIterator2 first2, ForwardIterator2 last2);
 
-template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-    constexpr ForwardIterator1      // constexpr in C++20
-    search(ForwardIterator1 first1, ForwardIterator1 last1,
+  template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+  ForwardIterator1            // constexpr in C++20
+  find_end(ForwardIterator1 first1, ForwardIterator1 last1,
            ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred);
 
-template <class ForwardIterator, class Size, class T>
-    constexpr ForwardIterator       // constexpr in C++20
-    search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value);
-
-template <class ForwardIterator, class Size, class T, class BinaryPredicate>
-    constexpr ForwardIterator       // constexpr in C++20
-    search_n(ForwardIterator first, ForwardIterator last,
-             Size count, const T& value, BinaryPredicate pred);
-
-template <class InputIterator, class OutputIterator>
-    OutputIterator
-    copy(InputIterator first, InputIterator last, OutputIterator result);
-
-template<class InputIterator, class OutputIterator, class Predicate>
-    OutputIterator
-    copy_if(InputIterator first, InputIterator last,
-            OutputIterator result, Predicate pred);
-
-template<class InputIterator, class Size, class OutputIterator>
-    OutputIterator
-    copy_n(InputIterator first, Size n, OutputIterator result);
-
-template <class BidirectionalIterator1, class BidirectionalIterator2>
-    BidirectionalIterator2
-    copy_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
-                  BidirectionalIterator2 result);
-
-template <class ForwardIterator1, class ForwardIterator2>
-    ForwardIterator2
-    swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2);
-
-template <class ForwardIterator1, class ForwardIterator2>
-    void
-    iter_swap(ForwardIterator1 a, ForwardIterator2 b);
-
-template <class InputIterator, class OutputIterator, class UnaryOperation>
-    constexpr OutputIterator      // constexpr in C++20
-    transform(InputIterator first, InputIterator last, OutputIterator result, UnaryOperation op);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator, class BinaryOperation>
-    constexpr OutputIterator      // constexpr in C++20
-    transform(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
-              OutputIterator result, BinaryOperation binary_op);
-
-template <class ForwardIterator, class T>
-    constexpr void      // constexpr in C++20
-    replace(ForwardIterator first, ForwardIterator last, const T& old_value, const T& new_value);
-
-template <class ForwardIterator, class Predicate, class T>
-    constexpr void      // constexpr in C++20
-    replace_if(ForwardIterator first, ForwardIterator last, Predicate pred, const T& new_value);
-
-template <class InputIterator, class OutputIterator, class T>
-    constexpr OutputIterator      // constexpr in C++20
-    replace_copy(InputIterator first, InputIterator last, OutputIterator result,
-                 const T& old_value, const T& new_value);
-
-template <class InputIterator, class OutputIterator, class Predicate, class T>
-    constexpr OutputIterator      // constexpr in C++20
-    replace_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate pred, const T& new_value);
-
-template <class ForwardIterator, class T>
-    constexpr void      // constexpr in C++20
-    fill(ForwardIterator first, ForwardIterator last, const T& value);
-
-template <class OutputIterator, class Size, class T>
-    constexpr OutputIterator      // constexpr in C++20
-    fill_n(OutputIterator first, Size n, const T& value);
-
-template <class ForwardIterator, class Generator>
-    constexpr void      // constexpr in C++20
-    generate(ForwardIterator first, ForwardIterator last, Generator gen);
-
-template <class OutputIterator, class Size, class Generator>
-    constexpr OutputIterator      // constexpr in C++20
-    generate_n(OutputIterator first, Size n, Generator gen);
-
-template <class ForwardIterator, class T>
-    constexpr ForwardIterator     // constexpr in C++20
-    remove(ForwardIterator first, ForwardIterator last, const T& value);
-
-template <class ForwardIterator, class Predicate>
-    constexpr ForwardIterator     // constexpr in C++20
-    remove_if(ForwardIterator first, ForwardIterator last, Predicate pred);
-
-template <class InputIterator, class OutputIterator, class T>
-    constexpr OutputIterator     // constexpr in C++20
-    remove_copy(InputIterator first, InputIterator last, OutputIterator result, const T& value);
-
-template <class InputIterator, class OutputIterator, class Predicate>
-    constexpr OutputIterator     // constexpr in C++20
-    remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate pred);
-
-template <class ForwardIterator>
-    ForwardIterator
-    unique(ForwardIterator first, ForwardIterator last);
-
-template <class ForwardIterator, class BinaryPredicate>
-    ForwardIterator
-    unique(ForwardIterator first, ForwardIterator last, BinaryPredicate pred);
-
-template <class InputIterator, class OutputIterator>
-    OutputIterator
-    unique_copy(InputIterator first, InputIterator last, OutputIterator result);
-
-template <class InputIterator, class OutputIterator, class BinaryPredicate>
-    OutputIterator
-    unique_copy(InputIterator first, InputIterator last, OutputIterator result, BinaryPredicate pred);
-
-template <class BidirectionalIterator>
-    void
-    reverse(BidirectionalIterator first, BidirectionalIterator last);
-
-template <class BidirectionalIterator, class OutputIterator>
-    constexpr OutputIterator       // constexpr in C++20
-    reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator result);
-
-template <class ForwardIterator>
-    ForwardIterator
-    rotate(ForwardIterator first, ForwardIterator middle, ForwardIterator last);
-
-template <class ForwardIterator, class OutputIterator>
-    OutputIterator
-    rotate_copy(ForwardIterator first, ForwardIterator middle, ForwardIterator last, OutputIterator result);
-
-template <class RandomAccessIterator>
-    void
-    random_shuffle(RandomAccessIterator first, RandomAccessIterator last); // deprecated in C++14, removed in C++17
-
-template <class RandomAccessIterator, class RandomNumberGenerator>
-    void
-    random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
-                   RandomNumberGenerator& rand);  // deprecated in C++14, removed in C++17
-
-template<class PopulationIterator, class SampleIterator,
-         class Distance, class UniformRandomBitGenerator>
-    SampleIterator sample(PopulationIterator first, PopulationIterator last,
-                          SampleIterator out, Distance n,
-                          UniformRandomBitGenerator&& g); // C++17
-
-template<class RandomAccessIterator, class UniformRandomNumberGenerator>
-    void shuffle(RandomAccessIterator first, RandomAccessIterator last,
-                 UniformRandomNumberGenerator&& g);
-
-template <class InputIterator, class Predicate>
-    constexpr bool  // constexpr in C++20
-    is_partitioned(InputIterator first, InputIterator last, Predicate pred);
-
-template <class ForwardIterator, class Predicate>
-    ForwardIterator
-    partition(ForwardIterator first, ForwardIterator last, Predicate pred);
-
-template <class InputIterator, class OutputIterator1,
-          class OutputIterator2, class Predicate>
-    constexpr pair<OutputIterator1, OutputIterator2>   // constexpr in C++20
-    partition_copy(InputIterator first, InputIterator last,
-                   OutputIterator1 out_true, OutputIterator2 out_false,
-                   Predicate pred);
-
-template <class ForwardIterator, class Predicate>
-    ForwardIterator
-    stable_partition(ForwardIterator first, ForwardIterator last, Predicate pred);
-
-template<class ForwardIterator, class Predicate>
-    constexpr ForwardIterator  // constexpr in C++20
-    partition_point(ForwardIterator first, ForwardIterator last, Predicate pred);
-
-template <class ForwardIterator>
-    constexpr bool  // constexpr in C++20
-    is_sorted(ForwardIterator first, ForwardIterator last);
-
-template <class ForwardIterator, class Compare>
-    bool
-    is_sorted(ForwardIterator first, ForwardIterator last, Compare comp);
-
-template<class ForwardIterator>
-    constexpr ForwardIterator    // constexpr in C++20
-    is_sorted_until(ForwardIterator first, ForwardIterator last);
-
-template <class ForwardIterator, class Compare>
-    constexpr ForwardIterator    // constexpr in C++20
-    is_sorted_until(ForwardIterator first, ForwardIterator last, Compare comp);
-
-template <class RandomAccessIterator>
-    void
-    sort(RandomAccessIterator first, RandomAccessIterator last);
-
-template <class RandomAccessIterator, class Compare>
-    void
-    sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
-
-template <class RandomAccessIterator>
-    void
-    stable_sort(RandomAccessIterator first, RandomAccessIterator last);
-
-template <class RandomAccessIterator, class Compare>
-    void
-    stable_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
-
-template <class RandomAccessIterator>
-    void
-    partial_sort(RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last);
-
-template <class RandomAccessIterator, class Compare>
-    void
-    partial_sort(RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last, Compare comp);
-
-template <class InputIterator, class RandomAccessIterator>
-    RandomAccessIterator
-    partial_sort_copy(InputIterator first, InputIterator last,
-                      RandomAccessIterator result_first, RandomAccessIterator result_last);
-
-template <class InputIterator, class RandomAccessIterator, class Compare>
-    RandomAccessIterator
-    partial_sort_copy(InputIterator first, InputIterator last,
-                      RandomAccessIterator result_first, RandomAccessIterator result_last, Compare comp);
-
-template <class RandomAccessIterator>
-    void
-    nth_element(RandomAccessIterator first, RandomAccessIterator nth, RandomAccessIterator last);
-
-template <class RandomAccessIterator, class Compare>
-    void
-    nth_element(RandomAccessIterator first, RandomAccessIterator nth, RandomAccessIterator last, Compare comp);
-
-template <class ForwardIterator, class T>
-    constexpr ForwardIterator                         // constexpr in C++20
-    lower_bound(ForwardIterator first, ForwardIterator last, const T& value);
-
-template <class ForwardIterator, class T, class Compare>
-    constexpr ForwardIterator                         // constexpr in C++20
-    lower_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
-
-template <class ForwardIterator, class T>
-    constexpr ForwardIterator                         // constexpr in C++20
-    upper_bound(ForwardIterator first, ForwardIterator last, const T& value);
-
-template <class ForwardIterator, class T, class Compare>
-    constexpr ForwardIterator                         // constexpr in C++20
-    upper_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
-
-template <class ForwardIterator, class T>
-    constexpr pair<ForwardIterator, ForwardIterator>  // constexpr in C++20
-    equal_range(ForwardIterator first, ForwardIterator last, const T& value);
-
-template <class ForwardIterator, class T, class Compare>
-    constexpr pair<ForwardIterator, ForwardIterator>  // constexpr in C++20
-    equal_range(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
-
-template <class ForwardIterator, class T>
-    constexpr bool                                    // constexpr in C++20
-    binary_search(ForwardIterator first, ForwardIterator last, const T& value);
-
-template <class ForwardIterator, class T, class Compare>
-    constexpr bool                                    // constexpr in C++20
-    binary_search(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator>
-    OutputIterator
-    merge(InputIterator1 first1, InputIterator1 last1,
-          InputIterator2 first2, InputIterator2 last2, OutputIterator result);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
-    OutputIterator
-    merge(InputIterator1 first1, InputIterator1 last1,
-          InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
-
-template <class BidirectionalIterator>
-    void
-    inplace_merge(BidirectionalIterator first, BidirectionalIterator middle, BidirectionalIterator last);
-
-template <class BidirectionalIterator, class Compare>
-    void
-    inplace_merge(BidirectionalIterator first, BidirectionalIterator middle, BidirectionalIterator last, Compare comp);
-
-template <class InputIterator1, class InputIterator2>
-    constexpr bool                                    // constexpr in C++20
-    includes(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2);
-
-template <class InputIterator1, class InputIterator2, class Compare>
-    constexpr bool                                    // constexpr in C++20
-    includes(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare comp);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator>
-    OutputIterator
-    set_union(InputIterator1 first1, InputIterator1 last1,
-              InputIterator2 first2, InputIterator2 last2, OutputIterator result);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
-    OutputIterator
-    set_union(InputIterator1 first1, InputIterator1 last1,
-              InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator>
-    constexpr OutputIterator                         // constexpr in C++20
-    set_intersection(InputIterator1 first1, InputIterator1 last1,
-                     InputIterator2 first2, InputIterator2 last2, OutputIterator result);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
-    constexpr OutputIterator                         // constexpr in C++20
-    set_intersection(InputIterator1 first1, InputIterator1 last1,
-                     InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
-
-template <class InputIterator1, class InputIterator2, class OutputIterator>
-    OutputIterator
-    set_difference(InputIterator1 first1, InputIterator1 last1,
+  template <class ForwardIterator1, class ForwardIterator2>
+  constexpr ForwardIterator1  // constexpr in C++20
+  find_first_of(ForwardIterator1 first1, ForwardIterator1 last1,
+                ForwardIterator2 first2, ForwardIterator2 last2);
+
+  template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+  constexpr ForwardIterator1  // constexpr in C++20
+  find_first_of(ForwardIterator1 first1, ForwardIterator1 last1,
+                ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred);
+
+  template <class ForwardIterator>
+  constexpr ForwardIterator   // constexpr in C++20
+  adjacent_find(ForwardIterator first, ForwardIterator last);
+
+  template <class ForwardIterator, class BinaryPredicate>
+  constexpr ForwardIterator   // constexpr in C++20
+  adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate pred);
+
+  template <class InputIterator, class T>
+  constexpr typename iterator_traits<InputIterator>::difference_type  // constexpr in C++20
+  count(InputIterator first, InputIterator last, const T& value);
+
+  template <class InputIterator, class Predicate>
+  constexpr typename iterator_traits<InputIterator>::difference_type // constexpr in C++20
+  count_if(InputIterator first, InputIterator last, Predicate pred);
+
+  template <class InputIterator1, class InputIterator2>
+  constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
+  mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2);
+
+  template <class InputIterator1, class InputIterator2>
+  constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
+  mismatch(InputIterator1 first1, InputIterator1 last1,
+           InputIterator2 first2, InputIterator2 last2); // **C++14**
+
+  template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+  constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
+  mismatch(InputIterator1 first1, InputIterator1 last1,
+           InputIterator2 first2, BinaryPredicate pred);
+
+  template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+  constexpr pair<InputIterator1, InputIterator2>   // constexpr in C++20
+  mismatch(InputIterator1 first1, InputIterator1 last1,
+           InputIterator2 first2, InputIterator2 last2,
+           BinaryPredicate pred); // **C++14**
+
+  template <class InputIterator1, class InputIterator2>
+  constexpr bool      // constexpr in C++20
+  equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2);
+
+  template <class InputIterator1, class InputIterator2>
+  constexpr bool      // constexpr in C++20
+  equal(InputIterator1 first1, InputIterator1 last1,
+        InputIterator2 first2, InputIterator2 last2); // **C++14**
+
+  template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+  constexpr bool      // constexpr in C++20
+  equal(InputIterator1 first1, InputIterator1 last1,
+        InputIterator2 first2, BinaryPredicate pred);
+
+  template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+  constexpr bool      // constexpr in C++20
+  equal(InputIterator1 first1, InputIterator1 last1,
+        InputIterator2 first2, InputIterator2 last2,
+        BinaryPredicate pred); // **C++14**
+
+  template<class ForwardIterator1, class ForwardIterator2>
+  constexpr bool      // constexpr in C++20
+  is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
+                 ForwardIterator2 first2);
+
+  template<class ForwardIterator1, class ForwardIterator2>
+  constexpr bool      // constexpr in C++20
+  is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
+                 ForwardIterator2 first2, ForwardIterator2 last2); // **C++14**
+
+  template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+  constexpr bool      // constexpr in C++20
+  is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
+                 ForwardIterator2 first2, BinaryPredicate pred);
+
+  template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+  constexpr bool      // constexpr in C++20
+  is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
+                 ForwardIterator2 first2, ForwardIterator2 last2,
+                 BinaryPredicate pred);  // **C++14**
+
+  template <class ForwardIterator1, class ForwardIterator2>
+  constexpr ForwardIterator1      // constexpr in C++20
+  search(ForwardIterator1 first1, ForwardIterator1 last1,
+         ForwardIterator2 first2, ForwardIterator2 last2);
+
+  template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+  constexpr ForwardIterator1      // constexpr in C++20
+  search(ForwardIterator1 first1, ForwardIterator1 last1,
+         ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred);
+
+  template <class ForwardIterator, class Size, class T>
+  constexpr ForwardIterator       // constexpr in C++20
+  search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value);
+
+  template <class ForwardIterator, class Size, class T, class BinaryPredicate>
+  constexpr ForwardIterator       // constexpr in C++20
+  search_n(ForwardIterator first, ForwardIterator last,
+           Size count, const T& value, BinaryPredicate pred);
+
+  template <class InputIterator, class OutputIterator>
+  OutputIterator
+  copy(InputIterator first, InputIterator last, OutputIterator result);
+
+  template<class InputIterator, class OutputIterator, class Predicate>
+  OutputIterator
+  copy_if(InputIterator first, InputIterator last,
+          OutputIterator result, Predicate pred);
+
+  template<class InputIterator, class Size, class OutputIterator>
+  OutputIterator
+  copy_n(InputIterator first, Size n, OutputIterator result);
+
+  template <class BidirectionalIterator1, class BidirectionalIterator2>
+  BidirectionalIterator2
+  copy_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
+                BidirectionalIterator2 result);
+
+  template <class ForwardIterator1, class ForwardIterator2>
+  ForwardIterator2
+  swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2);
+
+  template <class ForwardIterator1, class ForwardIterator2>
+  void
+  iter_swap(ForwardIterator1 a, ForwardIterator2 b);
+
+  template <class InputIterator, class OutputIterator, class UnaryOperation>
+  constexpr OutputIterator      // constexpr in C++20
+  transform(InputIterator first, InputIterator last, OutputIterator result, UnaryOperation op);
+
+  template <class InputIterator1, class InputIterator2, class OutputIterator, class BinaryOperation>
+  constexpr OutputIterator      // constexpr in C++20
+  transform(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
+            OutputIterator result, BinaryOperation binary_op);
+
+  template <class ForwardIterator, class T>
+  constexpr void      // constexpr in C++20
+  replace(ForwardIterator first, ForwardIterator last, const T& old_value, const T& new_value);
+
+  template <class ForwardIterator, class Predicate, class T>
+  constexpr void      // constexpr in C++20
+  replace_if(ForwardIterator first, ForwardIterator last, Predicate pred, const T& new_value);
+
+  template <class InputIterator, class OutputIterator, class T>
+  constexpr OutputIterator      // constexpr in C++20
+  replace_copy(InputIterator first, InputIterator last, OutputIterator result,
+               const T& old_value, const T& new_value);
+
+  template <class InputIterator, class OutputIterator, class Predicate, class T>
+  constexpr OutputIterator      // constexpr in C++20
+  replace_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate pred, const T& new_value);
+
+  template <class ForwardIterator, class T>
+  constexpr void      // constexpr in C++20
+  fill(ForwardIterator first, ForwardIterator last, const T& value);
+
+  template <class OutputIterator, class Size, class T>
+  constexpr OutputIterator      // constexpr in C++20
+  fill_n(OutputIterator first, Size n, const T& value);
+
+  template <class ForwardIterator, class Generator>
+  constexpr void      // constexpr in C++20
+  generate(ForwardIterator first, ForwardIterator last, Generator gen);
+
+  template <class OutputIterator, class Size, class Generator>
+  constexpr OutputIterator      // constexpr in C++20
+  generate_n(OutputIterator first, Size n, Generator gen);
+
+  template <class ForwardIterator, class T>
+  constexpr ForwardIterator     // constexpr in C++20
+  remove(ForwardIterator first, ForwardIterator last, const T& value);
+
+  template <class ForwardIterator, class Predicate>
+  constexpr ForwardIterator     // constexpr in C++20
+  remove_if(ForwardIterator first, ForwardIterator last, Predicate pred);
+
+  template <class InputIterator, class OutputIterator, class T>
+  constexpr OutputIterator     // constexpr in C++20
+  remove_copy(InputIterator first, InputIterator last, OutputIterator result, const T& value);
+
+  template <class InputIterator, class OutputIterator, class Predicate>
+  constexpr OutputIterator     // constexpr in C++20
+  remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate pred);
+
+  template <class ForwardIterator>
+  ForwardIterator
+  unique(ForwardIterator first, ForwardIterator last);
+
+  template <class ForwardIterator, class BinaryPredicate>
+  ForwardIterator
+  unique(ForwardIterator first, ForwardIterator last, BinaryPredicate pred);
+
+  template <class InputIterator, class OutputIterator>
+  OutputIterator
+  unique_copy(InputIterator first, InputIterator last, OutputIterator result);
+
+  template <class InputIterator, class OutputIterator, class BinaryPredicate>
+  OutputIterator
+  unique_copy(InputIterator first, InputIterator last, OutputIterator result, BinaryPredicate pred);
+
+  template <class BidirectionalIterator>
+  void
+  reverse(BidirectionalIterator first, BidirectionalIterator last);
+
+  template <class BidirectionalIterator, class OutputIterator>
+  constexpr OutputIterator       // constexpr in C++20
+  reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator result);
+
+  template <class ForwardIterator>
+  ForwardIterator
+  rotate(ForwardIterator first, ForwardIterator middle, ForwardIterator last);
+
+  template <class ForwardIterator, class OutputIterator>
+  OutputIterator
+  rotate_copy(ForwardIterator first, ForwardIterator middle, ForwardIterator last, OutputIterator result);
+
+  template <class RandomAccessIterator>
+  void
+  random_shuffle(RandomAccessIterator first, RandomAccessIterator last); // deprecated in C++14, removed in C++17
+
+  template <class RandomAccessIterator, class RandomNumberGenerator>
+  void
+  random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
+                 RandomNumberGenerator& rand);  // deprecated in C++14, removed in C++17
+
+  template<class PopulationIterator, class SampleIterator,
+           class Distance, class UniformRandomBitGenerator>
+  SampleIterator sample(PopulationIterator first, PopulationIterator last,
+                        SampleIterator out, Distance n,
+                        UniformRandomBitGenerator&& g); // C++17
+
+  template<class RandomAccessIterator, class UniformRandomNumberGenerator>
+  void shuffle(RandomAccessIterator first, RandomAccessIterator last,
+               UniformRandomNumberGenerator&& g);
+
+  template <class InputIterator, class Predicate>
+  constexpr bool  // constexpr in C++20
+  is_partitioned(InputIterator first, InputIterator last, Predicate pred);
+
+  template <class ForwardIterator, class Predicate>
+  ForwardIterator
+  partition(ForwardIterator first, ForwardIterator last, Predicate pred);
+
+  template <class InputIterator, class OutputIterator1,
+            class OutputIterator2, class Predicate>
+  constexpr pair<OutputIterator1, OutputIterator2>   // constexpr in C++20
+  partition_copy(InputIterator first, InputIterator last,
+                 OutputIterator1 out_true, OutputIterator2 out_false,
+                 Predicate pred);
+
+  template <class ForwardIterator, class Predicate>
+  ForwardIterator
+  stable_partition(ForwardIterator first, ForwardIterator last, Predicate pred);
+
+  template<class ForwardIterator, class Predicate>
+  constexpr ForwardIterator  // constexpr in C++20
+  partition_point(ForwardIterator first, ForwardIterator last, Predicate pred);
+
+  template <class ForwardIterator>
+  constexpr bool  // constexpr in C++20
+  is_sorted(ForwardIterator first, ForwardIterator last);
+
+  template <class ForwardIterator, class Compare>
+  bool
+  is_sorted(ForwardIterator first, ForwardIterator last, Compare comp);
+
+  template<class ForwardIterator>
+  constexpr ForwardIterator    // constexpr in C++20
+  is_sorted_until(ForwardIterator first, ForwardIterator last);
+
+  template <class ForwardIterator, class Compare>
+  constexpr ForwardIterator    // constexpr in C++20
+  is_sorted_until(ForwardIterator first, ForwardIterator last, Compare comp);
+
+  template <class RandomAccessIterator>
+  void
+  sort(RandomAccessIterator first, RandomAccessIterator last);
+
+  template <class RandomAccessIterator, class Compare>
+  void
+  sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+
+  template <class RandomAccessIterator>
+  void
+  stable_sort(RandomAccessIterator first, RandomAccessIterator last);
+
+  template <class RandomAccessIterator, class Compare>
+  void
+  stable_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+
+  template <class RandomAccessIterator>
+  void
+  partial_sort(RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last);
+
+  template <class RandomAccessIterator, class Compare>
+  void
+  partial_sort(RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last, Compare comp);
+
+  template <class InputIterator, class RandomAccessIterator>
+  RandomAccessIterator
+  partial_sort_copy(InputIterator first, InputIterator last,
+                    RandomAccessIterator result_first, RandomAccessIterator result_last);
+
+  template <class InputIterator, class RandomAccessIterator, class Compare>
+  RandomAccessIterator
+  partial_sort_copy(InputIterator first, InputIterator last,
+                    RandomAccessIterator result_first, RandomAccessIterator result_last, Compare comp);
+
+  template <class RandomAccessIterator>
+  void
+  nth_element(RandomAccessIterator first, RandomAccessIterator nth, RandomAccessIterator last);
+
+  template <class RandomAccessIterator, class Compare>
+  void
+  nth_element(RandomAccessIterator first, RandomAccessIterator nth, RandomAccessIterator last, Compare comp);
+
+  template <class ForwardIterator, class T>
+  constexpr ForwardIterator                         // constexpr in C++20
+  lower_bound(ForwardIterator first, ForwardIterator last, const T& value);
+
+  template <class ForwardIterator, class T, class Compare>
+  constexpr ForwardIterator                         // constexpr in C++20
+  lower_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
+
+  template <class ForwardIterator, class T>
+  constexpr ForwardIterator                         // constexpr in C++20
+  upper_bound(ForwardIterator first, ForwardIterator last, const T& value);
+
+  template <class ForwardIterator, class T, class Compare>
+  constexpr ForwardIterator                         // constexpr in C++20
+  upper_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
+
+  template <class ForwardIterator, class T>
+  constexpr pair<ForwardIterator, ForwardIterator>  // constexpr in C++20
+  equal_range(ForwardIterator first, ForwardIterator last, const T& value);
+
+  template <class ForwardIterator, class T, class Compare>
+  constexpr pair<ForwardIterator, ForwardIterator>  // constexpr in C++20
+  equal_range(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
+
+  template <class ForwardIterator, class T>
+  constexpr bool                                    // constexpr in C++20
+  binary_search(ForwardIterator first, ForwardIterator last, const T& value);
+
+  template <class ForwardIterator, class T, class Compare>
+  constexpr bool                                    // constexpr in C++20
+  binary_search(ForwardIterator first, ForwardIterator last, const T& value, Compare comp);
+
+  template <class InputIterator1, class InputIterator2, class OutputIterator>
+  OutputIterator
+  merge(InputIterator1 first1, InputIterator1 last1,
+        InputIterator2 first2, InputIterator2 last2, OutputIterator result);
+
+  template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+  OutputIterator
+  merge(InputIterator1 first1, InputIterator1 last1,
+        InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
+
+  template <class BidirectionalIterator>
+  void
+  inplace_merge(BidirectionalIterator first, BidirectionalIterator middle, BidirectionalIterator last);
+
+  template <class BidirectionalIterator, class Compare>
+  void
+  inplace_merge(BidirectionalIterator first, BidirectionalIterator middle, BidirectionalIterator last, Compare comp);
+
+  template <class InputIterator1, class InputIterator2>
+  constexpr bool                                    // constexpr in C++20
+  includes(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2);
+
+  template <class InputIterator1, class InputIterator2, class Compare>
+  constexpr bool                                    // constexpr in C++20
+  includes(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare comp);
+
+  template <class InputIterator1, class InputIterator2, class OutputIterator>
+  OutputIterator
+  set_union(InputIterator1 first1, InputIterator1 last1,
+            InputIterator2 first2, InputIterator2 last2, OutputIterator result);
+
+  template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+  OutputIterator
+  set_union(InputIterator1 first1, InputIterator1 last1,
+            InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
+
+  template <class InputIterator1, class InputIterator2, class OutputIterator>
+  constexpr OutputIterator                         // constexpr in C++20
+  set_intersection(InputIterator1 first1, InputIterator1 last1,
                    InputIterator2 first2, InputIterator2 last2, OutputIterator result);
 
-template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
-    OutputIterator
-    set_difference(InputIterator1 first1, InputIterator1 last1,
+  template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+  constexpr OutputIterator                         // constexpr in C++20
+  set_intersection(InputIterator1 first1, InputIterator1 last1,
                    InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
 
-template <class InputIterator1, class InputIterator2, class OutputIterator>
-    OutputIterator
-    set_symmetric_difference(InputIterator1 first1, InputIterator1 last1,
-                             InputIterator2 first2, InputIterator2 last2, OutputIterator result);
+  template <class InputIterator1, class InputIterator2, class OutputIterator>
+  OutputIterator
+  set_difference(InputIterator1 first1, InputIterator1 last1,
+                 InputIterator2 first2, InputIterator2 last2, OutputIterator result);
 
-template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
-    OutputIterator
-    set_symmetric_difference(InputIterator1 first1, InputIterator1 last1,
-                             InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
+  template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+  OutputIterator
+  set_difference(InputIterator1 first1, InputIterator1 last1,
+                 InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
 
-template <class RandomAccessIterator>
-    void
-    push_heap(RandomAccessIterator first, RandomAccessIterator last);
+  template <class InputIterator1, class InputIterator2, class OutputIterator>
+  OutputIterator
+  set_symmetric_difference(InputIterator1 first1, InputIterator1 last1,
+                           InputIterator2 first2, InputIterator2 last2, OutputIterator result);
 
-template <class RandomAccessIterator, class Compare>
-    void
-    push_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+  template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+  OutputIterator
+  set_symmetric_difference(InputIterator1 first1, InputIterator1 last1,
+                           InputIterator2 first2, InputIterator2 last2, OutputIterator result, Compare comp);
 
-template <class RandomAccessIterator>
-    void
-    pop_heap(RandomAccessIterator first, RandomAccessIterator last);
+  template <class RandomAccessIterator>
+  void
+  push_heap(RandomAccessIterator first, RandomAccessIterator last);
 
-template <class RandomAccessIterator, class Compare>
-    void
-    pop_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+  template <class RandomAccessIterator, class Compare>
+  void
+  push_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
 
-template <class RandomAccessIterator>
-    void
-    make_heap(RandomAccessIterator first, RandomAccessIterator last);
+  template <class RandomAccessIterator>
+  void
+  pop_heap(RandomAccessIterator first, RandomAccessIterator last);
 
-template <class RandomAccessIterator, class Compare>
-    void
-    make_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+  template <class RandomAccessIterator, class Compare>
+  void
+  pop_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
 
-template <class RandomAccessIterator>
-    void
-    sort_heap(RandomAccessIterator first, RandomAccessIterator last);
+  template <class RandomAccessIterator>
+  void
+  make_heap(RandomAccessIterator first, RandomAccessIterator last);
 
-template <class RandomAccessIterator, class Compare>
-    void
-    sort_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+  template <class RandomAccessIterator, class Compare>
+  void
+  make_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
 
-template <class RandomAccessIterator>
-    constexpr bool   // constexpr in C++20
-    is_heap(RandomAccessIterator first, RandomAccessiterator last);
+  template <class RandomAccessIterator>
+  void
+  sort_heap(RandomAccessIterator first, RandomAccessIterator last);
 
-template <class RandomAccessIterator, class Compare>
-    constexpr bool   // constexpr in C++20
-    is_heap(RandomAccessIterator first, RandomAccessiterator last, Compare comp);
+  template <class RandomAccessIterator, class Compare>
+  void
+  sort_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp);
 
-template <class RandomAccessIterator>
-    constexpr RandomAccessIterator   // constexpr in C++20
-    is_heap_until(RandomAccessIterator first, RandomAccessiterator last);
+  template <class RandomAccessIterator>
+  constexpr bool   // constexpr in C++20
+  is_heap(RandomAccessIterator first, RandomAccessiterator last);
 
-template <class RandomAccessIterator, class Compare>
-    constexpr RandomAccessIterator   // constexpr in C++20
-    is_heap_until(RandomAccessIterator first, RandomAccessiterator last, Compare comp);
+  template <class RandomAccessIterator, class Compare>
+  constexpr bool   // constexpr in C++20
+  is_heap(RandomAccessIterator first, RandomAccessiterator last, Compare comp);
 
-template <class ForwardIterator>
-    ForwardIterator
-    min_element(ForwardIterator first, ForwardIterator last);  // constexpr in C++14
+  template <class RandomAccessIterator>
+  constexpr RandomAccessIterator   // constexpr in C++20
+  is_heap_until(RandomAccessIterator first, RandomAccessiterator last);
 
-template <class ForwardIterator, class Compare>
-    ForwardIterator
-    min_element(ForwardIterator first, ForwardIterator last, Compare comp);  // constexpr in C++14
+  template <class RandomAccessIterator, class Compare>
+  constexpr RandomAccessIterator   // constexpr in C++20
+  is_heap_until(RandomAccessIterator first, RandomAccessiterator last, Compare comp);
 
-template <class T>
-    const T&
-    min(const T& a, const T& b);  // constexpr in C++14
+  template <class ForwardIterator>
+  ForwardIterator
+  min_element(ForwardIterator first, ForwardIterator last);  // constexpr in C++14
 
-template <class T, class Compare>
-    const T&
-    min(const T& a, const T& b, Compare comp);  // constexpr in C++14
+  template <class ForwardIterator, class Compare>
+  ForwardIterator
+  min_element(ForwardIterator first, ForwardIterator last, Compare comp);  // constexpr in C++14
 
-template<class T>
-    T
-    min(initializer_list<T> t);  // constexpr in C++14
+  template <class T>
+  const T&
+  min(const T& a, const T& b);  // constexpr in C++14
 
-template<class T, class Compare>
-    T
-    min(initializer_list<T> t, Compare comp);  // constexpr in C++14
+  template <class T, class Compare>
+  const T&
+  min(const T& a, const T& b, Compare comp);  // constexpr in C++14
 
-template<class T>
-    constexpr const T& clamp( const T& v, const T& lo, const T& hi );               // C++17
+  template<class T>
+  T
+  min(initializer_list<T> t);  // constexpr in C++14
 
-template<class T, class Compare>
-    constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp ); // C++17
+  template<class T, class Compare>
+  T
+  min(initializer_list<T> t, Compare comp);  // constexpr in C++14
 
-template <class ForwardIterator>
-    ForwardIterator
-    max_element(ForwardIterator first, ForwardIterator last);  // constexpr in C++14
+  template<class T>
+  constexpr const T& clamp( const T& v, const T& lo, const T& hi );               // C++17
 
-template <class ForwardIterator, class Compare>
-    ForwardIterator
-    max_element(ForwardIterator first, ForwardIterator last, Compare comp);  // constexpr in C++14
+  template<class T, class Compare>
+  constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp ); // C++17
 
-template <class T>
-    const T&
-    max(const T& a, const T& b); // constexpr in C++14
+  template <class ForwardIterator>
+  ForwardIterator
+  max_element(ForwardIterator first, ForwardIterator last);  // constexpr in C++14
 
-template <class T, class Compare>
-    const T&
-    max(const T& a, const T& b, Compare comp);  // constexpr in C++14
+  template <class ForwardIterator, class Compare>
+  ForwardIterator
+  max_element(ForwardIterator first, ForwardIterator last, Compare comp);  // constexpr in C++14
 
-template<class T>
-    T
-    max(initializer_list<T> t);  // constexpr in C++14
+  template <class T>
+  const T&
+  max(const T& a, const T& b); // constexpr in C++14
 
-template<class T, class Compare>
-    T
-    max(initializer_list<T> t, Compare comp);  // constexpr in C++14
+  template <class T, class Compare>
+  const T&
+  max(const T& a, const T& b, Compare comp);  // constexpr in C++14
 
-template<class ForwardIterator>
-    pair<ForwardIterator, ForwardIterator>
-    minmax_element(ForwardIterator first, ForwardIterator last);   // constexpr in C++14
+  template<class T>
+  T
+  max(initializer_list<T> t);  // constexpr in C++14
 
-template<class ForwardIterator, class Compare>
-    pair<ForwardIterator, ForwardIterator>
-    minmax_element(ForwardIterator first, ForwardIterator last, Compare comp);   // constexpr in C++14
+  template<class T, class Compare>
+  T
+  max(initializer_list<T> t, Compare comp);  // constexpr in C++14
 
-template<class T>
-    pair<const T&, const T&>
-    minmax(const T& a, const T& b);  // constexpr in C++14
+  template<class ForwardIterator>
+  pair<ForwardIterator, ForwardIterator>
+  minmax_element(ForwardIterator first, ForwardIterator last);   // constexpr in C++14
 
-template<class T, class Compare>
-    pair<const T&, const T&>
-    minmax(const T& a, const T& b, Compare comp);  // constexpr in C++14
+  template<class ForwardIterator, class Compare>
+  pair<ForwardIterator, ForwardIterator>
+  minmax_element(ForwardIterator first, ForwardIterator last, Compare comp);   // constexpr in C++14
 
-template<class T>
-    pair<T, T>
-    minmax(initializer_list<T> t);  // constexpr in C++14
+  template<class T>
+  pair<const T&, const T&>
+  minmax(const T& a, const T& b);  // constexpr in C++14
 
-template<class T, class Compare>
-    pair<T, T>
-    minmax(initializer_list<T> t, Compare comp);  // constexpr in C++14
+  template<class T, class Compare>
+  pair<const T&, const T&>
+  minmax(const T& a, const T& b, Compare comp);  // constexpr in C++14
 
-template <class InputIterator1, class InputIterator2>
-    constexpr bool     // constexpr in C++20
-    lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2);
+  template<class T>
+  pair<T, T>
+  minmax(initializer_list<T> t);  // constexpr in C++14
 
-template <class InputIterator1, class InputIterator2, class Compare>
-    constexpr bool     // constexpr in C++20
-    lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
-                            InputIterator2 first2, InputIterator2 last2, Compare comp);
+  template<class T, class Compare>
+  pair<T, T>
+  minmax(initializer_list<T> t, Compare comp);  // constexpr in C++14
 
-template <class BidirectionalIterator>
-    bool
-    next_permutation(BidirectionalIterator first, BidirectionalIterator last);
+  template <class InputIterator1, class InputIterator2>
+  constexpr bool     // constexpr in C++20
+  lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2);
 
-template <class BidirectionalIterator, class Compare>
-    bool
-    next_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp);
+  template <class InputIterator1, class InputIterator2, class Compare>
+  constexpr bool     // constexpr in C++20
+  lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
+                          InputIterator2 first2, InputIterator2 last2, Compare comp);
 
-template <class BidirectionalIterator>
-    bool
-    prev_permutation(BidirectionalIterator first, BidirectionalIterator last);
+  template <class BidirectionalIterator>
+  bool
+  next_permutation(BidirectionalIterator first, BidirectionalIterator last);
 
-template <class BidirectionalIterator, class Compare>
-    bool
-    prev_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp);
+  template <class BidirectionalIterator, class Compare>
+  bool
+  next_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp);
 
-}  // std
+  template <class BidirectionalIterator>
+  bool
+  prev_permutation(BidirectionalIterator first, BidirectionalIterator last);
 
-*/
+  template <class BidirectionalIterator, class Compare>
+  bool
+  prev_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp);
+
+} // std
+#endif // algorithm_synopsis
 
 #include <__config>
 #include <initializer_list>
@@ -649,14 +644,6 @@ template <class BidirectionalIterator, class Compare>
 
 #include <__debug>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 // I'd like to replace these with _VSTD::equal_to<void>, but can't because:
@@ -665,67 +652,67 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 template <class _T1, class _T2 = _T1>
 struct __equal_to
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11 bool operator()(const _T1& __x, const _T1& __y) const {return __x == __y;}
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11 bool operator()(const _T1& __x, const _T2& __y) const {return __x == __y;}
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11 bool operator()(const _T2& __x, const _T1& __y) const {return __x == __y;}
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11 bool operator()(const _T2& __x, const _T2& __y) const {return __x == __y;}
+    _LIBCPP_INLINE_VISIBILITY constexpr bool operator()(const _T1& __x, const _T1& __y) const {return __x == __y;}
+    _LIBCPP_INLINE_VISIBILITY constexpr bool operator()(const _T1& __x, const _T2& __y) const {return __x == __y;}
+    _LIBCPP_INLINE_VISIBILITY constexpr bool operator()(const _T2& __x, const _T1& __y) const {return __x == __y;}
+    _LIBCPP_INLINE_VISIBILITY constexpr bool operator()(const _T2& __x, const _T2& __y) const {return __x == __y;}
 };
 
 template <class _T1>
 struct __equal_to<_T1, _T1>
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T1& __y) const {return __x == __y;}
 };
 
 template <class _T1>
 struct __equal_to<const _T1, _T1>
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T1& __y) const {return __x == __y;}
 };
 
 template <class _T1>
 struct __equal_to<_T1, const _T1>
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T1& __y) const {return __x == __y;}
 };
 
 template <class _T1, class _T2 = _T1>
 struct __less
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T1& __y) const {return __x < __y;}
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T2& __y) const {return __x < __y;}
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T2& __x, const _T1& __y) const {return __x < __y;}
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T2& __x, const _T2& __y) const {return __x < __y;}
 };
 
 template <class _T1>
 struct __less<_T1, _T1>
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T1& __y) const {return __x < __y;}
 };
 
 template <class _T1>
 struct __less<const _T1, _T1>
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T1& __y) const {return __x < __y;}
 };
 
 template <class _T1>
 struct __less<_T1, const _T1>
 {
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     bool operator()(const _T1& __x, const _T1& __y) const {return __x < __y;}
 };
 
@@ -752,7 +739,7 @@ public:
 // Perform division by two quickly for positive integers (llvm.org/PR39129)
 
 template <typename _Integral>
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     is_integral<_Integral>::value,
@@ -764,7 +751,7 @@ __half_positive(_Integral __value)
 }
 
 template <typename _Tp>
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
 <
     !is_integral<_Tp>::value,
@@ -781,11 +768,11 @@ template <class _Compare>
 struct __debug_less
 {
     _Compare &__comp_;
-    _LIBCPP_CONSTEXPR_AFTER_CXX17
+    constexpr
     __debug_less(_Compare& __c) : __comp_(__c) {}
 
     template <class _Tp, class _Up>
-    _LIBCPP_CONSTEXPR_AFTER_CXX17
+    constexpr
     bool operator()(const _Tp& __x,  const _Up& __y)
     {
         bool __r = __comp_(__x, __y);
@@ -795,7 +782,7 @@ struct __debug_less
     }
 
     template <class _Tp, class _Up>
-    _LIBCPP_CONSTEXPR_AFTER_CXX17
+    constexpr
     bool operator()(_Tp& __x,  _Up& __y)
     {
         bool __r = __comp_(__x, __y);
@@ -805,7 +792,7 @@ struct __debug_less
     }
 
     template <class _LHS, class _RHS>
-    _LIBCPP_CONSTEXPR_AFTER_CXX17
+    constexpr
     inline _LIBCPP_INLINE_VISIBILITY
     decltype((void)_VSTD::declval<_Compare&>()(
         _VSTD::declval<_LHS &>(), _VSTD::declval<_RHS &>()))
@@ -815,7 +802,7 @@ struct __debug_less
     }
 
     template <class _LHS, class _RHS>
-    _LIBCPP_CONSTEXPR_AFTER_CXX17
+    constexpr
     inline _LIBCPP_INLINE_VISIBILITY
     void __do_compare_assert(long, _LHS &, _RHS &) {}
 };
@@ -837,7 +824,7 @@ struct __comp_ref_type {
 
 template <class _InputIterator, class _Predicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 all_of(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 {
@@ -851,7 +838,7 @@ all_of(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 
 template <class _InputIterator, class _Predicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 any_of(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 {
@@ -865,7 +852,7 @@ any_of(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 
 template <class _InputIterator, class _Predicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 none_of(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 {
@@ -878,7 +865,7 @@ none_of(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 // for_each
 
 template <class _InputIterator, class _Function>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _Function
 for_each(_InputIterator __first, _InputIterator __last, _Function __f)
 {
@@ -891,7 +878,7 @@ for_each(_InputIterator __first, _InputIterator __last, _Function __f)
 // for_each_n
 
 template <class _InputIterator, class _Size, class _Function>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _InputIterator
 for_each_n(_InputIterator __first, _Size __orig_n, _Function __f)
 {
@@ -911,7 +898,7 @@ for_each_n(_InputIterator __first, _Size __orig_n, _Function __f)
 
 template <class _InputIterator, class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _InputIterator
 find(_InputIterator __first, _InputIterator __last, const _Tp& __value_)
 {
@@ -925,7 +912,7 @@ find(_InputIterator __first, _InputIterator __last, const _Tp& __value_)
 
 template <class _InputIterator, class _Predicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _InputIterator
 find_if(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 {
@@ -939,7 +926,7 @@ find_if(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 
 template<class _InputIterator, class _Predicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _InputIterator
 find_if_not(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 {
@@ -952,7 +939,7 @@ find_if_not(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 // find_end
 
 template <class _BinaryPredicate, class _ForwardIterator1, class _ForwardIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator1
+constexpr _ForwardIterator1
 __find_end(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
            _ForwardIterator2 __first2, _ForwardIterator2 __last2, _BinaryPredicate __pred,
            forward_iterator_tag, forward_iterator_tag)
@@ -994,7 +981,7 @@ __find_end(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 }
 
 template <class _BinaryPredicate, class _BidirectionalIterator1, class _BidirectionalIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _BidirectionalIterator1
+constexpr _BidirectionalIterator1
 __find_end(_BidirectionalIterator1 __first1, _BidirectionalIterator1 __last1,
            _BidirectionalIterator2 __first2, _BidirectionalIterator2 __last2, _BinaryPredicate __pred,
            bidirectional_iterator_tag, bidirectional_iterator_tag)
@@ -1033,7 +1020,7 @@ __find_end(_BidirectionalIterator1 __first1, _BidirectionalIterator1 __last1,
 }
 
 template <class _BinaryPredicate, class _RandomAccessIterator1, class _RandomAccessIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX11 _RandomAccessIterator1
+constexpr _RandomAccessIterator1
 __find_end(_RandomAccessIterator1 __first1, _RandomAccessIterator1 __last1,
            _RandomAccessIterator2 __first2, _RandomAccessIterator2 __last2, _BinaryPredicate __pred,
            random_access_iterator_tag, random_access_iterator_tag)
@@ -1075,7 +1062,7 @@ __find_end(_RandomAccessIterator1 __first1, _RandomAccessIterator1 __last1,
 
 template <class _ForwardIterator1, class _ForwardIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator1
 find_end(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
          _ForwardIterator2 __first2, _ForwardIterator2 __last2, _BinaryPredicate __pred)
@@ -1088,7 +1075,7 @@ find_end(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template <class _ForwardIterator1, class _ForwardIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator1
 find_end(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
          _ForwardIterator2 __first2, _ForwardIterator2 __last2)
@@ -1101,7 +1088,7 @@ find_end(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 // find_first_of
 
 template <class _ForwardIterator1, class _ForwardIterator2, class _BinaryPredicate>
-_LIBCPP_CONSTEXPR_AFTER_CXX11 _ForwardIterator1
+constexpr _ForwardIterator1
 __find_first_of_ce(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
               _ForwardIterator2 __first2, _ForwardIterator2 __last2, _BinaryPredicate __pred)
 {
@@ -1115,7 +1102,7 @@ __find_first_of_ce(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template <class _ForwardIterator1, class _ForwardIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator1
 find_first_of(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
               _ForwardIterator2 __first2, _ForwardIterator2 __last2, _BinaryPredicate __pred)
@@ -1125,7 +1112,7 @@ find_first_of(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template <class _ForwardIterator1, class _ForwardIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator1
 find_first_of(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
               _ForwardIterator2 __first2, _ForwardIterator2 __last2)
@@ -1139,7 +1126,7 @@ find_first_of(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template <class _ForwardIterator, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 adjacent_find(_ForwardIterator __first, _ForwardIterator __last, _BinaryPredicate __pred)
 {
@@ -1158,7 +1145,7 @@ adjacent_find(_ForwardIterator __first, _ForwardIterator __last, _BinaryPredicat
 
 template <class _ForwardIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 adjacent_find(_ForwardIterator __first, _ForwardIterator __last)
 {
@@ -1170,7 +1157,7 @@ adjacent_find(_ForwardIterator __first, _ForwardIterator __last)
 
 template <class _InputIterator, class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 typename iterator_traits<_InputIterator>::difference_type
 count(_InputIterator __first, _InputIterator __last, const _Tp& __value_)
 {
@@ -1185,7 +1172,7 @@ count(_InputIterator __first, _InputIterator __last, const _Tp& __value_)
 
 template <class _InputIterator, class _Predicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 typename iterator_traits<_InputIterator>::difference_type
 count_if(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 {
@@ -1200,7 +1187,7 @@ count_if(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 
 template <class _InputIterator1, class _InputIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_InputIterator1, _InputIterator2>
 mismatch(_InputIterator1 __first1, _InputIterator1 __last1,
          _InputIterator2 __first2, _BinaryPredicate __pred)
@@ -1213,7 +1200,7 @@ mismatch(_InputIterator1 __first1, _InputIterator1 __last1,
 
 template <class _InputIterator1, class _InputIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_InputIterator1, _InputIterator2>
 mismatch(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2)
 {
@@ -1225,7 +1212,7 @@ mismatch(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __fi
 #if _LIBCPP_STD_VER > 11
 template <class _InputIterator1, class _InputIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_InputIterator1, _InputIterator2>
 mismatch(_InputIterator1 __first1, _InputIterator1 __last1,
          _InputIterator2 __first2, _InputIterator2 __last2,
@@ -1239,7 +1226,7 @@ mismatch(_InputIterator1 __first1, _InputIterator1 __last1,
 
 template <class _InputIterator1, class _InputIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_InputIterator1, _InputIterator2>
 mismatch(_InputIterator1 __first1, _InputIterator1 __last1,
          _InputIterator2 __first2, _InputIterator2 __last2)
@@ -1254,7 +1241,7 @@ mismatch(_InputIterator1 __first1, _InputIterator1 __last1,
 
 template <class _InputIterator1, class _InputIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 equal(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _BinaryPredicate __pred)
 {
@@ -1266,7 +1253,7 @@ equal(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first
 
 template <class _InputIterator1, class _InputIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 equal(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2)
 {
@@ -1277,7 +1264,7 @@ equal(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first
 
 #if _LIBCPP_STD_VER > 11
 template <class _BinaryPredicate, class _InputIterator1, class _InputIterator2>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 __equal(_InputIterator1 __first1, _InputIterator1 __last1,
         _InputIterator2 __first2, _InputIterator2 __last2, _BinaryPredicate __pred,
@@ -1290,7 +1277,7 @@ __equal(_InputIterator1 __first1, _InputIterator1 __last1,
 }
 
 template <class _BinaryPredicate, class _RandomAccessIterator1, class _RandomAccessIterator2>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 __equal(_RandomAccessIterator1 __first1, _RandomAccessIterator1 __last1,
         _RandomAccessIterator2 __first2, _RandomAccessIterator2 __last2, _BinaryPredicate __pred,
@@ -1305,7 +1292,7 @@ __equal(_RandomAccessIterator1 __first1, _RandomAccessIterator1 __last1,
 
 template <class _InputIterator1, class _InputIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 equal(_InputIterator1 __first1, _InputIterator1 __last1,
       _InputIterator2 __first2, _InputIterator2 __last2, _BinaryPredicate __pred )
@@ -1318,7 +1305,7 @@ equal(_InputIterator1 __first1, _InputIterator1 __last1,
 
 template <class _InputIterator1, class _InputIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 equal(_InputIterator1 __first1, _InputIterator1 __last1,
       _InputIterator2 __first2, _InputIterator2 __last2)
@@ -1334,7 +1321,7 @@ equal(_InputIterator1 __first1, _InputIterator1 __last1,
 // is_permutation
 
 template<class _ForwardIterator1, class _ForwardIterator2, class _BinaryPredicate>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX17 bool
+_LIBCPP_NODISCARD_EXT constexpr bool
 is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
                _ForwardIterator2 __first2, _BinaryPredicate __pred)
 {
@@ -1382,7 +1369,7 @@ is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template<class _ForwardIterator1, class _ForwardIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
                _ForwardIterator2 __first2)
@@ -1394,7 +1381,7 @@ is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 #if _LIBCPP_STD_VER > 11
 template<class _BinaryPredicate, class _ForwardIterator1, class _ForwardIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 bool
+constexpr bool
 __is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
                  _ForwardIterator2 __first2, _ForwardIterator2 __last2,
                  _BinaryPredicate __pred,
@@ -1447,7 +1434,7 @@ __is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 }
 
 template<class _BinaryPredicate, class _RandomAccessIterator1, class _RandomAccessIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 bool
+constexpr bool
 __is_permutation(_RandomAccessIterator1 __first1, _RandomAccessIterator2 __last1,
                _RandomAccessIterator1 __first2, _RandomAccessIterator2 __last2,
                _BinaryPredicate __pred,
@@ -1462,7 +1449,7 @@ __is_permutation(_RandomAccessIterator1 __first1, _RandomAccessIterator2 __last1
 
 template<class _ForwardIterator1, class _ForwardIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
                _ForwardIterator2 __first2, _ForwardIterator2 __last2,
@@ -1476,7 +1463,7 @@ is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template<class _ForwardIterator1, class _ForwardIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
                _ForwardIterator2 __first2, _ForwardIterator2 __last2)
@@ -1495,7 +1482,7 @@ is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template <class _ForwardIterator1, class _ForwardIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator1
 search(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
        _ForwardIterator2 __first2, _ForwardIterator2 __last2, _BinaryPredicate __pred)
@@ -1509,7 +1496,7 @@ search(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 template <class _ForwardIterator1, class _ForwardIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator1
 search(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
        _ForwardIterator2 __first2, _ForwardIterator2 __last2)
@@ -1522,7 +1509,7 @@ search(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 
 #if _LIBCPP_STD_VER > 14
 template <class _ForwardIterator, class _Searcher>
-_LIBCPP_NODISCARD_EXT _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_NODISCARD_EXT _LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator search(_ForwardIterator __f, _ForwardIterator __l, const _Searcher &__s)
 { return __s(__f, __l).first; }
 #endif
@@ -1530,7 +1517,7 @@ _ForwardIterator search(_ForwardIterator __f, _ForwardIterator __l, const _Searc
 // search_n
 
 template <class _BinaryPredicate, class _ForwardIterator, class _Size, class _Tp>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+constexpr _ForwardIterator
 __search_n(_ForwardIterator __first, _ForwardIterator __last,
            _Size __count, const _Tp& __value_, _BinaryPredicate __pred, forward_iterator_tag)
 {
@@ -1567,7 +1554,7 @@ __search_n(_ForwardIterator __first, _ForwardIterator __last,
 }
 
 template <class _BinaryPredicate, class _RandomAccessIterator, class _Size, class _Tp>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _RandomAccessIterator
+constexpr _RandomAccessIterator
 __search_n(_RandomAccessIterator __first, _RandomAccessIterator __last,
            _Size __count, const _Tp& __value_, _BinaryPredicate __pred, random_access_iterator_tag)
 {
@@ -1608,7 +1595,7 @@ __search_n(_RandomAccessIterator __first, _RandomAccessIterator __last,
 
 template <class _ForwardIterator, class _Size, class _Tp, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 search_n(_ForwardIterator __first, _ForwardIterator __last,
          _Size __count, const _Tp& __value_, _BinaryPredicate __pred)
@@ -1620,7 +1607,7 @@ search_n(_ForwardIterator __first, _ForwardIterator __last,
 
 template <class _ForwardIterator, class _Size, class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 search_n(_ForwardIterator __first, _ForwardIterator __last, _Size __count, const _Tp& __value_)
 {
@@ -1912,7 +1899,7 @@ move_backward(_BidirectionalIterator1 __first, _BidirectionalIterator1 __last,
 // transform
 
 template <class _InputIterator, class _OutputIterator, class _UnaryOperation>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 transform(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _UnaryOperation __op)
 {
@@ -1922,7 +1909,7 @@ transform(_InputIterator __first, _InputIterator __last, _OutputIterator __resul
 }
 
 template <class _InputIterator1, class _InputIterator2, class _OutputIterator, class _BinaryOperation>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 transform(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2,
           _OutputIterator __result, _BinaryOperation __binary_op)
@@ -1935,7 +1922,7 @@ transform(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __f
 // replace
 
 template <class _ForwardIterator, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 void
 replace(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __old_value, const _Tp& __new_value)
 {
@@ -1947,7 +1934,7 @@ replace(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __old_valu
 // replace_if
 
 template <class _ForwardIterator, class _Predicate, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 void
 replace_if(_ForwardIterator __first, _ForwardIterator __last, _Predicate __pred, const _Tp& __new_value)
 {
@@ -1959,7 +1946,7 @@ replace_if(_ForwardIterator __first, _ForwardIterator __last, _Predicate __pred,
 // replace_copy
 
 template <class _InputIterator, class _OutputIterator, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 replace_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __result,
              const _Tp& __old_value, const _Tp& __new_value)
@@ -1975,7 +1962,7 @@ replace_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __re
 // replace_copy_if
 
 template <class _InputIterator, class _OutputIterator, class _Predicate, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 replace_copy_if(_InputIterator __first, _InputIterator __last, _OutputIterator __result,
                 _Predicate __pred, const _Tp& __new_value)
@@ -1991,7 +1978,7 @@ replace_copy_if(_InputIterator __first, _InputIterator __last, _OutputIterator _
 // fill_n
 
 template <class _OutputIterator, class _Size, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 __fill_n(_OutputIterator __first, _Size __n, const _Tp& __value_)
 {
@@ -2001,7 +1988,7 @@ __fill_n(_OutputIterator __first, _Size __n, const _Tp& __value_)
 }
 
 template <class _OutputIterator, class _Size, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 fill_n(_OutputIterator __first, _Size __n, const _Tp& __value_)
 {
@@ -2011,7 +1998,7 @@ fill_n(_OutputIterator __first, _Size __n, const _Tp& __value_)
 // fill
 
 template <class _ForwardIterator, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 void
 __fill(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, forward_iterator_tag)
 {
@@ -2020,7 +2007,7 @@ __fill(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, f
 }
 
 template <class _RandomAccessIterator, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 void
 __fill(_RandomAccessIterator __first, _RandomAccessIterator __last, const _Tp& __value_, random_access_iterator_tag)
 {
@@ -2028,7 +2015,7 @@ __fill(_RandomAccessIterator __first, _RandomAccessIterator __last, const _Tp& _
 }
 
 template <class _ForwardIterator, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 void
 fill(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 {
@@ -2038,7 +2025,7 @@ fill(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 // generate
 
 template <class _ForwardIterator, class _Generator>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 void
 generate(_ForwardIterator __first, _ForwardIterator __last, _Generator __gen)
 {
@@ -2049,7 +2036,7 @@ generate(_ForwardIterator __first, _ForwardIterator __last, _Generator __gen)
 // generate_n
 
 template <class _OutputIterator, class _Size, class _Generator>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 generate_n(_OutputIterator __first, _Size __orig_n, _Generator __gen)
 {
@@ -2063,7 +2050,7 @@ generate_n(_OutputIterator __first, _Size __orig_n, _Generator __gen)
 // remove
 
 template <class _ForwardIterator, class _Tp>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+_LIBCPP_NODISCARD_EXT constexpr _ForwardIterator
 remove(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 {
     __first = _VSTD::find(__first, __last, __value_);
@@ -2085,7 +2072,7 @@ remove(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 // remove_if
 
 template <class _ForwardIterator, class _Predicate>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+_LIBCPP_NODISCARD_EXT constexpr _ForwardIterator
 remove_if(_ForwardIterator __first, _ForwardIterator __last, _Predicate __pred)
 {
     __first = _VSTD::find_if<_ForwardIterator, typename add_lvalue_reference<_Predicate>::type>
@@ -2108,7 +2095,7 @@ remove_if(_ForwardIterator __first, _ForwardIterator __last, _Predicate __pred)
 // remove_copy
 
 template <class _InputIterator, class _OutputIterator, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 remove_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __result, const _Tp& __value_)
 {
@@ -2126,7 +2113,7 @@ remove_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __res
 // remove_copy_if
 
 template <class _InputIterator, class _OutputIterator, class _Predicate>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 remove_copy_if(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _Predicate __pred)
 {
@@ -2144,7 +2131,7 @@ remove_copy_if(_InputIterator __first, _InputIterator __last, _OutputIterator __
 // unique
 
 template <class _ForwardIterator, class _BinaryPredicate>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+_LIBCPP_NODISCARD_EXT constexpr _ForwardIterator
 unique(_ForwardIterator __first, _ForwardIterator __last, _BinaryPredicate __pred)
 {
     __first = _VSTD::adjacent_find<_ForwardIterator, typename add_lvalue_reference<_BinaryPredicate>::type>
@@ -2164,7 +2151,7 @@ unique(_ForwardIterator __first, _ForwardIterator __last, _BinaryPredicate __pre
 
 template <class _ForwardIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 unique(_ForwardIterator __first, _ForwardIterator __last)
 {
@@ -2175,7 +2162,7 @@ unique(_ForwardIterator __first, _ForwardIterator __last)
 // unique_copy
 
 template <class _BinaryPredicate, class _InputIterator, class _OutputIterator>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _OutputIterator
+constexpr _OutputIterator
 __unique_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _BinaryPredicate __pred,
               input_iterator_tag, output_iterator_tag)
 {
@@ -2198,7 +2185,7 @@ __unique_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __r
 }
 
 template <class _BinaryPredicate, class _ForwardIterator, class _OutputIterator>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _OutputIterator
+constexpr _OutputIterator
 __unique_copy(_ForwardIterator __first, _ForwardIterator __last, _OutputIterator __result, _BinaryPredicate __pred,
               forward_iterator_tag, output_iterator_tag)
 {
@@ -2221,7 +2208,7 @@ __unique_copy(_ForwardIterator __first, _ForwardIterator __last, _OutputIterator
 }
 
 template <class _BinaryPredicate, class _InputIterator, class _ForwardIterator>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+constexpr _ForwardIterator
 __unique_copy(_InputIterator __first, _InputIterator __last, _ForwardIterator __result, _BinaryPredicate __pred,
               input_iterator_tag, forward_iterator_tag)
 {
@@ -2237,7 +2224,7 @@ __unique_copy(_InputIterator __first, _InputIterator __last, _ForwardIterator __
 }
 
 template <class _InputIterator, class _OutputIterator, class _BinaryPredicate>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 unique_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _BinaryPredicate __pred)
 {
@@ -2248,7 +2235,7 @@ unique_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __res
 }
 
 template <class _InputIterator, class _OutputIterator>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 unique_copy(_InputIterator __first, _InputIterator __last, _OutputIterator __result)
 {
@@ -2293,7 +2280,7 @@ reverse(_BidirectionalIterator __first, _BidirectionalIterator __last)
 // reverse_copy
 
 template <class _BidirectionalIterator, class _OutputIterator>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 reverse_copy(_BidirectionalIterator __first, _BidirectionalIterator __last, _OutputIterator __result)
 {
@@ -2488,7 +2475,7 @@ rotate_copy(_ForwardIterator __first, _ForwardIterator __middle, _ForwardIterato
 
 template <class _ForwardIterator, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 min_element(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 {
@@ -2506,7 +2493,7 @@ min_element(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 
 template <class _ForwardIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 min_element(_ForwardIterator __first, _ForwardIterator __last)
 {
@@ -2518,7 +2505,7 @@ min_element(_ForwardIterator __first, _ForwardIterator __last)
 
 template <class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 const _Tp&
 min(const _Tp& __a, const _Tp& __b, _Compare __comp)
 {
@@ -2527,7 +2514,7 @@ min(const _Tp& __a, const _Tp& __b, _Compare __comp)
 
 template <class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 const _Tp&
 min(const _Tp& __a, const _Tp& __b)
 {
@@ -2538,7 +2525,7 @@ min(const _Tp& __a, const _Tp& __b)
 
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _Tp
 min(initializer_list<_Tp> __t, _Compare __comp)
 {
@@ -2547,7 +2534,7 @@ min(initializer_list<_Tp> __t, _Compare __comp)
 
 template<class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _Tp
 min(initializer_list<_Tp> __t)
 {
@@ -2560,7 +2547,7 @@ min(initializer_list<_Tp> __t)
 
 template <class _ForwardIterator, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 max_element(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 {
@@ -2579,7 +2566,7 @@ max_element(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 
 template <class _ForwardIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 max_element(_ForwardIterator __first, _ForwardIterator __last)
 {
@@ -2591,7 +2578,7 @@ max_element(_ForwardIterator __first, _ForwardIterator __last)
 
 template <class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 const _Tp&
 max(const _Tp& __a, const _Tp& __b, _Compare __comp)
 {
@@ -2600,7 +2587,7 @@ max(const _Tp& __a, const _Tp& __b, _Compare __comp)
 
 template <class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 const _Tp&
 max(const _Tp& __a, const _Tp& __b)
 {
@@ -2611,7 +2598,7 @@ max(const _Tp& __a, const _Tp& __b)
 
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _Tp
 max(initializer_list<_Tp> __t, _Compare __comp)
 {
@@ -2620,7 +2607,7 @@ max(initializer_list<_Tp> __t, _Compare __comp)
 
 template<class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 _Tp
 max(initializer_list<_Tp> __t)
 {
@@ -2633,7 +2620,7 @@ max(initializer_list<_Tp> __t)
 // clamp
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 const _Tp&
 clamp(const _Tp& __v, const _Tp& __lo, const _Tp& __hi, _Compare __comp)
 {
@@ -2644,7 +2631,7 @@ clamp(const _Tp& __v, const _Tp& __lo, const _Tp& __hi, _Compare __comp)
 
 template<class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+_LIBCPP_INLINE_VISIBILITY constexpr
 const _Tp&
 clamp(const _Tp& __v, const _Tp& __lo, const _Tp& __hi)
 {
@@ -2655,7 +2642,7 @@ clamp(const _Tp& __v, const _Tp& __lo, const _Tp& __hi)
 // minmax_element
 
 template <class _ForwardIterator, class _Compare>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_NODISCARD_EXT constexpr
 std::pair<_ForwardIterator, _ForwardIterator>
 minmax_element(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 {
@@ -2706,7 +2693,7 @@ minmax_element(_ForwardIterator __first, _ForwardIterator __last, _Compare __com
 
 template <class _ForwardIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 std::pair<_ForwardIterator, _ForwardIterator>
 minmax_element(_ForwardIterator __first, _ForwardIterator __last)
 {
@@ -2718,7 +2705,7 @@ minmax_element(_ForwardIterator __first, _ForwardIterator __last)
 
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<const _Tp&, const _Tp&>
 minmax(const _Tp& __a, const _Tp& __b, _Compare __comp)
 {
@@ -2728,7 +2715,7 @@ minmax(const _Tp& __a, const _Tp& __b, _Compare __comp)
 
 template<class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<const _Tp&, const _Tp&>
 minmax(const _Tp& __a, const _Tp& __b)
 {
@@ -2739,7 +2726,7 @@ minmax(const _Tp& __a, const _Tp& __b)
 
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_Tp, _Tp>
 minmax(initializer_list<_Tp> __t, _Compare __comp)
 {
@@ -2777,7 +2764,7 @@ minmax(initializer_list<_Tp> __t, _Compare __comp)
 
 template<class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_Tp, _Tp>
 minmax(initializer_list<_Tp> __t)
 {
@@ -2846,12 +2833,12 @@ private:
     static const _Working_result_type _Rp = _Engine::_Max - _Engine::_Min
                                           + _Working_result_type(1);
 #else
-    static _LIBCPP_CONSTEXPR const _Working_result_type _Rp = _Engine::max() - _Engine::min()
+    static constexpr const _Working_result_type _Rp = _Engine::max() - _Engine::min()
                                                       + _Working_result_type(1);
 #endif
-    static _LIBCPP_CONSTEXPR const size_t __m = __log2<_Working_result_type, _Rp>::value;
-    static _LIBCPP_CONSTEXPR const size_t _WDt = numeric_limits<_Working_result_type>::digits;
-    static _LIBCPP_CONSTEXPR const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
+    static constexpr const size_t __m = __log2<_Working_result_type, _Rp>::value;
+    static constexpr const size_t _WDt = numeric_limits<_Working_result_type>::digits;
+    static constexpr const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
 
 public:
     // constructors and seeding functions
@@ -3055,8 +3042,8 @@ public:
 
     result_type operator()();
 
-    static _LIBCPP_CONSTEXPR result_type min() {return _Min;}
-    static _LIBCPP_CONSTEXPR result_type max() {return _Max;}
+    static constexpr result_type min() {return _Min;}
+    static constexpr result_type max() {return _Max;}
 
     friend _LIBCPP_FUNC_VIS __rs_default __rs_get();
 };
@@ -3200,7 +3187,7 @@ template<class _RandomAccessIterator, class _UniformRandomNumberGenerator>
 }
 
 template <class _InputIterator, class _Predicate>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX17 bool
+_LIBCPP_NODISCARD_EXT constexpr bool
 is_partitioned(_InputIterator __first, _InputIterator __last, _Predicate __pred)
 {
     for (; __first != __last; ++__first)
@@ -3278,7 +3265,7 @@ partition(_ForwardIterator __first, _ForwardIterator __last, _Predicate __pred)
 
 template <class _InputIterator, class _OutputIterator1,
           class _OutputIterator2, class _Predicate>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 pair<_OutputIterator1, _OutputIterator2>
+constexpr pair<_OutputIterator1, _OutputIterator2>
 partition_copy(_InputIterator __first, _InputIterator __last,
                _OutputIterator1 __out_true, _OutputIterator2 __out_false,
                _Predicate __pred)
@@ -3302,7 +3289,7 @@ partition_copy(_InputIterator __first, _InputIterator __last,
 // partition_point
 
 template<class _ForwardIterator, class _Predicate>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+constexpr _ForwardIterator
 partition_point(_ForwardIterator __first, _ForwardIterator __last, _Predicate __pred)
 {
     typedef typename iterator_traits<_ForwardIterator>::difference_type difference_type;
@@ -3608,7 +3595,7 @@ stable_partition(_ForwardIterator __first, _ForwardIterator __last, _Predicate _
 // is_sorted_until
 
 template <class _ForwardIterator, class _Compare>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+_LIBCPP_NODISCARD_EXT constexpr _ForwardIterator
 is_sorted_until(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 {
     if (__first != __last)
@@ -3626,7 +3613,7 @@ is_sorted_until(_ForwardIterator __first, _ForwardIterator __last, _Compare __co
 
 template<class _ForwardIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 is_sorted_until(_ForwardIterator __first, _ForwardIterator __last)
 {
@@ -3637,7 +3624,7 @@ is_sorted_until(_ForwardIterator __first, _ForwardIterator __last)
 
 template <class _ForwardIterator, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 is_sorted(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 {
@@ -3646,7 +3633,7 @@ is_sorted(_ForwardIterator __first, _ForwardIterator __last, _Compare __comp)
 
 template<class _ForwardIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 is_sorted(_ForwardIterator __first, _ForwardIterator __last)
 {
@@ -4167,7 +4154,7 @@ _LIBCPP_EXTERN_TEMPLATE(_LIBCPP_FUNC_VIS unsigned __sort5<__less<long double>&, 
 // lower_bound
 
 template <class _Compare, class _ForwardIterator, class _Tp>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+constexpr _ForwardIterator
 __lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
     typedef typename iterator_traits<_ForwardIterator>::difference_type difference_type;
@@ -4190,7 +4177,7 @@ __lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __va
 
 template <class _ForwardIterator, class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
@@ -4200,7 +4187,7 @@ lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __valu
 
 template <class _ForwardIterator, class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 {
@@ -4211,7 +4198,7 @@ lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __valu
 // upper_bound
 
 template <class _Compare, class _ForwardIterator, class _Tp>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _ForwardIterator
+constexpr _ForwardIterator
 __upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
     typedef typename iterator_traits<_ForwardIterator>::difference_type difference_type;
@@ -4234,7 +4221,7 @@ __upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __va
 
 template <class _ForwardIterator, class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
@@ -4244,7 +4231,7 @@ upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __valu
 
 template <class _ForwardIterator, class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator
 upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 {
@@ -4255,7 +4242,7 @@ upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __valu
 // equal_range
 
 template <class _Compare, class _ForwardIterator, class _Tp>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 pair<_ForwardIterator, _ForwardIterator>
+constexpr pair<_ForwardIterator, _ForwardIterator>
 __equal_range(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
     typedef typename iterator_traits<_ForwardIterator>::difference_type difference_type;
@@ -4290,7 +4277,7 @@ __equal_range(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __va
 
 template <class _ForwardIterator, class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_ForwardIterator, _ForwardIterator>
 equal_range(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
@@ -4300,7 +4287,7 @@ equal_range(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __valu
 
 template <class _ForwardIterator, class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 pair<_ForwardIterator, _ForwardIterator>
 equal_range(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 {
@@ -4311,7 +4298,7 @@ equal_range(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __valu
 // binary_search
 
 template <class _Compare, class _ForwardIterator, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 __binary_search(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
@@ -4321,7 +4308,7 @@ __binary_search(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __
 
 template <class _ForwardIterator, class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 binary_search(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_, _Compare __comp)
 {
@@ -4331,7 +4318,7 @@ binary_search(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __va
 
 template <class _ForwardIterator, class _Tp>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 binary_search(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __value_)
 {
@@ -4765,7 +4752,7 @@ stable_sort(_RandomAccessIterator __first, _RandomAccessIterator __last)
 // is_heap_until
 
 template <class _RandomAccessIterator, class _Compare>
-_LIBCPP_NODISCARD_EXT _LIBCPP_CONSTEXPR_AFTER_CXX17 _RandomAccessIterator
+_LIBCPP_NODISCARD_EXT constexpr _RandomAccessIterator
 is_heap_until(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
 {
     typedef typename _VSTD::iterator_traits<_RandomAccessIterator>::difference_type difference_type;
@@ -4793,7 +4780,7 @@ is_heap_until(_RandomAccessIterator __first, _RandomAccessIterator __last, _Comp
 
 template<class _RandomAccessIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 _RandomAccessIterator
 is_heap_until(_RandomAccessIterator __first, _RandomAccessIterator __last)
 {
@@ -4804,7 +4791,7 @@ is_heap_until(_RandomAccessIterator __first, _RandomAccessIterator __last)
 
 template <class _RandomAccessIterator, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 is_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
 {
@@ -4813,7 +4800,7 @@ is_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __
 
 template<class _RandomAccessIterator>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 is_heap(_RandomAccessIterator __first, _RandomAccessIterator __last)
 {
@@ -5309,7 +5296,7 @@ nth_element(_RandomAccessIterator __first, _RandomAccessIterator __nth, _RandomA
 // includes
 
 template <class _Compare, class _InputIterator1, class _InputIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 bool
+constexpr bool
 __includes(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _InputIterator2 __last2,
            _Compare __comp)
 {
@@ -5325,7 +5312,7 @@ __includes(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __
 
 template <class _InputIterator1, class _InputIterator2, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 includes(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _InputIterator2 __last2,
          _Compare __comp)
@@ -5336,7 +5323,7 @@ includes(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __fi
 
 template <class _InputIterator1, class _InputIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 includes(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _InputIterator2 __last2)
 {
@@ -5396,7 +5383,7 @@ set_union(_InputIterator1 __first1, _InputIterator1 __last1,
 // set_intersection
 
 template <class _Compare, class _InputIterator1, class _InputIterator2, class _OutputIterator>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 _OutputIterator
+constexpr _OutputIterator
 __set_intersection(_InputIterator1 __first1, _InputIterator1 __last1,
                    _InputIterator2 __first2, _InputIterator2 __last2, _OutputIterator __result, _Compare __comp)
 {
@@ -5419,7 +5406,7 @@ __set_intersection(_InputIterator1 __first1, _InputIterator1 __last1,
 }
 
 template <class _InputIterator1, class _InputIterator2, class _OutputIterator, class _Compare>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 set_intersection(_InputIterator1 __first1, _InputIterator1 __last1,
                  _InputIterator2 __first2, _InputIterator2 __last2, _OutputIterator __result, _Compare __comp)
@@ -5429,7 +5416,7 @@ set_intersection(_InputIterator1 __first1, _InputIterator1 __last1,
 }
 
 template <class _InputIterator1, class _InputIterator2, class _OutputIterator>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _OutputIterator
 set_intersection(_InputIterator1 __first1, _InputIterator1 __last1,
                  _InputIterator2 __first2, _InputIterator2 __last2, _OutputIterator __result)
@@ -5543,7 +5530,7 @@ set_symmetric_difference(_InputIterator1 __first1, _InputIterator1 __last1,
 // lexicographical_compare
 
 template <class _Compare, class _InputIterator1, class _InputIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX17 bool
+constexpr bool
 __lexicographical_compare(_InputIterator1 __first1, _InputIterator1 __last1,
                           _InputIterator2 __first2, _InputIterator2 __last2, _Compare __comp)
 {
@@ -5559,7 +5546,7 @@ __lexicographical_compare(_InputIterator1 __first1, _InputIterator1 __last1,
 
 template <class _InputIterator1, class _InputIterator2, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 lexicographical_compare(_InputIterator1 __first1, _InputIterator1 __last1,
                         _InputIterator2 __first2, _InputIterator2 __last2, _Compare __comp)
@@ -5570,7 +5557,7 @@ lexicographical_compare(_InputIterator1 __first1, _InputIterator1 __last1,
 
 template <class _InputIterator1, class _InputIterator2>
 _LIBCPP_NODISCARD_EXT inline
-_LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_LIBCPP_INLINE_VISIBILITY constexpr
 bool
 lexicographical_compare(_InputIterator1 __first1, _InputIterator1 __last1,
                         _InputIterator2 __first2, _InputIterator2 __last2)
@@ -5675,7 +5662,3 @@ prev_permutation(_BidirectionalIterator __first, _BidirectionalIterator __last)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_ALGORITHM

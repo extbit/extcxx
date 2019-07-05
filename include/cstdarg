@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CSTDARG
-#define _LIBCPP_CSTDARG
+#pragma once
+#pragma GCC system_header
 
 /*
     cstdarg synopsis
@@ -34,14 +33,8 @@ Types:
 #include <__config>
 #include <stdarg.h>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 using ::va_list;
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_CSTDARG

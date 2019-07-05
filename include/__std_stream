@@ -6,23 +6,14 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP___STD_STREAM
-#define _LIBCPP___STD_STREAM
+#pragma once
+#pragma GCC system_header
 
 #include <__config>
 #include <ostream>
 #include <istream>
 #include <__locale>
 #include <cstdio>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -355,7 +346,3 @@ __stdoutbuf<_CharT>::imbue(const locale& __loc)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP___STD_STREAM

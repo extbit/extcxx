@@ -30,7 +30,9 @@ std::string __libcpp_debug_info::what() const {
   msg += __msg_;
   return msg;
 }
-_LIBCPP_NORETURN void __libcpp_abort_debug_function(__libcpp_debug_info const& info) {
+
+[[noreturn]]
+void __libcpp_abort_debug_function(__libcpp_debug_info const& info) {
     std::fprintf(stderr, "%s\n", info.what().c_str());
     std::abort();
 }

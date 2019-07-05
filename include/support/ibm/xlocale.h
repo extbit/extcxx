@@ -6,9 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_SUPPORT_IBM_XLOCALE_H
-#define _LIBCPP_SUPPORT_IBM_XLOCALE_H
 #include <support/ibm/locale_mgmt_aix.h>
 
 #if defined(_AIX)
@@ -267,4 +267,3 @@ int vasprintf(char **strp, const char *fmt, va_list ap)
 }
 #endif
 #endif // defined(_AIX)
-#endif // _LIBCPP_SUPPORT_IBM_XLOCALE_H

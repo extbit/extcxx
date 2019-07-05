@@ -6,18 +6,17 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_ISTREAM
-#define _LIBCPP_ISTREAM
+#if defined(istream_synopsis)
+namespace std {
 
-/*
-    istream synopsis
-
-template <class charT, class traits = char_traits<charT> >
-class basic_istream
+  template <class charT, class traits = char_traits<charT> >
+  class basic_istream
     : virtual public basic_ios<charT,traits>
-{
-public:
+  {
+  public:
     // types (inherited from basic_ios (27.5.4)):
     typedef charT                          char_type;
     typedef traits                         traits_type;
@@ -81,47 +80,47 @@ public:
     pos_type tellg();
     basic_istream& seekg(pos_type);
     basic_istream& seekg(off_type, ios_base::seekdir);
-protected:
+  protected:
     basic_istream(const basic_istream& rhs) = delete;
     basic_istream(basic_istream&& rhs);
     // 27.7.2.1.2 Assign/swap:
     basic_istream& operator=(const basic_istream& rhs) = delete;
     basic_istream& operator=(basic_istream&& rhs);
     void swap(basic_istream& rhs);
-};
+  };
 
-// 27.7.1.2.3 character extraction templates:
-template<class charT, class traits>
+  // 27.7.1.2.3 character extraction templates:
+  template<class charT, class traits>
   basic_istream<charT,traits>& operator>>(basic_istream<charT,traits>&, charT&);
 
-template<class traits>
+  template<class traits>
   basic_istream<char,traits>& operator>>(basic_istream<char,traits>&, unsigned char&);
 
-template<class traits>
+  template<class traits>
   basic_istream<char,traits>& operator>>(basic_istream<char,traits>&, signed char&);
 
-template<class charT, class traits>
+  template<class charT, class traits>
   basic_istream<charT,traits>& operator>>(basic_istream<charT,traits>&, charT*);
 
-template<class traits>
+  template<class traits>
   basic_istream<char,traits>& operator>>(basic_istream<char,traits>&, unsigned char*);
 
-template<class traits>
+  template<class traits>
   basic_istream<char,traits>& operator>>(basic_istream<char,traits>&, signed char*);
 
-template <class charT, class traits>
+  template <class charT, class traits>
   void
   swap(basic_istream<charT, traits>& x, basic_istream<charT, traits>& y);
 
-typedef basic_istream<char> istream;
-typedef basic_istream<wchar_t> wistream;
+  typedef basic_istream<char> istream;
+  typedef basic_istream<wchar_t> wistream;
 
-template <class charT, class traits = char_traits<charT> >
-class basic_iostream :
+  template <class charT, class traits = char_traits<charT> >
+  class basic_iostream :
     public basic_istream<charT,traits>,
     public basic_ostream<charT,traits>
-{
-public:
+  {
+  public:
     // types:
     typedef charT                          char_type;
     typedef traits                         traits_type;
@@ -137,38 +136,29 @@ public:
     // assign/swap
     basic_iostream& operator=(basic_iostream&& rhs);
     void swap(basic_iostream& rhs);
-};
+  };
 
-template <class charT, class traits>
+  template <class charT, class traits>
   void
   swap(basic_iostream<charT, traits>& x, basic_iostream<charT, traits>& y);
 
-typedef basic_iostream<char> iostream;
-typedef basic_iostream<wchar_t> wiostream;
+  typedef basic_iostream<char> iostream;
+  typedef basic_iostream<wchar_t> wiostream;
 
-template <class charT, class traits>
+  template <class charT, class traits>
   basic_istream<charT,traits>&
   ws(basic_istream<charT,traits>& is);
 
-template <class charT, class traits, class T>
+  template <class charT, class traits, class T>
   basic_istream<charT, traits>&
   operator>>(basic_istream<charT, traits>&& is, T& x);
 
 }  // std
-
-*/
+#endif // istream_synopsis
 
 #include <__config>
 #include <version>
 #include <ostream>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -302,8 +292,7 @@ public:
 //    ~sentry() = default;
 
     _LIBCPP_INLINE_VISIBILITY
-        _LIBCPP_EXPLICIT
-        operator bool() const {return __ok_;}
+        explicit operator bool() const {return __ok_;}
 };
 
 template <class _CharT, class _Traits>
@@ -1645,7 +1634,3 @@ _LIBCPP_EXTERN_TEMPLATE(class _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS basic_iostream<ch
 #endif
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_ISTREAM

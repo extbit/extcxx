@@ -6,21 +6,18 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_MUTEX
-#define _LIBCPP_MUTEX
-
-/*
-    mutex synopsis
-
+#if defined(mutex_synopsis)
 namespace std
 {
 
-class mutex
-{
-public:
-     constexpr mutex() noexcept;
-     ~mutex();
+  class mutex
+  {
+  public:
+    constexpr mutex() noexcept;
+    ~mutex();
 
     mutex(const mutex&) = delete;
     mutex& operator=(const mutex&) = delete;
@@ -31,13 +28,13 @@ public:
 
     typedef pthread_mutex_t* native_handle_type;
     native_handle_type native_handle();
-};
+  };
 
-class recursive_mutex
-{
-public:
-     recursive_mutex();
-     ~recursive_mutex();
+  class recursive_mutex
+  {
+  public:
+    recursive_mutex();
+    ~recursive_mutex();
 
     recursive_mutex(const recursive_mutex&) = delete;
     recursive_mutex& operator=(const recursive_mutex&) = delete;
@@ -48,13 +45,13 @@ public:
 
     typedef pthread_mutex_t* native_handle_type;
     native_handle_type native_handle();
-};
+  };
 
-class timed_mutex
-{
-public:
-     timed_mutex();
-     ~timed_mutex();
+  class timed_mutex
+  {
+  public:
+    timed_mutex();
+    ~timed_mutex();
 
     timed_mutex(const timed_mutex&) = delete;
     timed_mutex& operator=(const timed_mutex&) = delete;
@@ -62,17 +59,17 @@ public:
     void lock();
     bool try_lock();
     template <class Rep, class Period>
-        bool try_lock_for(const chrono::duration<Rep, Period>& rel_time);
+    bool try_lock_for(const chrono::duration<Rep, Period>& rel_time);
     template <class Clock, class Duration>
-        bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time);
+    bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time);
     void unlock();
-};
+  };
 
-class recursive_timed_mutex
-{
-public:
-     recursive_timed_mutex();
-     ~recursive_timed_mutex();
+  class recursive_timed_mutex
+  {
+  public:
+    recursive_timed_mutex();
+    ~recursive_timed_mutex();
 
     recursive_timed_mutex(const recursive_timed_mutex&) = delete;
     recursive_timed_mutex& operator=(const recursive_timed_mutex&) = delete;
@@ -80,24 +77,24 @@ public:
     void lock();
     bool try_lock() noexcept;
     template <class Rep, class Period>
-        bool try_lock_for(const chrono::duration<Rep, Period>& rel_time);
+    bool try_lock_for(const chrono::duration<Rep, Period>& rel_time);
     template <class Clock, class Duration>
-        bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time);
+    bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time);
     void unlock();
-};
+  };
 
-struct defer_lock_t {};
-struct try_to_lock_t {};
-struct adopt_lock_t {};
+  struct defer_lock_t {};
+  struct try_to_lock_t {};
+  struct adopt_lock_t {};
 
-inline constexpr defer_lock_t  defer_lock{};
-inline constexpr try_to_lock_t try_to_lock{};
-inline constexpr adopt_lock_t  adopt_lock{};
+  inline constexpr defer_lock_t  defer_lock{};
+  inline constexpr try_to_lock_t try_to_lock{};
+  inline constexpr adopt_lock_t  adopt_lock{};
 
-template <class Mutex>
-class lock_guard
-{
-public:
+  template <class Mutex>
+  class lock_guard
+  {
+  public:
     typedef Mutex mutex_type;
 
     explicit lock_guard(mutex_type& m);
@@ -106,12 +103,12 @@ public:
 
     lock_guard(lock_guard const&) = delete;
     lock_guard& operator=(lock_guard const&) = delete;
-};
+  };
 
-template <class... MutexTypes>
-class scoped_lock // C++17
-{
-public:
+  template <class... MutexTypes>
+  class scoped_lock // C++17
+  {
+  public:
     using mutex_type = Mutex;  // If MutexTypes... consists of the single type Mutex
 
     explicit scoped_lock(MutexTypes&... m);
@@ -119,14 +116,14 @@ public:
     ~scoped_lock();
     scoped_lock(scoped_lock const&) = delete;
     scoped_lock& operator=(scoped_lock const&) = delete;
-private:
+  private:
     tuple<MutexTypes&...> pm; // exposition only
-};
+  };
 
-template <class Mutex>
-class unique_lock
-{
-public:
+  template <class Mutex>
+  class unique_lock
+  {
+  public:
     typedef Mutex mutex_type;
     unique_lock() noexcept;
     explicit unique_lock(mutex_type& m);
@@ -134,9 +131,9 @@ public:
     unique_lock(mutex_type& m, try_to_lock_t);
     unique_lock(mutex_type& m, adopt_lock_t);
     template <class Clock, class Duration>
-        unique_lock(mutex_type& m, const chrono::time_point<Clock, Duration>& abs_time);
+    unique_lock(mutex_type& m, const chrono::time_point<Clock, Duration>& abs_time);
     template <class Rep, class Period>
-        unique_lock(mutex_type& m, const chrono::duration<Rep, Period>& rel_time);
+    unique_lock(mutex_type& m, const chrono::duration<Rep, Period>& rel_time);
     ~unique_lock();
 
     unique_lock(unique_lock const&) = delete;
@@ -149,9 +146,9 @@ public:
     bool try_lock();
 
     template <class Rep, class Period>
-        bool try_lock_for(const chrono::duration<Rep, Period>& rel_time);
+    bool try_lock_for(const chrono::duration<Rep, Period>& rel_time);
     template <class Clock, class Duration>
-        bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time);
+    bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time);
 
     void unlock();
 
@@ -161,30 +158,29 @@ public:
     bool owns_lock() const noexcept;
     explicit operator bool () const noexcept;
     mutex_type* mutex() const noexcept;
-};
+  };
 
-template <class Mutex>
+  template <class Mutex>
   void swap(unique_lock<Mutex>& x, unique_lock<Mutex>& y) noexcept;
 
-template <class L1, class L2, class... L3>
+  template <class L1, class L2, class... L3>
   int try_lock(L1&, L2&, L3&...);
-template <class L1, class L2, class... L3>
+  template <class L1, class L2, class... L3>
   void lock(L1&, L2&, L3&...);
 
-struct once_flag
-{
+  struct once_flag
+  {
     constexpr once_flag() noexcept;
 
     once_flag(const once_flag&) = delete;
     once_flag& operator=(const once_flag&) = delete;
-};
+  };
 
-template<class Callable, class ...Args>
+  template<class Callable, class ...Args>
   void call_once(once_flag& flag, Callable&& func, Args&&... args);
 
 }  // std
-
-*/
+#endif // mutex_synopsis
 
 #include <__config>
 #include <__mutex_base>
@@ -196,14 +192,6 @@ template<class Callable, class ...Args>
 #endif
 #include <version>
 #include <__threading_support>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -223,8 +211,8 @@ private:
 
 public:
     void lock();
-    bool try_lock() _NOEXCEPT;
-    void unlock()  _NOEXCEPT;
+    bool try_lock() noexcept;
+    void unlock()  noexcept;
 
     typedef __libcpp_recursive_mutex_t* native_handle_type;
 
@@ -247,7 +235,7 @@ private:
 
 public:
     void lock();
-    bool try_lock() _NOEXCEPT;
+    bool try_lock() noexcept;
     template <class _Rep, class _Period>
         _LIBCPP_INLINE_VISIBILITY
         bool try_lock_for(const chrono::duration<_Rep, _Period>& __d)
@@ -255,7 +243,7 @@ public:
     template <class _Clock, class _Duration>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         bool try_lock_until(const chrono::time_point<_Clock, _Duration>& __t);
-    void unlock() _NOEXCEPT;
+    void unlock() noexcept;
 };
 
 template <class _Clock, class _Duration>
@@ -291,7 +279,7 @@ private:
 
 public:
     void lock();
-    bool try_lock() _NOEXCEPT;
+    bool try_lock() noexcept;
     template <class _Rep, class _Period>
         _LIBCPP_INLINE_VISIBILITY
         bool try_lock_for(const chrono::duration<_Rep, _Period>& __d)
@@ -299,7 +287,7 @@ public:
     template <class _Clock, class _Duration>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         bool try_lock_until(const chrono::time_point<_Clock, _Duration>& __t);
-    void unlock() _NOEXCEPT;
+    void unlock() noexcept;
 };
 
 template <class _Clock, class _Duration>
@@ -573,8 +561,7 @@ void call_once(once_flag&, const _Callable&);
 struct _LIBCPP_TEMPLATE_VIS once_flag
 {
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR
-        once_flag() _NOEXCEPT : __state_(0) {}
+    constexpr once_flag() noexcept : __state_(0) {}
 
 #if defined(_LIBCPP_ABI_MICROSOFT)
    typedef uintptr_t _State_type;
@@ -705,7 +692,3 @@ call_once(once_flag& __flag, const _Callable& __func)
 #endif  // _LIBCPP_CXX03_LANG
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_MUTEX

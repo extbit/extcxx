@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_FUNCTIONAL_BASE_03
-#define _LIBCPP_FUNCTIONAL_BASE_03
+#pragma once
+#pragma GCC system_header
 
 // manual variadic expansion for <functional>
 
@@ -220,4 +219,3 @@ template <class _Ret, class _Class, class _A0, class _A1, class _A2>
 struct __invoke_return2<_Ret _Class::*, _A0, _A1, _A2> {
     typedef typename __enable_invoke<_Ret _Class::*, _A0>::type type;
 };
-#endif  // _LIBCPP_FUNCTIONAL_BASE_03

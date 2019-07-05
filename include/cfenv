@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CFENV
-#define _LIBCPP_CFENV
+#pragma once
+#pragma GCC system_header
 
 /*
     cfenv synopsis
@@ -55,10 +54,6 @@ int feupdateenv(const fenv_t* envp);
 #include <__config>
 #include <fenv.h>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 using ::fenv_t;
@@ -77,5 +72,3 @@ using ::fesetenv;
 using ::feupdateenv;
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_CFENV

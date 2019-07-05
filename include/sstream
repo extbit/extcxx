@@ -6,18 +6,16 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_SSTREAM
-#define _LIBCPP_SSTREAM
-
-/*
-    sstream synopsis
-
-template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
-class basic_stringbuf
+#if defined(sstream_synopsis)
+namespace std {
+  template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
+  class basic_stringbuf
     : public basic_streambuf<charT, traits>
-{
-public:
+  {
+  public:
     typedef charT                          char_type;
     typedef traits                         traits_type;
     typedef typename traits_type::int_type int_type;
@@ -39,7 +37,7 @@ public:
     basic_string<char_type, traits_type, allocator_type> str() const;
     void str(const basic_string<char_type, traits_type, allocator_type>& s);
 
-protected:
+  protected:
     // 27.8.1.4 Overridden virtual functions:
     virtual int_type underflow();
     virtual int_type pbackfail(int_type c = traits_type::eof());
@@ -49,20 +47,20 @@ protected:
                              ios_base::openmode which = ios_base::in | ios_base::out);
     virtual pos_type seekpos(pos_type sp,
                              ios_base::openmode which = ios_base::in | ios_base::out);
-};
+  };
 
-template <class charT, class traits, class Allocator>
+  template <class charT, class traits, class Allocator>
   void swap(basic_stringbuf<charT, traits, Allocator>& x,
             basic_stringbuf<charT, traits, Allocator>& y);
 
-typedef basic_stringbuf<char>    stringbuf;
-typedef basic_stringbuf<wchar_t> wstringbuf;
+  typedef basic_stringbuf<char>    stringbuf;
+  typedef basic_stringbuf<wchar_t> wstringbuf;
 
-template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
-class basic_istringstream
+  template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
+  class basic_istringstream
     : public basic_istream<charT, traits>
-{
-public:
+  {
+  public:
     typedef charT                          char_type;
     typedef traits                         traits_type;
     typedef typename traits_type::int_type int_type;
@@ -84,20 +82,20 @@ public:
     basic_stringbuf<char_type, traits_type, allocator_type>* rdbuf() const;
     basic_string<char_type, traits_type, allocator_type> str() const;
     void str(const basic_string<char_type, traits_type, allocator_type>& s);
-};
+  };
 
-template <class charT, class traits, class Allocator>
+  template <class charT, class traits, class Allocator>
   void swap(basic_istringstream<charT, traits, Allocator>& x,
             basic_istringstream<charT, traits, Allocator>& y);
 
-typedef basic_istringstream<char>    istringstream;
-typedef basic_istringstream<wchar_t> wistringstream;
+  typedef basic_istringstream<char>    istringstream;
+  typedef basic_istringstream<wchar_t> wistringstream;
 
-template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
-class basic_ostringstream
+  template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
+  class basic_ostringstream
     : public basic_ostream<charT, traits>
-{
-public:
+  {
+  public:
     // types:
     typedef charT                          char_type;
     typedef traits                         traits_type;
@@ -120,20 +118,20 @@ public:
     basic_stringbuf<char_type, traits_type, allocator_type>* rdbuf() const;
     basic_string<char_type, traits_type, allocator_type> str() const;
     void str(const basic_string<char_type, traits_type, allocator_type>& s);
-};
+  };
 
-template <class charT, class traits, class Allocator>
+  template <class charT, class traits, class Allocator>
   void swap(basic_ostringstream<charT, traits, Allocator>& x,
             basic_ostringstream<charT, traits, Allocator>& y);
 
-typedef basic_ostringstream<char>    ostringstream;
-typedef basic_ostringstream<wchar_t> wostringstream;
+  typedef basic_ostringstream<char>    ostringstream;
+  typedef basic_ostringstream<wchar_t> wostringstream;
 
-template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
-class basic_stringstream
+  template <class charT, class traits = char_traits<charT>, class Allocator = allocator<charT> >
+  class basic_stringstream
     : public basic_iostream<charT, traits>
-{
-public:
+  {
+  public:
     // types:
     typedef charT                          char_type;
     typedef traits                         traits_type;
@@ -156,35 +154,24 @@ public:
     basic_stringbuf<char_type, traits_type, allocator_type>* rdbuf() const;
     basic_string<char_type, traits_type, allocator_type> str() const;
     void str(const basic_string<char_type, traits_type, allocator_type>& str);
-};
+  };
 
-template <class charT, class traits, class Allocator>
+  template <class charT, class traits, class Allocator>
   void swap(basic_stringstream<charT, traits, Allocator>& x,
             basic_stringstream<charT, traits, Allocator>& y);
 
-typedef basic_stringstream<char>    stringstream;
-typedef basic_stringstream<wchar_t> wstringstream;
+  typedef basic_stringstream<char>    stringstream;
+  typedef basic_stringstream<wchar_t> wstringstream;
 
 }  // std
-
-*/
+#endif // sstream_synopsis
 
 #include <__config>
 #include <ostream>
 #include <istream>
 #include <string>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
-
 _LIBCPP_BEGIN_NAMESPACE_STD
-
-// basic_stringbuf
 
 template <class _CharT, class _Traits, class _Allocator>
 class _LIBCPP_TEMPLATE_VIS basic_stringbuf
@@ -979,7 +966,3 @@ basic_stringstream<_CharT, _Traits, _Allocator>::str(const string_type& __s)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_SSTREAM

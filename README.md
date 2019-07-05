@@ -4,5 +4,7 @@ extc++ - the standard C++ library for ExtBit is based on [libc++](http://libcxx.
 * To work with the specific [toolchain](https://github.com/extbit/toolchain).
 * No compatibility concerns with other compiler (in order to make the implementation clean & modern).
 * Modern C++ symtax and no macros if possible in any cases.
+  * Avoid preprocessor expansion
+  * Avoid preprocessor inclusion model
 * Built specifically to work for ExtBit.
 * Security first.

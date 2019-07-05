@@ -6,18 +6,14 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
+#pragma GCC system_header
 #if defined(__need_ptrdiff_t) || defined(__need_size_t) || \
     defined(__need_wchar_t) || defined(__need_NULL) || defined(__need_wint_t)
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
+#  include_next <stddef.h>
 
-#include_next <stddef.h>
-
-#elif !defined(_LIBCPP_STDDEF_H)
-#define _LIBCPP_STDDEF_H
+#else
+#pragma once
 
 /*
     stddef.h synopsis
@@ -38,10 +34,6 @@ Types:
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 #include_next <stddef.h>
 
 #ifdef __cplusplus
@@ -59,4 +51,4 @@ typedef long double max_align_t;
 
 #endif
 
-#endif  // _LIBCPP_STDDEF_H
+#endif

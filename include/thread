@@ -6,22 +6,17 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_THREAD
-#define _LIBCPP_THREAD
-
-/*
-
-    thread synopsis
-
+#if defined(thread_synopsis)
 #define __STDCPP_THREADS__ __cplusplus
-
 namespace std
 {
 
-class thread
-{
-public:
+  class thread
+  {
+  public:
     class id;
     typedef pthread_t native_handle_type;
 
@@ -44,45 +39,44 @@ public:
     native_handle_type native_handle();
 
     static unsigned hardware_concurrency() noexcept;
-};
+  };
 
-void swap(thread& x, thread& y) noexcept;
+  void swap(thread& x, thread& y) noexcept;
 
-class thread::id
-{
-public:
+  class thread::id
+  {
+  public:
     id() noexcept;
-};
+  };
 
-bool operator==(thread::id x, thread::id y) noexcept;
-bool operator!=(thread::id x, thread::id y) noexcept;
-bool operator< (thread::id x, thread::id y) noexcept;
-bool operator<=(thread::id x, thread::id y) noexcept;
-bool operator> (thread::id x, thread::id y) noexcept;
-bool operator>=(thread::id x, thread::id y) noexcept;
+  bool operator==(thread::id x, thread::id y) noexcept;
+  bool operator!=(thread::id x, thread::id y) noexcept;
+  bool operator< (thread::id x, thread::id y) noexcept;
+  bool operator<=(thread::id x, thread::id y) noexcept;
+  bool operator> (thread::id x, thread::id y) noexcept;
+  bool operator>=(thread::id x, thread::id y) noexcept;
 
-template<class charT, class traits>
-basic_ostream<charT, traits>&
-operator<<(basic_ostream<charT, traits>& out, thread::id id);
+  template<class charT, class traits>
+  basic_ostream<charT, traits>&
+  operator<<(basic_ostream<charT, traits>& out, thread::id id);
 
-namespace this_thread
-{
+  namespace this_thread
+  {
 
-thread::id get_id() noexcept;
+    thread::id get_id() noexcept;
 
-void yield() noexcept;
+    void yield() noexcept;
 
-template <class Clock, class Duration>
-void sleep_until(const chrono::time_point<Clock, Duration>& abs_time);
+    template <class Clock, class Duration>
+    void sleep_until(const chrono::time_point<Clock, Duration>& abs_time);
 
-template <class Rep, class Period>
-void sleep_for(const chrono::duration<Rep, Period>& rel_time);
+    template <class Rep, class Period>
+    void sleep_for(const chrono::duration<Rep, Period>& rel_time);
 
-}  // this_thread
+  }  // this_thread
 
-}  // std
-
-*/
+} // std
+#endif // thread_synopsis
 
 #include <__config>
 #include <iosfwd>
@@ -99,13 +93,6 @@ void sleep_for(const chrono::duration<Rep, Period>& rel_time);
 #endif
 #include <__threading_support>
 #include <__debug>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
 
 #define __STDCPP_THREADS__ __cplusplus
 
@@ -206,7 +193,7 @@ class _LIBCPP_TYPE_VIS __thread_id;
 namespace this_thread
 {
 
-_LIBCPP_INLINE_VISIBILITY __thread_id get_id() _NOEXCEPT;
+_LIBCPP_INLINE_VISIBILITY __thread_id get_id() noexcept;
 
 }  // this_thread
 
@@ -221,25 +208,25 @@ class _LIBCPP_TEMPLATE_VIS __thread_id
 
 public:
     _LIBCPP_INLINE_VISIBILITY
-    __thread_id() _NOEXCEPT : __id_(0) {}
+    __thread_id() noexcept : __id_(0) {}
 
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator==(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator==(__thread_id __x, __thread_id __y) noexcept
         {return __libcpp_thread_id_equal(__x.__id_, __y.__id_);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator!=(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator!=(__thread_id __x, __thread_id __y) noexcept
         {return !(__x == __y);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator< (__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator< (__thread_id __x, __thread_id __y) noexcept
         {return  __libcpp_thread_id_less(__x.__id_, __y.__id_);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator<=(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator<=(__thread_id __x, __thread_id __y) noexcept
         {return !(__y < __x);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator> (__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator> (__thread_id __x, __thread_id __y) noexcept
         {return   __y < __x ;}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator>=(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator>=(__thread_id __x, __thread_id __y) noexcept
         {return !(__x < __y);}
 
     template<class _CharT, class _Traits>
@@ -253,7 +240,7 @@ private:
     _LIBCPP_INLINE_VISIBILITY
     __thread_id(__libcpp_thread_id __id) : __id_(__id) {}
 
-    friend __thread_id this_thread::get_id() _NOEXCEPT;
+    friend __thread_id this_thread::get_id() noexcept;
     friend class _LIBCPP_TYPE_VIS thread;
     friend struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>;
 };
@@ -263,7 +250,7 @@ struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>
     : public unary_function<__thread_id, size_t>
 {
     _LIBCPP_INLINE_VISIBILITY
-    size_t operator()(__thread_id __v) const _NOEXCEPT
+    size_t operator()(__thread_id __v) const noexcept
     {
         return hash<__libcpp_thread_id>()(__v.__id_);
     }
@@ -274,7 +261,7 @@ namespace this_thread
 
 inline _LIBCPP_INLINE_VISIBILITY
 __thread_id
-get_id() _NOEXCEPT
+get_id() noexcept
 {
     return __libcpp_thread_get_current_id();
 }
@@ -292,7 +279,7 @@ public:
     typedef __libcpp_thread_t native_handle_type;
 
     _LIBCPP_INLINE_VISIBILITY
-    thread() _NOEXCEPT : __t_(_LIBCPP_NULL_THREAD) {}
+    thread() noexcept : __t_(_LIBCPP_NULL_THREAD) {}
 #ifndef _LIBCPP_CXX03_LANG
     template <class _Fp, class ..._Args,
               class = typename enable_if
@@ -311,24 +298,24 @@ public:
 
 #ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
-    thread(thread&& __t) _NOEXCEPT : __t_(__t.__t_) {__t.__t_ = _LIBCPP_NULL_THREAD;}
+    thread(thread&& __t) noexcept : __t_(__t.__t_) {__t.__t_ = _LIBCPP_NULL_THREAD;}
     _LIBCPP_INLINE_VISIBILITY
-    thread& operator=(thread&& __t) _NOEXCEPT;
+    thread& operator=(thread&& __t) noexcept;
 #endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
-    void swap(thread& __t) _NOEXCEPT {_VSTD::swap(__t_, __t.__t_);}
+    void swap(thread& __t) noexcept {_VSTD::swap(__t_, __t.__t_);}
 
     _LIBCPP_INLINE_VISIBILITY
-    bool joinable() const _NOEXCEPT {return !__libcpp_thread_isnull(&__t_);}
+    bool joinable() const noexcept {return !__libcpp_thread_isnull(&__t_);}
     void join();
     void detach();
     _LIBCPP_INLINE_VISIBILITY
-    id get_id() const _NOEXCEPT {return __libcpp_thread_get_id(&__t_);}
+    id get_id() const noexcept {return __libcpp_thread_get_id(&__t_);}
     _LIBCPP_INLINE_VISIBILITY
-    native_handle_type native_handle() _NOEXCEPT {return __t_;}
+    native_handle_type native_handle() noexcept {return __t_;}
 
-    static unsigned hardware_concurrency() _NOEXCEPT;
+    static unsigned hardware_concurrency() noexcept;
 };
 
 #ifndef _LIBCPP_CXX03_LANG
@@ -373,7 +360,7 @@ thread::thread(_Fp&& __f, _Args&&... __args)
 
 inline
 thread&
-thread::operator=(thread&& __t) _NOEXCEPT
+thread::operator=(thread&& __t) noexcept
 {
     if (!__libcpp_thread_isnull(&__t_))
         terminate();
@@ -420,7 +407,7 @@ thread::thread(_Fp __f)
 #endif  // _LIBCPP_CXX03_LANG
 
 inline _LIBCPP_INLINE_VISIBILITY
-void swap(thread& __x, thread& __y) _NOEXCEPT {__x.swap(__y);}
+void swap(thread& __x, thread& __y) noexcept {__x.swap(__y);}
 
 namespace this_thread
 {
@@ -436,9 +423,9 @@ sleep_for(const chrono::duration<_Rep, _Period>& __d)
     {
 #if defined(_LIBCPP_COMPILER_GCC) && (__powerpc__ || __POWERPC__)
     //  GCC's long double const folding is incomplete for IBM128 long doubles.
-        _LIBCPP_CONSTEXPR duration<long double> _Max = nanoseconds::max();
+        constexpr duration<long double> _Max = nanoseconds::max();
 #else
-        _LIBCPP_CONSTEXPR duration<long double> _Max = duration<long double>(ULLONG_MAX/1000000000ULL) ;
+        constexpr duration<long double> _Max = duration<long double>(ULLONG_MAX/1000000000ULL) ;
 #endif
         nanoseconds __ns;
         if (__d < _Max)
@@ -475,14 +462,10 @@ sleep_until(const chrono::time_point<chrono::steady_clock, _Duration>& __t)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-void yield() _NOEXCEPT {__libcpp_thread_yield();}
+void yield() noexcept {__libcpp_thread_yield();}
 
 }  // this_thread
 
 _LIBCPP_END_NAMESPACE_STD
 
 #endif // !_LIBCPP_HAS_NO_THREADS
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_THREAD

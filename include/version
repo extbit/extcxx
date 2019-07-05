@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_VERSIONH
-#define _LIBCPP_VERSIONH
+#pragma once
+#pragma GCC system_header
 
 /*
   version synopsis
@@ -233,5 +232,3 @@ __cpp_lib_void_t                                        201411L <type_traits>
 // # define __cpp_lib_ranges                               201811L
 // # define __cpp_lib_three_way_comparison                 201711L
 #endif
-
-#endif // _LIBCPP_VERSIONH

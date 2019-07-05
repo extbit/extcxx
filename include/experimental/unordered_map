@@ -6,11 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_EXPERIMENTAL_UNORDERED_MAP
-#define _LIBCPP_EXPERIMENTAL_UNORDERED_MAP
-/*
-    experimental/unordered_map synopsis
+#if defined(experimental_unordered_map_synopsis)
 
 // C++1z
 namespace std {
@@ -37,7 +36,7 @@ namespace pmr {
 } // namespace experimental
 } // namespace std
 
- */
+#endif // experimental_unordered_map_synopsis
 
 #include <experimental/__config>
 #include <unordered_map>
@@ -60,5 +59,3 @@ using unordered_multimap = _VSTD::unordered_multimap<_Key, _Value, _Hash, _Pred,
                         polymorphic_allocator<pair<const _Key, _Value>>>;
 
 _LIBCPP_END_NAMESPACE_LFTS_PMR
-
-#endif /* _LIBCPP_EXPERIMENTAL_UNORDERED_MAP */

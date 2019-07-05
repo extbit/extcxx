@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_HASH_SET
-#define _LIBCPP_HASH_SET
-
+#pragma once
+#pragma GCC system_header
 /*
 
     hash_set synopsis
@@ -657,5 +655,3 @@ operator!=(const hash_multiset<_Value, _Hash, _Pred, _Alloc>& __x,
 }
 
 } // __gnu_cxx
-
-#endif  // _LIBCPP_HASH_SET
