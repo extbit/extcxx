@@ -426,9 +426,9 @@ typedef __char32_t char32_t;
 #  endif
 #endif
 
-#if !(__has_feature(cxx_rvalue_references))
-#define _LIBCPP_HAS_NO_RVALUE_REFERENCES
-#endif
+// #if !(__has_feature(cxx_rvalue_references))
+// #define _LIBCPP_HAS_NO_RVALUE_REFERENCES
+// #endif
 
 #if !(__has_feature(cxx_auto_type))
 #define _LIBCPP_HAS_NO_AUTO_TYPE
