@@ -434,9 +434,9 @@ typedef __char32_t char32_t;
 #define _LIBCPP_HAS_NO_AUTO_TYPE
 #endif
 
-#if !(__has_feature(cxx_variadic_templates))
-#define _LIBCPP_HAS_NO_VARIADICS
-#endif
+// #if !(__has_feature(cxx_variadic_templates))
+// #define _LIBCPP_HAS_NO_VARIADICS
+// #endif
 
 // Objective-C++ features (opt-in)
 #if __has_feature(objc_arc)
