@@ -147,9 +147,7 @@ using ::tmpnam;
 
 #ifndef _LIBCPP_HAS_NO_STDIN
 using ::getchar;
-#if _LIBCPP_STD_VER <= 11 && !defined(_LIBCPP_MSVCRT)
-using ::gets;
-#endif
+//using ::gets;
 using ::scanf;
 using ::vscanf;
 #endif

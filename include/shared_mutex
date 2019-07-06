@@ -120,8 +120,6 @@ namespace std
 #include <__config>
 #include <version>
 
-#if _LIBCPP_STD_VER > 11 || defined(_LIBCPP_BUILDING_LIBRARY)
-
 #include <__mutex_base>
 
 #ifdef _LIBCPP_HAS_NO_THREADS
@@ -161,8 +159,6 @@ __shared_mutex_base
 //     native_handle_type native_handle(); // See 30.2.3
 };
 
-
-#if _LIBCPP_STD_VER > 14
 class _LIBCPP_TYPE_VIS _LIBCPP_AVAILABILITY_SHARED_MUTEX shared_mutex
 {
     __shared_mutex_base __base;
@@ -186,8 +182,6 @@ public:
 //     typedef __shared_mutex_base::native_handle_type native_handle_type;
 //     _LIBCPP_INLINE_VISIBILITY native_handle_type native_handle() { return __base::unlock_shared(); }
 };
-#endif
-
 
 class _LIBCPP_TYPE_VIS _LIBCPP_AVAILABILITY_SHARED_MUTEX shared_timed_mutex
 {
@@ -486,5 +480,3 @@ void swap(shared_lock<_Mutex>& __x, shared_lock<_Mutex>& __y) noexcept
 _LIBCPP_END_NAMESPACE_STD
 
 #endif  // !_LIBCPP_HAS_NO_THREADS
-
-#endif  // _LIBCPP_STD_VER > 11

@@ -794,11 +794,9 @@ namespace std { namespace chrono {
 #include <limits>
 #include <version>
 
-#ifndef _LIBCPP_CXX03_LANG
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 struct _FilesystemClock;
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-#endif // !_LIBCPP_CXX03_LANG
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -905,7 +903,7 @@ duration_cast(const duration<_Rep, _Period>& __fd)
 template <class _Rep>
 struct _LIBCPP_TEMPLATE_VIS treat_as_floating_point : is_floating_point<_Rep> {};
 
-#if _LIBCPP_STD_VER > 14 && !defined(_LIBCPP_HAS_NO_VARIABLE_TEMPLATES)
+#if !defined(_LIBCPP_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Rep>
 _LIBCPP_INLINE_VAR constexpr bool treat_as_floating_point_v
     = treat_as_floating_point<_Rep>::value;
@@ -920,7 +918,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY static constexpr _Rep min()  noexcept {return numeric_limits<_Rep>::lowest();}
 };
 
-#if _LIBCPP_STD_VER > 14
 template <class _ToDuration, class _Rep, class _Period>
 inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
@@ -970,7 +967,6 @@ round(const duration<_Rep, _Period>& __d)
         return __upper;
     return __lower.count() & 1 ? __upper : __lower;
 }
-#endif
 
 // duration
 
@@ -1019,11 +1015,7 @@ private:
 public:
 
     _LIBCPP_INLINE_VISIBILITY constexpr
-#ifndef _LIBCPP_CXX03_LANG
-        duration() = default;
-#else
-        duration() {}
-#endif
+      duration() = default;
 
     template <class _Rep2>
         _LIBCPP_INLINE_VISIBILITY constexpr
@@ -1083,12 +1075,11 @@ typedef duration<long long,        milli> milliseconds;
 typedef duration<long long              > seconds;
 typedef duration<     long, ratio<  60> > minutes;
 typedef duration<     long, ratio<3600> > hours;
-#if _LIBCPP_STD_VER > 17
 typedef duration<     int, ratio_multiply<ratio<24>, hours::period>>         days;
 typedef duration<     int, ratio_multiply<ratio<7>,   days::period>>         weeks;
 typedef duration<     int, ratio_multiply<ratio<146097, 400>, days::period>> years;
 typedef duration<     int, ratio_divide<years::period, ratio<12>>>           months;
-#endif
+
 // Duration ==
 
 template <class _LhsDuration, class _RhsDuration>
@@ -1369,7 +1360,6 @@ time_point_cast(const time_point<_Clock, _Duration>& __t)
     return time_point<_Clock, _ToDuration>(_VSTD::chrono::duration_cast<_ToDuration>(__t.time_since_epoch()));
 }
 
-#if _LIBCPP_STD_VER > 14
 template <class _ToDuration, class _Clock, class _Duration>
 inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename enable_if
@@ -1417,7 +1407,6 @@ abs(duration<_Rep, _Period> __d)
 {
     return __d >= __d.zero() ? __d : -__d;
 }
-#endif
 
 // time_point ==
 
@@ -1557,7 +1546,6 @@ typedef steady_clock high_resolution_clock;
 typedef system_clock high_resolution_clock;
 #endif
 
-#if _LIBCPP_STD_VER > 17
 // [time.clock.file], type file_clock
 using file_clock = _VSTD_FS::_FilesystemClock;
 
@@ -2702,10 +2690,8 @@ inline constexpr year_month_weekday_last& year_month_weekday_last::operator-=(co
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator+=(const years& __dy)  noexcept { *this = *this + __dy; return *this; }
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator-=(const years& __dy)  noexcept { *this = *this - __dy; return *this; }
 
-#endif // _LIBCPP_STD_VER > 17
 } // chrono
 
-#if _LIBCPP_STD_VER > 11
 // Suffixes for duration literals [time.duration.literals]
 inline namespace literals
 {
@@ -2777,7 +2763,7 @@ inline namespace literals
         return chrono::duration<long double, nano> (__ns);
     }
 
-#if _LIBCPP_STD_VER > 17 && !defined(_LIBCPP_HAS_NO_CXX20_CHRONO_LITERALS)
+#if !defined(_LIBCPP_HAS_NO_CXX20_CHRONO_LITERALS)
     constexpr chrono::day operator ""d(unsigned long long __d) noexcept
     {
         return chrono::day(static_cast<unsigned>(__d));
@@ -2794,11 +2780,8 @@ namespace chrono { // hoist the literals into namespace std::chrono
    using namespace literals::chrono_literals;
 }
 
-#endif
-
 _LIBCPP_END_NAMESPACE_STD
 
-#ifndef _LIBCPP_CXX03_LANG
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 struct _FilesystemClock {
 #if !defined(_LIBCPP_HAS_NO_INT128)
@@ -2830,4 +2813,3 @@ struct _FilesystemClock {
   }
 };
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-#endif // !_LIBCPP_CXX03_LANG

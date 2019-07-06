@@ -184,11 +184,9 @@ protected:
     _LIBCPP_INLINE_VISIBILITY
     size_t __hash_code() const noexcept;
 private:
-#ifdef _LIBCPP_CXX03_LANG
     void __init(unsigned long long __v, false_type) noexcept;
     _LIBCPP_INLINE_VISIBILITY
     void __init(unsigned long long __v, true_type) noexcept;
-#endif  // _LIBCPP_CXX03_LANG
     unsigned long to_ulong(false_type) const;
     _LIBCPP_INLINE_VISIBILITY
     unsigned long to_ulong(true_type) const;
@@ -204,16 +202,10 @@ template <size_t _N_words, size_t _Size>
 inline
 constexpr
 __bitset<_N_words, _Size>::__bitset() noexcept
-#ifndef _LIBCPP_CXX03_LANG
     : __first_{0}
-#endif
 {
-#ifdef _LIBCPP_CXX03_LANG
     _VSTD::fill_n(__first_, _N_words, __storage_type(0));
-#endif
 }
-
-#ifdef _LIBCPP_CXX03_LANG
 
 template <size_t _N_words, size_t _Size>
 void
@@ -244,13 +236,10 @@ __bitset<_N_words, _Size>::__init(unsigned long long __v, true_type) noexcept
     _VSTD::fill(__first_ + 1, __first_ + sizeof(__first_)/sizeof(__first_[0]), __storage_type(0));
 }
 
-#endif  // _LIBCPP_CXX03_LANG
-
 template <size_t _N_words, size_t _Size>
 inline
 constexpr
 __bitset<_N_words, _Size>::__bitset(unsigned long long __v) noexcept
-#ifndef _LIBCPP_CXX03_LANG
 #if __SIZEOF_SIZE_T__ == 8
     : __first_{__v}
 #elif __SIZEOF_SIZE_T__ == 4
@@ -260,11 +249,8 @@ __bitset<_N_words, _Size>::__bitset(unsigned long long __v) noexcept
 #else
 #error This constructor has not been ported to this platform
 #endif
-#endif
 {
-#ifdef _LIBCPP_CXX03_LANG
     __init(__v, integral_constant<bool, sizeof(unsigned long long) == sizeof(__storage_type)>());
-#endif
 }
 
 template <size_t _N_words, size_t _Size>

@@ -517,7 +517,6 @@ using ::scalbnl;
 using ::tgammal;
 using ::truncl;
 
-#if _LIBCPP_STD_VER > 14
 inline _LIBCPP_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }
 inline _LIBCPP_INLINE_VISIBILITY double      hypot(      double x,      double y,      double z ) { return sqrt(x*x + y*y + z*z); }
 inline _LIBCPP_INLINE_VISIBILITY long double hypot( long double x, long double y, long double z ) { return sqrt(x*x + y*y + z*z); }
@@ -539,7 +538,6 @@ hypot(_A1 __lcpp_x, _A2 __lcpp_y, _A3 __lcpp_z) noexcept
                      is_same<_A3, __result_type>::value)), "");
     return hypot((__result_type)__lcpp_x, (__result_type)__lcpp_y, (__result_type)__lcpp_z);
 }
-#endif
 
 template <class _A1>
 _LIBCPP_INLINE_VISIBILITY
@@ -601,7 +599,6 @@ __libcpp_isfinite_or_builtin(_A1 __lcpp_x) noexcept
     return isfinite(__lcpp_x);
 }
 
-#if _LIBCPP_STD_VER > 17
 template <typename _Fp>
 constexpr
 _Fp __lerp(_Fp __a, _Fp __b, _Fp __t) noexcept {
@@ -624,7 +621,5 @@ lerp(double __a, double __b, double __t)                noexcept { return __lerp
 
 constexpr long double
 lerp(long double __a, long double __b, long double __t) noexcept { return __lerp(__a, __b, __t); }
-
-#endif // _LIBCPP_STD_VER > 17
 
 _LIBCPP_END_NAMESPACE_STD

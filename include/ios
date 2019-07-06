@@ -262,15 +262,6 @@ public:
 
     enum seekdir {beg, cur, end};
 
-#if _LIBCPP_STD_VER <= 14
-    typedef iostate      io_state;
-    typedef openmode     open_mode;
-    typedef seekdir      seek_dir;
-
-    typedef _VSTD::streamoff streamoff;
-    typedef _VSTD::streampos streampos;
-#endif
-
     class _LIBCPP_TYPE_VIS Init;
 
     // 27.5.2.2 fmtflags state:
@@ -578,13 +569,6 @@ ios_base::exceptions(iostate __iostate)
     clear(__rdstate_);
 }
 
-#if defined(_LIBCPP_CXX03_LANG)
-struct _LIBCPP_TYPE_VIS __cxx03_bool {
-  typedef void (__cxx03_bool::*__bool_type)();
-  void __true_value() {}
-};
-#endif
-
 template <class _CharT, class _Traits>
 class _LIBCPP_TEMPLATE_VIS basic_ios
     : public ios_base
@@ -604,15 +588,8 @@ public:
   // __true_value will generate undefined references when linking unless
   // we give it internal linkage.
 
-#if defined(_LIBCPP_CXX03_LANG)
-    _LIBCPP_INLINE_VISIBILITY
-    operator __cxx03_bool::__bool_type() const {
-        return !fail() ? &__cxx03_bool::__true_value : nullptr;
-    }
-#else
     _LIBCPP_INLINE_VISIBILITY
     explicit operator bool() const {return !fail();}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY bool operator!() const    {return  fail();}
     _LIBCPP_INLINE_VISIBILITY iostate rdstate() const   {return ios_base::rdstate();}
@@ -666,10 +643,8 @@ protected:
 
     _LIBCPP_INLINE_VISIBILITY
     void move(basic_ios& __rhs);
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     void move(basic_ios&& __rhs) {move(__rhs);}
-#endif
     _LIBCPP_INLINE_VISIBILITY
     void swap(basic_ios& __rhs) noexcept;
     _LIBCPP_INLINE_VISIBILITY

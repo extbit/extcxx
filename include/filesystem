@@ -245,8 +245,6 @@ namespace std { namespace filesystem {
 
 #include <__debug>
 
-#ifndef _LIBCPP_CXX03_LANG
-
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 _LIBCPP_AVAILABILITY_FILESYSTEM_PUSH
@@ -2626,5 +2624,3 @@ end(const recursive_directory_iterator&) noexcept {
 _LIBCPP_AVAILABILITY_FILESYSTEM_POP
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // !_LIBCPP_CXX03_LANG

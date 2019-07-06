@@ -125,9 +125,9 @@
 # define _LIBCPP_ABI_NAMESPACE _LIBCPP_CONCAT(__,_LIBCPP_ABI_VERSION)
 #endif
 
-#if __cplusplus < 201103L
-#define _LIBCPP_CXX03_LANG
-#endif
+// #if __cplusplus < 201103L
+// #define _LIBCPP_CXX03_LANG
+// #endif
 
 // #ifndef __has_attribute
 // #define __has_attribute(__x) 0
@@ -789,10 +789,10 @@ typedef unsigned int   char32_t;
 #define _LIBCPP_HAS_NO_INT128
 #endif
 
-#ifdef _LIBCPP_CXX03_LANG
-# define static_assert(...) _Static_assert(__VA_ARGS__)
-# define decltype(...) __decltype(__VA_ARGS__)
-#endif  // _LIBCPP_CXX03_LANG
+// #ifdef _LIBCPP_CXX03_LANG
+// # define static_assert(...) _Static_assert(__VA_ARGS__)
+// # define decltype(...) __decltype(__VA_ARGS__)
+// #endif  // _LIBCPP_CXX03_LANG
 
 // #ifdef _LIBCPP_CXX03_LANG
 // #  define _LIBCPP_CONSTEXPR

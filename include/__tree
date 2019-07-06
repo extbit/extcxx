@@ -523,8 +523,6 @@ __tree_remove(_NodePtr __root, _NodePtr __z) noexcept
 
 // node traits
 
-
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Tp>
 struct __is_tree_value_type_imp : false_type {};
 
@@ -536,7 +534,6 @@ struct __is_tree_value_type : false_type {};
 
 template <class _One>
 struct __is_tree_value_type<_One> : __is_tree_value_type_imp<typename __uncvref<_One>::type> {};
-#endif
 
 template <class _Tp>
 struct __tree_key_value_types {
@@ -557,12 +554,11 @@ struct __tree_key_value_types {
   static __container_value_type* __get_ptr(__node_value_type& __n) {
     return _VSTD::addressof(__n);
   }
-#ifndef _LIBCPP_CXX03_LANG
+
   _LIBCPP_INLINE_VISIBILITY
   static __container_value_type&& __move(__node_value_type& __v) {
     return _VSTD::move(__v);
   }
-#endif
 };
 
 template <class _Key, class _Tp>
@@ -607,12 +603,10 @@ struct __tree_key_value_types<__value_type<_Key, _Tp> > {
     return _VSTD::addressof(__n.__get_value());
   }
 
-#ifndef _LIBCPP_CXX03_LANG
   _LIBCPP_INLINE_VISIBILITY
   static pair<key_type&&, mapped_type&&> __move(__node_value_type& __v) {
     return __v.__move();
   }
-#endif
 };
 
 template <class _VoidPtr>
@@ -789,7 +783,6 @@ public:
     template <class> friend class __map_node_destructor;
 };
 
-#if _LIBCPP_STD_VER > 14
 template <class _NodeType, class _Alloc>
 struct __generic_container_node_destructor;
 template <class _Tp, class _VoidPtr, class _Alloc>
@@ -798,7 +791,6 @@ struct __generic_container_node_destructor<__tree_node<_Tp, _VoidPtr>, _Alloc>
 {
     using __tree_node_destructor<_Alloc>::__tree_node_destructor;
 };
-#endif
 
 template <class _Tp, class _NodePtr, class _DiffType>
 class _LIBCPP_TEMPLATE_VIS __tree_iterator
@@ -820,9 +812,7 @@ public:
     typedef typename _NodeTypes::__node_value_type_pointer pointer;
 
     _LIBCPP_INLINE_VISIBILITY __tree_iterator() noexcept
-#if _LIBCPP_STD_VER > 11
     : __ptr_(nullptr)
-#endif
     {}
 
     _LIBCPP_INLINE_VISIBILITY reference operator*() const
@@ -893,9 +883,7 @@ public:
     typedef typename _NodeTypes::__const_node_value_type_pointer pointer;
 
     _LIBCPP_INLINE_VISIBILITY __tree_const_iterator() noexcept
-#if _LIBCPP_STD_VER > 11
     : __ptr_(nullptr)
-#endif
     {}
 
 private:
@@ -960,10 +948,8 @@ private:
 };
 
 template<class _Tp, class _Compare>
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_DIAGNOSE_WARNING(!std::__invokable<_Compare const&, _Tp const&, _Tp const&>::value,
         "the specified comparator type does not provide a viable const call operator")
-#endif
 int __diagnose_non_const_comparator();
 
 template <class _Tp, class _Compare, class _Allocator>
@@ -1091,7 +1077,6 @@ public:
         void __assign_unique(_InputIterator __first, _InputIterator __last);
     template <class _InputIterator>
         void __assign_multi(_InputIterator __first, _InputIterator __last);
-#ifndef _LIBCPP_CXX03_LANG
     __tree(__tree&& __t)
         noexcept(
             is_nothrow_move_constructible<__node_allocator>::value &&
@@ -1102,7 +1087,6 @@ public:
             __node_traits::propagate_on_container_move_assignment::value &&
             is_nothrow_move_assignable<value_compare>::value &&
             is_nothrow_move_assignable<__node_allocator>::value);
-#endif // _LIBCPP_CXX03_LANG
 
     ~__tree();
 
@@ -1124,17 +1108,8 @@ public:
     void clear() noexcept;
 
     void swap(__tree& __t)
-#if _LIBCPP_STD_VER <= 11
-        noexcept(
-            __is_nothrow_swappable<value_compare>::value
-            && (!__node_traits::propagate_on_container_swap::value ||
-                 __is_nothrow_swappable<__node_allocator>::value)
-            );
-#else
         noexcept(__is_nothrow_swappable<value_compare>::value);
-#endif
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class _Key, class ..._Args>
     pair<iterator, bool>
     __emplace_unique_key_args(_Key const&, _Args&&... __args);
@@ -1243,15 +1218,6 @@ public:
       return __emplace_hint_unique_key_args(__p, __x.first, _VSTD::forward<_Pp>(__x));
     }
 
-#else
-    template <class _Key, class _Args>
-    _LIBCPP_INLINE_VISIBILITY
-    pair<iterator, bool> __emplace_unique_key_args(_Key const&, _Args& __args);
-    template <class _Key, class _Args>
-    _LIBCPP_INLINE_VISIBILITY
-    iterator __emplace_hint_unique_key_args(const_iterator, _Key const&, _Args&);
-#endif
-
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator, bool> __insert_unique(const __container_value_type& __v) {
         return __emplace_unique_key_args(_NodeTypes::__get_key(__v), __v);
@@ -1262,12 +1228,6 @@ public:
         return __emplace_hint_unique_key_args(__p, _NodeTypes::__get_key(__v), __v);
     }
 
-#ifdef _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
-    iterator __insert_multi(const __container_value_type& __v);
-    _LIBCPP_INLINE_VISIBILITY
-    iterator __insert_multi(const_iterator __p, const __container_value_type& __v);
-#else
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator, bool> __insert_unique(__container_value_type&& __v) {
         return __emplace_unique_key_args(_NodeTypes::__get_key(__v), _VSTD::move(__v));
@@ -1320,8 +1280,6 @@ public:
         return __emplace_hint_multi(__p, _VSTD::forward<_Vp>(__v));
     }
 
-#endif // !_LIBCPP_CXX03_LANG
-
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator, bool> __node_insert_unique(__node_pointer __nd);
     _LIBCPP_INLINE_VISIBILITY
@@ -1337,7 +1295,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY iterator
     __remove_node_pointer(__node_pointer) noexcept;
 
-#if _LIBCPP_STD_VER > 14
     template <class _NodeHandle, class _InsertReturnType>
     _LIBCPP_INLINE_VISIBILITY
     _InsertReturnType __node_handle_insert_unique(_NodeHandle&&);
@@ -1365,7 +1322,6 @@ public:
     template <class _NodeHandle>
     _LIBCPP_INLINE_VISIBILITY
     _NodeHandle __node_handle_extract(const_iterator);
-#endif
 
     iterator erase(const_iterator __p);
     iterator erase(const_iterator __f, const_iterator __l);
@@ -1462,12 +1418,8 @@ private:
                      __node_base_pointer& __dummy,
                      const _Key& __v);
 
-#ifndef _LIBCPP_CXX03_LANG
     template <class ..._Args>
     __node_holder __construct_node(_Args&& ...__args);
-#else
-    __node_holder __construct_node(const __container_value_type& __v);
-#endif
 
     void destroy(__node_pointer __nd) noexcept;
 
@@ -1699,8 +1651,6 @@ __tree<_Tp, _Compare, _Allocator>::__tree(const __tree& __t)
     __begin_node() = __end_node();
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp, class _Compare, class _Allocator>
 __tree<_Tp, _Compare, _Allocator>::__tree(__tree&& __t)
     noexcept(
@@ -1829,8 +1779,6 @@ __tree<_Tp, _Compare, _Allocator>::operator=(__tree&& __t)
     return *this;
 }
 
-#endif  // _LIBCPP_CXX03_LANG
-
 template <class _Tp, class _Compare, class _Allocator>
 __tree<_Tp, _Compare, _Allocator>::~__tree()
 {
@@ -1856,15 +1804,7 @@ __tree<_Tp, _Compare, _Allocator>::destroy(__node_pointer __nd) noexcept
 template <class _Tp, class _Compare, class _Allocator>
 void
 __tree<_Tp, _Compare, _Allocator>::swap(__tree& __t)
-#if _LIBCPP_STD_VER <= 11
-        noexcept(
-            __is_nothrow_swappable<value_compare>::value
-            && (!__node_traits::propagate_on_container_swap::value ||
-                 __is_nothrow_swappable<__node_allocator>::value)
-            )
-#else
         noexcept(__is_nothrow_swappable<value_compare>::value)
-#endif
 {
     using _VSTD::swap;
     swap(__begin_node_, __t.__begin_node_);
@@ -2132,17 +2072,10 @@ void __tree<_Tp, _Compare, _Allocator>::__insert_node_at(
     ++size();
 }
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Tp, class _Compare, class _Allocator>
 template <class _Key, class... _Args>
 pair<typename __tree<_Tp, _Compare, _Allocator>::iterator, bool>
 __tree<_Tp, _Compare, _Allocator>::__emplace_unique_key_args(_Key const& __k, _Args&&... __args)
-#else
-template <class _Tp, class _Compare, class _Allocator>
-template <class _Key, class _Args>
-pair<typename __tree<_Tp, _Compare, _Allocator>::iterator, bool>
-__tree<_Tp, _Compare, _Allocator>::__emplace_unique_key_args(_Key const& __k, _Args& __args)
-#endif
 {
     __parent_pointer __parent;
     __node_base_pointer& __child = __find_equal(__parent, __k);
@@ -2150,11 +2083,7 @@ __tree<_Tp, _Compare, _Allocator>::__emplace_unique_key_args(_Key const& __k, _A
     bool __inserted = false;
     if (__child == nullptr)
     {
-#ifndef _LIBCPP_CXX03_LANG
         __node_holder __h = __construct_node(_VSTD::forward<_Args>(__args)...);
-#else
-        __node_holder __h = __construct_node(__args);
-#endif
         __insert_node_at(__parent, __child, static_cast<__node_base_pointer>(__h.get()));
         __r = __h.release();
         __inserted = true;
@@ -2163,19 +2092,11 @@ __tree<_Tp, _Compare, _Allocator>::__emplace_unique_key_args(_Key const& __k, _A
 }
 
 
-#ifndef _LIBCPP_CXX03_LANG
 template <class _Tp, class _Compare, class _Allocator>
 template <class _Key, class... _Args>
 typename __tree<_Tp, _Compare, _Allocator>::iterator
 __tree<_Tp, _Compare, _Allocator>::__emplace_hint_unique_key_args(
     const_iterator __p, _Key const& __k, _Args&&... __args)
-#else
-template <class _Tp, class _Compare, class _Allocator>
-template <class _Key, class _Args>
-typename __tree<_Tp, _Compare, _Allocator>::iterator
-__tree<_Tp, _Compare, _Allocator>::__emplace_hint_unique_key_args(
-    const_iterator __p, _Key const& __k, _Args& __args)
-#endif
 {
     __parent_pointer __parent;
     __node_base_pointer __dummy;
@@ -2183,19 +2104,13 @@ __tree<_Tp, _Compare, _Allocator>::__emplace_hint_unique_key_args(
     __node_pointer __r = static_cast<__node_pointer>(__child);
     if (__child == nullptr)
     {
-#ifndef _LIBCPP_CXX03_LANG
         __node_holder __h = __construct_node(_VSTD::forward<_Args>(__args)...);
-#else
-        __node_holder __h = __construct_node(__args);
-#endif
         __insert_node_at(__parent, __child, static_cast<__node_base_pointer>(__h.get()));
         __r = __h.release();
     }
     return iterator(__r);
 }
 
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Compare, class _Allocator>
 template <class ..._Args>
@@ -2274,46 +2189,6 @@ __tree<_Tp, _Compare, _Allocator>::__emplace_hint_multi(const_iterator __p,
     return iterator(static_cast<__node_pointer>(__h.release()));
 }
 
-
-#else  // _LIBCPP_CXX03_LANG
-
-template <class _Tp, class _Compare, class _Allocator>
-typename __tree<_Tp, _Compare, _Allocator>::__node_holder
-__tree<_Tp, _Compare, _Allocator>::__construct_node(const __container_value_type& __v)
-{
-    __node_allocator& __na = __node_alloc();
-    __node_holder __h(__node_traits::allocate(__na, 1), _Dp(__na));
-    __node_traits::construct(__na, _NodeTypes::__get_ptr(__h->__value_), __v);
-    __h.get_deleter().__value_constructed = true;
-    return _VSTD::move(__h);  // explicitly moved for C++03
-}
-
-#endif  // _LIBCPP_CXX03_LANG
-
-#ifdef _LIBCPP_CXX03_LANG
-template <class _Tp, class _Compare, class _Allocator>
-typename __tree<_Tp, _Compare, _Allocator>::iterator
-__tree<_Tp, _Compare, _Allocator>::__insert_multi(const __container_value_type& __v)
-{
-    __parent_pointer __parent;
-    __node_base_pointer& __child = __find_leaf_high(__parent, _NodeTypes::__get_key(__v));
-    __node_holder __h = __construct_node(__v);
-    __insert_node_at(__parent, __child, static_cast<__node_base_pointer>(__h.get()));
-    return iterator(__h.release());
-}
-
-template <class _Tp, class _Compare, class _Allocator>
-typename __tree<_Tp, _Compare, _Allocator>::iterator
-__tree<_Tp, _Compare, _Allocator>::__insert_multi(const_iterator __p, const __container_value_type& __v)
-{
-    __parent_pointer __parent;
-    __node_base_pointer& __child = __find_leaf(__p, __parent, _NodeTypes::__get_key(__v));
-    __node_holder __h = __construct_node(__v);
-    __insert_node_at(__parent, __child, static_cast<__node_base_pointer>(__h.get()));
-    return iterator(__h.release());
-}
-#endif
-
 template <class _Tp, class _Compare, class _Allocator>
 pair<typename __tree<_Tp, _Compare, _Allocator>::iterator, bool>
 __tree<_Tp, _Compare, _Allocator>::__node_insert_unique(__node_pointer __nd)
@@ -2383,7 +2258,6 @@ __tree<_Tp, _Compare, _Allocator>::__remove_node_pointer(__node_pointer __ptr) n
     return __r;
 }
 
-#if _LIBCPP_STD_VER > 14
 template <class _Tp, class _Compare, class _Allocator>
 template <class _NodeHandle, class _InsertReturnType>
 _LIBCPP_INLINE_VISIBILITY
@@ -2539,8 +2413,6 @@ __tree<_Tp, _Compare, _Allocator>::__node_handle_merge_multi(_Tree& __source)
                          static_cast<__node_base_pointer>(__src_ptr));
     }
 }
-
-#endif  // _LIBCPP_STD_VER > 14
 
 template <class _Tp, class _Compare, class _Allocator>
 typename __tree<_Tp, _Compare, _Allocator>::iterator

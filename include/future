@@ -425,9 +425,11 @@ class _LIBCPP_EXCEPTION_ABI _LIBCPP_AVAILABILITY_FUTURE_ERROR future_error
     error_code __ec_;
 public:
     future_error(error_code __ec);
-#if _LIBCPP_STD_VERS > 14
-    explicit future_error(future_errc _Ev) : logic_error(), __ec_(make_error_code(_Ev)) {}
-#endif
+    explicit future_error(future_errc _Ev)
+      : logic_error(future_category().message(int(_Ev)))
+      , __ec_(make_error_code(_Ev))
+      {}
+
     _LIBCPP_INLINE_VISIBILITY
     const error_code& code() const noexcept {return __ec_;}
 

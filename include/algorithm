@@ -874,7 +874,6 @@ for_each(_InputIterator __first, _InputIterator __last, _Function __f)
     return __f;
 }
 
-#if _LIBCPP_STD_VER > 14
 // for_each_n
 
 template <class _InputIterator, class _Size, class _Function>
@@ -892,7 +891,6 @@ for_each_n(_InputIterator __first, _Size __orig_n, _Function __f)
     }
     return __first;
 }
-#endif
 
 // find
 
@@ -1209,7 +1207,6 @@ mismatch(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __fi
     return _VSTD::mismatch(__first1, __last1, __first2, __equal_to<__v1, __v2>());
 }
 
-#if _LIBCPP_STD_VER > 11
 template <class _InputIterator1, class _InputIterator2, class _BinaryPredicate>
 _LIBCPP_NODISCARD_EXT inline
 _LIBCPP_INLINE_VISIBILITY constexpr
@@ -1235,7 +1232,6 @@ mismatch(_InputIterator1 __first1, _InputIterator1 __last1,
     typedef typename iterator_traits<_InputIterator2>::value_type __v2;
     return _VSTD::mismatch(__first1, __last1, __first2, __last2, __equal_to<__v1, __v2>());
 }
-#endif
 
 // equal
 
@@ -1262,7 +1258,6 @@ equal(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first
     return _VSTD::equal(__first1, __last1, __first2, __equal_to<__v1, __v2>());
 }
 
-#if _LIBCPP_STD_VER > 11
 template <class _BinaryPredicate, class _InputIterator1, class _InputIterator2>
 inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
@@ -1316,7 +1311,6 @@ equal(_InputIterator1 __first1, _InputIterator1 __last1,
         typename iterator_traits<_InputIterator1>::iterator_category(),
         typename iterator_traits<_InputIterator2>::iterator_category());
 }
-#endif
 
 // is_permutation
 
@@ -1379,7 +1373,6 @@ is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
     return _VSTD::is_permutation(__first1, __last1, __first2, __equal_to<__v1, __v2>());
 }
 
-#if _LIBCPP_STD_VER > 11
 template<class _BinaryPredicate, class _ForwardIterator1, class _ForwardIterator2>
 constexpr bool
 __is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
@@ -1475,7 +1468,6 @@ is_permutation(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
         typename iterator_traits<_ForwardIterator1>::iterator_category(),
         typename iterator_traits<_ForwardIterator2>::iterator_category());
 }
-#endif
 
 // search
 // __search is in <functional>
@@ -1506,13 +1498,10 @@ search(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
     return _VSTD::search(__first1, __last1, __first2, __last2, __equal_to<__v1, __v2>());
 }
 
-
-#if _LIBCPP_STD_VER > 14
 template <class _ForwardIterator, class _Searcher>
 _LIBCPP_NODISCARD_EXT _LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator search(_ForwardIterator __f, _ForwardIterator __l, const _Searcher &__s)
 { return __s(__f, __l).first; }
-#endif
 
 // search_n
 
@@ -2521,8 +2510,6 @@ min(const _Tp& __a, const _Tp& __b)
     return _VSTD::min(__a, __b, __less<_Tp>());
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
 _LIBCPP_INLINE_VISIBILITY constexpr
@@ -2540,8 +2527,6 @@ min(initializer_list<_Tp> __t)
 {
     return *_VSTD::min_element(__t.begin(), __t.end(), __less<_Tp>());
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 // max_element
 
@@ -2594,8 +2579,6 @@ max(const _Tp& __a, const _Tp& __b)
     return _VSTD::max(__a, __b, __less<_Tp>());
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
 _LIBCPP_INLINE_VISIBILITY constexpr
@@ -2614,9 +2597,6 @@ max(initializer_list<_Tp> __t)
     return *_VSTD::max_element(__t.begin(), __t.end(), __less<_Tp>());
 }
 
-#endif  // _LIBCPP_CXX03_LANG
-
-#if _LIBCPP_STD_VER > 14
 // clamp
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
@@ -2637,7 +2617,6 @@ clamp(const _Tp& __v, const _Tp& __lo, const _Tp& __hi)
 {
     return _VSTD::clamp(__v, __lo, __hi, __less<_Tp>());
 }
-#endif
 
 // minmax_element
 
@@ -2722,8 +2701,6 @@ minmax(const _Tp& __a, const _Tp& __b)
     return _VSTD::minmax(__a, __b, __less<_Tp>());
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template<class _Tp, class _Compare>
 _LIBCPP_NODISCARD_EXT inline
 _LIBCPP_INLINE_VISIBILITY constexpr
@@ -2770,8 +2747,6 @@ minmax(initializer_list<_Tp> __t)
 {
     return _VSTD::minmax(__t, __less<_Tp>());
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 // random_shuffle
 
@@ -2829,13 +2804,9 @@ private:
     _Engine_result_type __mask0_;
     _Engine_result_type __mask1_;
 
-#ifdef _LIBCPP_CXX03_LANG
-    static const _Working_result_type _Rp = _Engine::_Max - _Engine::_Min
-                                          + _Working_result_type(1);
-#else
     static constexpr const _Working_result_type _Rp = _Engine::max() - _Engine::min()
                                                       + _Working_result_type(1);
-#endif
+
     static constexpr const size_t __m = __log2<_Working_result_type, _Rp>::value;
     static constexpr const size_t _WDt = numeric_limits<_Working_result_type>::digits;
     static constexpr const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
@@ -3020,7 +2991,7 @@ _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
     return static_cast<result_type>(__u + __p.a());
 }
 
-#if _LIBCPP_STD_VER <= 14 || defined(_LIBCPP_ENABLE_CXX17_REMOVED_RANDOM_SHUFFLE) \
+#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_RANDOM_SHUFFLE) \
   || defined(_LIBCPP_BUILDING_LIBRARY)
 class _LIBCPP_TYPE_VIS __rs_default;
 
@@ -3074,11 +3045,7 @@ random_shuffle(_RandomAccessIterator __first, _RandomAccessIterator __last)
 template <class _RandomAccessIterator, class _RandomNumberGenerator>
 _LIBCPP_DEPRECATED_IN_CXX14 void
 random_shuffle(_RandomAccessIterator __first, _RandomAccessIterator __last,
-#ifndef _LIBCPP_CXX03_LANG
                _RandomNumberGenerator&& __rand)
-#else
-               _RandomNumberGenerator& __rand)
-#endif
 {
     typedef typename iterator_traits<_RandomAccessIterator>::difference_type difference_type;
     difference_type __d = __last - __first;
@@ -3155,7 +3122,6 @@ _SampleIterator __sample(_PopulationIterator __first,
       __g, _PopCategory());
 }
 
-#if _LIBCPP_STD_VER > 14
 template <class _PopulationIterator, class _SampleIterator, class _Distance,
           class _UniformRandomNumberGenerator>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -3164,7 +3130,6 @@ _SampleIterator sample(_PopulationIterator __first,
                        _Distance __n, _UniformRandomNumberGenerator&& __g) {
     return _VSTD::__sample(__first, __last, __output_iter, __n, __g);
 }
-#endif // _LIBCPP_STD_VER > 14
 
 template<class _RandomAccessIterator, class _UniformRandomNumberGenerator>
     void shuffle(_RandomAccessIterator __first, _RandomAccessIterator __last,

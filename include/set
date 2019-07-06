@@ -465,10 +465,8 @@ public:
     typedef _VSTD::reverse_iterator<iterator>       reverse_iterator;
     typedef _VSTD::reverse_iterator<const_iterator> const_reverse_iterator;
 
-#if _LIBCPP_STD_VER > 14
     typedef __set_node_handle<typename __base::__node, allocator_type> node_type;
     typedef __insert_return_type<iterator, node_type> insert_return_type;
-#endif
 
     template <class _Key2, class _Compare2, class _Alloc2>
         friend class _LIBCPP_TEMPLATE_VIS set;
@@ -511,12 +509,10 @@ public:
             insert(__f, __l);
         }
 
-#if _LIBCPP_STD_VER > 11
         template <class _InputIterator>
         _LIBCPP_INLINE_VISIBILITY
         set(_InputIterator __f, _InputIterator __l, const allocator_type& __a)
             : set(__f, __l, key_compare(), __a) {}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     set(const set& __s)
@@ -532,12 +528,10 @@ public:
             return *this;
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     set(set&& __s)
         noexcept(is_nothrow_move_constructible<__base>::value)
         : __tree_(_VSTD::move(__s.__tree_)) {}
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     explicit set(const allocator_type& __a)
@@ -550,7 +544,6 @@ public:
             insert(__s.begin(), __s.end());
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     set(set&& __s, const allocator_type& __a);
 
     _LIBCPP_INLINE_VISIBILITY
@@ -568,11 +561,9 @@ public:
             insert(__il.begin(), __il.end());
         }
 
-#if _LIBCPP_STD_VER > 11
     _LIBCPP_INLINE_VISIBILITY
     set(initializer_list<value_type> __il, const allocator_type& __a)
         : set(__il, key_compare(), __a) {}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     set& operator=(initializer_list<value_type> __il)
@@ -588,7 +579,6 @@ public:
             __tree_ = _VSTD::move(__s.__tree_);
             return *this;
         }
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     ~set() {
@@ -634,7 +624,6 @@ public:
     size_type max_size() const noexcept {return __tree_.max_size();}
 
     // modifiers:
-#ifndef _LIBCPP_CXX03_LANG
     template <class... _Args>
         _LIBCPP_INLINE_VISIBILITY
         pair<iterator, bool> emplace(_Args&&... __args)
@@ -643,7 +632,6 @@ public:
         _LIBCPP_INLINE_VISIBILITY
         iterator emplace_hint(const_iterator __p, _Args&&... __args)
             {return __tree_.__emplace_hint_unique(__p, _VSTD::forward<_Args>(__args)...);}
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator,bool> insert(const value_type& __v)
@@ -660,7 +648,6 @@ public:
                 __tree_.__insert_unique(__e, *__f);
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator,bool> insert(value_type&& __v)
         {return __tree_.__insert_unique(_VSTD::move(__v));}
@@ -672,7 +659,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void insert(initializer_list<value_type> __il)
         {insert(__il.begin(), __il.end());}
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     iterator  erase(const_iterator __p) {return __tree_.erase(__p);}
@@ -685,7 +671,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void clear() noexcept {__tree_.clear();}
 
-#if _LIBCPP_STD_VER > 14
     _LIBCPP_INLINE_VISIBILITY
     insert_return_type insert(node_type&& __nh)
     {
@@ -744,7 +729,6 @@ public:
                        "merging container with incompatible allocator");
         __tree_.__node_handle_merge_unique(__source.__tree_);
     }
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(set& __s) noexcept(__is_nothrow_swappable<__base>::value)
@@ -762,7 +746,6 @@ public:
     iterator find(const key_type& __k)             {return __tree_.find(__k);}
     _LIBCPP_INLINE_VISIBILITY
     const_iterator find(const key_type& __k) const {return __tree_.find(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,iterator>::type
@@ -771,24 +754,20 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,const_iterator>::type
     find(const _K2& __k) const                     {return __tree_.find(__k);}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     size_type      count(const key_type& __k) const
         {return __tree_.__count_unique(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,size_type>::type
     count(const _K2& __k) const                    {return __tree_.__count_multi(__k);}
-#endif
     _LIBCPP_INLINE_VISIBILITY
     iterator lower_bound(const key_type& __k)
         {return __tree_.lower_bound(__k);}
     _LIBCPP_INLINE_VISIBILITY
     const_iterator lower_bound(const key_type& __k) const
         {return __tree_.lower_bound(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,iterator>::type
@@ -798,7 +777,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,const_iterator>::type
     lower_bound(const _K2& __k) const {return __tree_.lower_bound(__k);}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     iterator upper_bound(const key_type& __k)
@@ -806,7 +784,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     const_iterator upper_bound(const key_type& __k) const
         {return __tree_.upper_bound(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,iterator>::type
@@ -815,7 +792,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,const_iterator>::type
     upper_bound(const _K2& __k) const {return __tree_.upper_bound(__k);}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator,iterator> equal_range(const key_type& __k)
@@ -823,7 +799,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     pair<const_iterator,const_iterator> equal_range(const key_type& __k) const
         {return __tree_.__equal_range_unique(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,pair<iterator,iterator>>::type
@@ -832,7 +807,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,pair<const_iterator,const_iterator>>::type
     equal_range(const _K2& __k) const {return __tree_.__equal_range_multi(__k);}
-#endif
 };
 
 #ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
@@ -863,8 +837,6 @@ set(initializer_list<_Key>, _Allocator)
   -> set<_Key, less<_Key>, _Allocator>;
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Key, class _Compare, class _Allocator>
 set<_Key, _Compare, _Allocator>::set(set&& __s, const allocator_type& __a)
     : __tree_(_VSTD::move(__s.__tree_), __a)
@@ -876,8 +848,6 @@ set<_Key, _Compare, _Allocator>::set(set&& __s, const allocator_type& __a)
             insert(__e, _VSTD::move(__s.__tree_.remove(__s.begin())->__value_));
     }
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Key, class _Compare, class _Allocator>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -944,12 +914,10 @@ swap(set<_Key, _Compare, _Allocator>& __x,
     __x.swap(__y);
 }
 
-#if _LIBCPP_STD_VER > 17
 template <class _Key, class _Compare, class _Allocator, class _Predicate>
 inline _LIBCPP_INLINE_VISIBILITY
 void erase_if(set<_Key, _Compare, _Allocator>& __c, _Predicate __pred)
 { __libcpp_erase_if_container(__c, __pred); }
-#endif
 
 template <class _Key, class _Compare = less<_Key>,
           class _Allocator = allocator<_Key> >
@@ -985,9 +953,7 @@ public:
     typedef _VSTD::reverse_iterator<iterator>       reverse_iterator;
     typedef _VSTD::reverse_iterator<const_iterator> const_reverse_iterator;
 
-#if _LIBCPP_STD_VER > 14
     typedef __set_node_handle<typename __base::__node, allocator_type> node_type;
-#endif
 
     template <class _Key2, class _Compare2, class _Alloc2>
         friend class _LIBCPP_TEMPLATE_VIS set;
@@ -1022,12 +988,10 @@ public:
             insert(__f, __l);
         }
 
-#if _LIBCPP_STD_VER > 11
         template <class _InputIterator>
         _LIBCPP_INLINE_VISIBILITY
         multiset(_InputIterator __f, _InputIterator __l, const allocator_type& __a)
             : multiset(__f, __l, key_compare(), __a) {}
-#endif
 
     template <class _InputIterator>
         _LIBCPP_INLINE_VISIBILITY
@@ -1053,14 +1017,13 @@ public:
             return *this;
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     multiset(multiset&& __s)
         noexcept(is_nothrow_move_constructible<__base>::value)
         : __tree_(_VSTD::move(__s.__tree_)) {}
 
     multiset(multiset&& __s, const allocator_type& __a);
-#endif  // _LIBCPP_CXX03_LANG
+
     _LIBCPP_INLINE_VISIBILITY
     explicit multiset(const allocator_type& __a)
         : __tree_(__a) {}
@@ -1071,7 +1034,6 @@ public:
             insert(__s.begin(), __s.end());
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     multiset(initializer_list<value_type> __il, const value_compare& __comp = value_compare())
         : __tree_(__comp)
@@ -1087,11 +1049,9 @@ public:
             insert(__il.begin(), __il.end());
         }
 
-#if _LIBCPP_STD_VER > 11
     _LIBCPP_INLINE_VISIBILITY
     multiset(initializer_list<value_type> __il, const allocator_type& __a)
         : multiset(__il, key_compare(), __a) {}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     multiset& operator=(initializer_list<value_type> __il)
@@ -1107,7 +1067,6 @@ public:
             __tree_ = _VSTD::move(__s.__tree_);
             return *this;
         }
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     ~multiset() {
@@ -1153,7 +1112,6 @@ public:
     size_type max_size() const noexcept {return __tree_.max_size();}
 
     // modifiers:
-#ifndef _LIBCPP_CXX03_LANG
     template <class... _Args>
         _LIBCPP_INLINE_VISIBILITY
         iterator emplace(_Args&&... __args)
@@ -1162,7 +1120,6 @@ public:
         _LIBCPP_INLINE_VISIBILITY
         iterator emplace_hint(const_iterator __p, _Args&&... __args)
             {return __tree_.__emplace_hint_multi(__p, _VSTD::forward<_Args>(__args)...);}
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     iterator insert(const value_type& __v)
@@ -1179,7 +1136,6 @@ public:
                 __tree_.__insert_multi(__e, *__f);
         }
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     iterator insert(value_type&& __v)
         {return __tree_.__insert_multi(_VSTD::move(__v));}
@@ -1191,7 +1147,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void insert(initializer_list<value_type> __il)
         {insert(__il.begin(), __il.end());}
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     iterator  erase(const_iterator __p) {return __tree_.erase(__p);}
@@ -1203,7 +1158,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void clear() noexcept {__tree_.clear();}
 
-#if _LIBCPP_STD_VER > 14
     _LIBCPP_INLINE_VISIBILITY
     iterator insert(node_type&& __nh)
     {
@@ -1262,7 +1216,6 @@ public:
                        "merging container with incompatible allocator");
         __tree_.__node_handle_merge_multi(__source.__tree_);
     }
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(multiset& __s)
@@ -1281,7 +1234,6 @@ public:
     iterator find(const key_type& __k)             {return __tree_.find(__k);}
     _LIBCPP_INLINE_VISIBILITY
     const_iterator find(const key_type& __k) const {return __tree_.find(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,iterator>::type
@@ -1290,17 +1242,14 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,const_iterator>::type
     find(const _K2& __k) const                     {return __tree_.find(__k);}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     size_type      count(const key_type& __k) const
         {return __tree_.__count_multi(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename enable_if<__is_transparent<_Compare, _K2>::value,size_type>::type
     count(const _K2& __k) const            {return __tree_.__count_multi(__k);}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     iterator lower_bound(const key_type& __k)
@@ -1308,7 +1257,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     const_iterator lower_bound(const key_type& __k) const
             {return __tree_.lower_bound(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,iterator>::type
@@ -1318,7 +1266,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,const_iterator>::type
     lower_bound(const _K2& __k) const {return __tree_.lower_bound(__k);}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     iterator upper_bound(const key_type& __k)
@@ -1326,7 +1273,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     const_iterator upper_bound(const key_type& __k) const
             {return __tree_.upper_bound(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,iterator>::type
@@ -1335,7 +1281,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,const_iterator>::type
     upper_bound(const _K2& __k) const {return __tree_.upper_bound(__k);}
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     pair<iterator,iterator>             equal_range(const key_type& __k)
@@ -1343,7 +1288,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     pair<const_iterator,const_iterator> equal_range(const key_type& __k) const
             {return __tree_.__equal_range_multi(__k);}
-#if _LIBCPP_STD_VER > 11
     template <typename _K2>
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,pair<iterator,iterator>>::type
@@ -1352,7 +1296,6 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     typename _VSTD::enable_if<_VSTD::__is_transparent<_Compare, _K2>::value,pair<const_iterator,const_iterator>>::type
     equal_range(const _K2& __k) const {return __tree_.__equal_range_multi(__k);}
-#endif
 };
 
 #ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
@@ -1383,8 +1326,6 @@ multiset(initializer_list<_Key>, _Allocator)
   -> multiset<_Key, less<_Key>, _Allocator>;
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Key, class _Compare, class _Allocator>
 multiset<_Key, _Compare, _Allocator>::multiset(multiset&& __s, const allocator_type& __a)
     : __tree_(_VSTD::move(__s.__tree_), __a)
@@ -1396,8 +1337,6 @@ multiset<_Key, _Compare, _Allocator>::multiset(multiset&& __s, const allocator_t
             insert(__e, _VSTD::move(__s.__tree_.remove(__s.begin())->__value_));
     }
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Key, class _Compare, class _Allocator>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -1463,11 +1402,9 @@ swap(multiset<_Key, _Compare, _Allocator>& __x,
     __x.swap(__y);
 }
 
-#if _LIBCPP_STD_VER > 17
 template <class _Key, class _Compare, class _Allocator, class _Predicate>
 inline _LIBCPP_INLINE_VISIBILITY
 void erase_if(multiset<_Key, _Compare, _Allocator>& __c, _Predicate __pred)
 { __libcpp_erase_if_container(__c, __pred); }
-#endif
 
 _LIBCPP_END_NAMESPACE_STD

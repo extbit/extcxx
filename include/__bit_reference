@@ -1093,9 +1093,7 @@ private:
 
 public:
     _LIBCPP_INLINE_VISIBILITY __bit_iterator() noexcept
-#if _LIBCPP_STD_VER > 11
-    : __seg_(nullptr), __ctz_(0)
-#endif
+      : __seg_(nullptr), __ctz_(0)
     {}
 
     _LIBCPP_INLINE_VISIBILITY

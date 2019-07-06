@@ -156,33 +156,21 @@ _LIBCPP_FUNC_VIS new_handler get_new_handler() noexcept;
 
 #if !defined(_LIBCPP_HAS_NO_LIBRARY_ALIGNED_ALLOCATION) && \
     !defined(_LIBCPP_ABI_VCRUNTIME)
-#ifndef _LIBCPP_CXX03_LANG
 enum class _LIBCPP_ENUM_VIS align_val_t : size_t { };
-#else
-enum align_val_t { __zero = 0, __max = (size_t)-1 };
-#endif
 #endif
 
-#if _LIBCPP_STD_VER > 17
 // Enable the declaration even if the compiler doesn't support the language
 // feature.
 struct destroying_delete_t {
   explicit destroying_delete_t() = default;
 };
 _LIBCPP_INLINE_VAR constexpr destroying_delete_t destroying_delete{};
-#endif // _LIBCPP_STD_VER > 17
 
 }  // std
 
-#if defined(_LIBCPP_CXX03_LANG)
-#define _THROW_BAD_ALLOC throw(std::bad_alloc)
-#else
-#define _THROW_BAD_ALLOC
-#endif
-
 #if !defined(_LIBCPP_ABI_VCRUNTIME)
 
-_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new(std::size_t __sz) _THROW_BAD_ALLOC;
+_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new(std::size_t __sz);
 _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new(std::size_t __sz, const std::nothrow_t&) noexcept _LIBCPP_NOALIAS;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete(void* __p) noexcept;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete(void* __p, const std::nothrow_t&) noexcept;
@@ -190,7 +178,7 @@ _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete(void* __p, const std::nothrow
 _LIBCPP_OVERRIDABLE_FUNC_VIS _LIBCPP_AVAILABILITY_SIZED_NEW_DELETE void  operator delete(void* __p, std::size_t __sz) noexcept;
 #endif
 
-_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new[](std::size_t __sz) _THROW_BAD_ALLOC;
+_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new[](std::size_t __sz);
 _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new[](std::size_t __sz, const std::nothrow_t&) noexcept _LIBCPP_NOALIAS;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete[](void* __p) noexcept;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete[](void* __p, const std::nothrow_t&) noexcept;
@@ -199,7 +187,7 @@ _LIBCPP_OVERRIDABLE_FUNC_VIS _LIBCPP_AVAILABILITY_SIZED_NEW_DELETE void  operato
 #endif
 
 #ifndef _LIBCPP_HAS_NO_LIBRARY_ALIGNED_ALLOCATION
-_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new(std::size_t __sz, std::align_val_t) _THROW_BAD_ALLOC;
+_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new(std::size_t __sz, std::align_val_t);
 _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new(std::size_t __sz, std::align_val_t, const std::nothrow_t&) noexcept _LIBCPP_NOALIAS;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete(void* __p, std::align_val_t) noexcept;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete(void* __p, std::align_val_t, const std::nothrow_t&) noexcept;
@@ -207,7 +195,7 @@ _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete(void* __p, std::align_val_t, 
 _LIBCPP_OVERRIDABLE_FUNC_VIS _LIBCPP_AVAILABILITY_SIZED_NEW_DELETE void  operator delete(void* __p, std::size_t __sz, std::align_val_t) noexcept;
 #endif
 
-_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new[](std::size_t __sz, std::align_val_t) _THROW_BAD_ALLOC;
+_LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new[](std::size_t __sz, std::align_val_t);
 _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_OVERRIDABLE_FUNC_VIS void* operator new[](std::size_t __sz, std::align_val_t, const std::nothrow_t&) noexcept _LIBCPP_NOALIAS;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete[](void* __p, std::align_val_t) noexcept;
 _LIBCPP_OVERRIDABLE_FUNC_VIS void  operator delete[](void* __p, std::align_val_t, const std::nothrow_t&) noexcept;
@@ -356,14 +344,11 @@ constexpr _Tp* __launder(_Tp* __p) noexcept
 #endif
 }
 
-
-#if _LIBCPP_STD_VER > 14
 template <class _Tp>
 _LIBCPP_NODISCARD_AFTER_CXX17 inline _LIBCPP_INLINE_VISIBILITY
 constexpr _Tp* launder(_Tp* __p) noexcept
 {
     return _VSTD::__launder(__p);
 }
-#endif
 
 _LIBCPP_END_NAMESPACE_STD

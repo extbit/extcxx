@@ -627,9 +627,6 @@ __quoted ( basic_string <_CharT, _Traits, _Allocator> &__s, _CharT __delim = _Ch
     return __quoted_proxy<_CharT, _Traits, _Allocator>( __s, __delim, __escape );
 }
 
-
-#if _LIBCPP_STD_VER > 11
-
 template <class _CharT, class _Traits, class _Allocator>
 _LIBCPP_INLINE_VISIBILITY
 __quoted_output_proxy<_CharT, typename basic_string <_CharT, _Traits, _Allocator>::const_iterator>
@@ -654,6 +651,5 @@ quoted (basic_string_view <_CharT, _Traits> __sv,
     return __quoted_output_proxy<_CharT, const _CharT *, _Traits>
          ( __sv.data(), __sv.data() + __sv.size(), __delim, __escape );
 }
-#endif
 
 _LIBCPP_END_NAMESPACE_STD

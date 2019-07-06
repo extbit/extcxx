@@ -216,8 +216,6 @@ public:
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#if _LIBCPP_STD_VER > 14
-
 [[noreturn]]
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_AVAILABILITY_THROW_BAD_VARIANT_ACCESS
@@ -1622,7 +1620,5 @@ struct _LIBCPP_TEMPLATE_VIS hash<monostate> {
     return 66740831; // return a fundamentally attractive random value.
   }
 };
-
-#endif  // _LIBCPP_STD_VER > 14
 
 _LIBCPP_END_NAMESPACE_STD

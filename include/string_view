@@ -215,9 +215,7 @@ public:
     basic_string_view(const _CharT* __s, size_type __len) noexcept
         : __data(__s), __size(__len)
     {
-#if _LIBCPP_STD_VER > 11
     _LIBCPP_ASSERT(__len == 0 || __s != nullptr, "string_view::string_view(_CharT *, size_t): received nullptr");
-#endif
     }
 
     constexpr _LIBCPP_INLINE_VISIBILITY
@@ -561,7 +559,6 @@ public:
             (data(), size(), __s, __pos, traits_type::length(__s));
     }
 
-#if _LIBCPP_STD_VER > 17
     constexpr _LIBCPP_INLINE_VISIBILITY
     bool starts_with(basic_string_view __s) const noexcept
     { return size() >= __s.size() && compare(0, __s.size(), __s) == 0; }
@@ -585,7 +582,6 @@ public:
     constexpr _LIBCPP_INLINE_VISIBILITY
     bool ends_with(const value_type* __s) const noexcept
     { return ends_with(basic_string_view(__s)); }
-#endif
 
 private:
     const   value_type* __data;
@@ -774,7 +770,6 @@ struct _LIBCPP_TEMPLATE_VIS hash<basic_string_view<_CharT, char_traits<_CharT> >
 };
 
 
-#if _LIBCPP_STD_VER > 11
 inline namespace literals
 {
   inline namespace string_view_literals
@@ -812,5 +807,5 @@ inline namespace literals
     }
   }
 }
-#endif
+
 _LIBCPP_END_NAMESPACE_STD

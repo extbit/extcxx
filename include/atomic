@@ -592,8 +592,6 @@ enum __legacy_memory_order {
 
 typedef underlying_type<__legacy_memory_order>::type __memory_order_underlying_t;
 
-#if _LIBCPP_STD_VER > 17
-
 enum class memory_order : __memory_order_underlying_t {
   relaxed = __mo_relaxed,
   consume = __mo_consume,
@@ -609,19 +607,6 @@ inline constexpr auto memory_order_acquire = memory_order::acquire;
 inline constexpr auto memory_order_release = memory_order::release;
 inline constexpr auto memory_order_acq_rel = memory_order::acq_rel;
 inline constexpr auto memory_order_seq_cst = memory_order::seq_cst;
-
-#else
-
-typedef enum memory_order {
-  memory_order_relaxed = __mo_relaxed,
-  memory_order_consume = __mo_consume,
-  memory_order_acquire = __mo_acquire,
-  memory_order_release = __mo_release,
-  memory_order_acq_rel = __mo_acq_rel,
-  memory_order_seq_cst = __mo_seq_cst,
-} memory_order;
-
-#endif // _LIBCPP_STD_VER > 17
 
 static_assert((is_same<underlying_type<memory_order>::type, __memory_order_underlying_t>::value),
   "unexpected underlying type for std::memory_order");
@@ -655,11 +640,8 @@ template <typename _Tp>
 struct __cxx_atomic_base_impl {
 
   _LIBCPP_INLINE_VISIBILITY
-#ifndef _LIBCPP_CXX03_LANG
     __cxx_atomic_base_impl() noexcept = default;
-#else
-    __cxx_atomic_base_impl() noexcept : __a_value() {}
-#endif // _LIBCPP_CXX03_LANG
+
   constexpr explicit __cxx_atomic_base_impl(_Tp value) noexcept
     : __a_value(value) {}
   _Tp __a_value;
@@ -907,11 +889,8 @@ template <typename _Tp>
 struct __cxx_atomic_base_impl {
 
   _LIBCPP_INLINE_VISIBILITY
-#ifndef _LIBCPP_CXX03_LANG
     __cxx_atomic_base_impl() noexcept = default;
-#else
-    __cxx_atomic_base_impl() noexcept : __a_value() {}
-#endif // _LIBCPP_CXX03_LANG
+
   constexpr explicit __cxx_atomic_base_impl(_Tp value) noexcept
     : __a_value(value) {}
   _Atomic(_Tp) __a_value;
@@ -1532,16 +1511,9 @@ struct __atomic_base  // false
     _LIBCPP_INLINE_VISIBILITY constexpr
     __atomic_base(_Tp __d) noexcept : __a_(__d) {}
 
-#ifndef _LIBCPP_CXX03_LANG
     __atomic_base(const __atomic_base&) = delete;
     __atomic_base& operator=(const __atomic_base&) = delete;
     __atomic_base& operator=(const __atomic_base&) volatile = delete;
-#else
-private:
-    __atomic_base(const __atomic_base&);
-    __atomic_base& operator=(const __atomic_base&);
-    __atomic_base& operator=(const __atomic_base&) volatile;
-#endif
 };
 
 #if defined(__cpp_lib_atomic_is_always_lock_free)
@@ -2292,16 +2264,9 @@ typedef struct atomic_flag
     _LIBCPP_INLINE_VISIBILITY constexpr
     atomic_flag(bool __b) noexcept : __a_(__b) {} // EXTENSION
 
-#ifndef _LIBCPP_CXX03_LANG
     atomic_flag(const atomic_flag&) = delete;
     atomic_flag& operator=(const atomic_flag&) = delete;
     atomic_flag& operator=(const atomic_flag&) volatile = delete;
-#else
-private:
-    atomic_flag(const atomic_flag&);
-    atomic_flag& operator=(const atomic_flag&);
-    atomic_flag& operator=(const atomic_flag&) volatile;
-#endif
 } atomic_flag;
 
 inline _LIBCPP_INLINE_VISIBILITY

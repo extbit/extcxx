@@ -107,8 +107,7 @@ public:
 };
 #endif // !_LIBCPP_ABI_VCRUNTIME
 
-#if _LIBCPP_STD_VER <= 14 \
-    || defined(_LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS) \
+#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS) \
     || defined(_LIBCPP_BUILDING_LIBRARY)
 typedef void (*unexpected_handler)();
 _LIBCPP_FUNC_VIS unexpected_handler set_unexpected(unexpected_handler) noexcept;
@@ -264,11 +263,7 @@ struct __throw_with_nested<_Tp, _Up, true> {
 template <class _Tp, class _Up>
 struct __throw_with_nested<_Tp, _Up, false> {
     [[noreturn]] static inline _LIBCPP_INLINE_VISIBILITY void
-#ifndef _LIBCPP_CXX03_LANG
     __do_throw(_Tp&& __t)
-#else
-    __do_throw (_Tp& __t)
-#endif  // _LIBCPP_CXX03_LANG
     {
         throw _VSTD::forward<_Tp>(__t);
     }
