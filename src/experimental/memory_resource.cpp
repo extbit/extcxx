@@ -36,7 +36,7 @@ class _LIBCPP_TYPE_VIS __new_delete_memory_resource_imp
       _VSTD::__libcpp_deallocate(p, n, align);
     }
 
-    bool do_is_equal(memory_resource const & other) const _NOEXCEPT override
+    bool do_is_equal(memory_resource const & other) const noexcept override
         { return &other == this; }
 
 public:
@@ -56,7 +56,7 @@ protected:
         __throw_bad_alloc();
     }
     virtual void do_deallocate(void *, size_t, size_t) {}
-    virtual bool do_is_equal(memory_resource const & __other) const _NOEXCEPT
+    virtual bool do_is_equal(memory_resource const & __other) const noexcept
     { return &__other == this; }
 };
 
@@ -68,7 +68,7 @@ union ResourceInitHelper {
     __null_memory_resource_imp       null_res;
   } resources;
   char dummy;
-  _LIBCPP_CONSTEXPR_AFTER_CXX11 ResourceInitHelper() : resources() {}
+  constexpr ResourceInitHelper() : resources() {}
   ~ResourceInitHelper() {}
 };
 
@@ -90,18 +90,18 @@ ResourceInitHelper res_init _LIBCPP_INIT_PRIORITY_MAX;
 } // end namespace
 
 
-memory_resource * new_delete_resource() _NOEXCEPT {
+memory_resource * new_delete_resource() noexcept {
     return &res_init.resources.new_delete_res;
 }
 
-memory_resource * null_memory_resource() _NOEXCEPT {
+memory_resource * null_memory_resource() noexcept {
     return &res_init.resources.null_res;
 }
 
 // default_memory_resource()
 
 static memory_resource *
-__default_memory_resource(bool set = false, memory_resource * new_res = nullptr) _NOEXCEPT
+__default_memory_resource(bool set = false, memory_resource * new_res = nullptr) noexcept
 {
 #ifndef _LIBCPP_HAS_NO_ATOMIC_HEADER
     _LIBCPP_SAFE_STATIC static atomic<memory_resource*> __res =
@@ -110,11 +110,11 @@ __default_memory_resource(bool set = false, memory_resource * new_res = nullptr)
         new_res = new_res ? new_res : new_delete_resource();
         // TODO: Can a weaker ordering be used?
         return _VSTD::atomic_exchange_explicit(
-            &__res, new_res, memory_order::memory_order_acq_rel);
+            &__res, new_res, memory_order::acq_rel);
     }
     else {
         return _VSTD::atomic_load_explicit(
-            &__res, memory_order::memory_order_acquire);
+            &__res, memory_order::acquire);
     }
 #else
     _LIBCPP_SAFE_STATIC static memory_resource * res = &res_init.resources.new_delete_res;
@@ -132,12 +132,12 @@ __default_memory_resource(bool set = false, memory_resource * new_res = nullptr)
 #endif
 }
 
-memory_resource * get_default_resource() _NOEXCEPT
+memory_resource * get_default_resource() noexcept
 {
     return __default_memory_resource();
 }
 
-memory_resource * set_default_resource(memory_resource * __new_res) _NOEXCEPT
+memory_resource * set_default_resource(memory_resource * __new_res) noexcept
 {
     return __default_memory_resource(true, __new_res);
 }
