@@ -3770,47 +3770,11 @@ atomic_compare_exchange_weak_explicit(shared_ptr<_Tp>* __p, shared_ptr<_Tp>* __v
 }
 
 //enum class
-#if defined(_LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE)
 enum class pointer_safety : unsigned char {
   relaxed,
   preferred,
   strict
 };
-#else
-struct _LIBCPP_TYPE_VIS pointer_safety
-{
-    enum __lx
-    {
-        relaxed,
-        preferred,
-        strict
-    };
-
-    __lx __v_;
-
-    _LIBCPP_INLINE_VISIBILITY
-    pointer_safety() : __v_() {}
-
-    _LIBCPP_INLINE_VISIBILITY
-    pointer_safety(__lx __v) : __v_(__v) {}
-    _LIBCPP_INLINE_VISIBILITY
-    operator int() const {return __v_;}
-};
-#endif
-
-#if !defined(_LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE) && \
-    defined(_LIBCPP_BUILDING_LIBRARY)
-_LIBCPP_FUNC_VIS pointer_safety get_pointer_safety() noexcept;
-#else
-// This function is only offered in C++03 under ABI v1.
-# if !defined(_LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE)
-inline _LIBCPP_INLINE_VISIBILITY
-pointer_safety get_pointer_safety() noexcept {
-  return pointer_safety::relaxed;
-}
-# endif
-#endif
-
 
 _LIBCPP_FUNC_VIS void declare_reachable(void* __p);
 _LIBCPP_FUNC_VIS void declare_no_pointers(char* __p, size_t __n);
@@ -3854,7 +3818,6 @@ struct __noexcept_move_assign_container : public integral_constant<bool,
         || _Traits::is_always_equal::value
     > {};
 
-
 template <class _Tp, class _Alloc>
 struct __temp_value {
     typedef allocator_traits<_Alloc> _Traits;
@@ -3873,7 +3836,7 @@ struct __temp_value {
     }
 
     ~__temp_value() { _Traits::destroy(__a, __addr()); }
-    };
+};
 
 template<typename _Alloc, typename = void, typename = void>
 struct __is_allocator : false_type {};
