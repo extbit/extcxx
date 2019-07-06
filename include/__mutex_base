@@ -266,12 +266,11 @@ swap(unique_lock<_Mutex>& __x, unique_lock<_Mutex>& __y) noexcept
     {__x.swap(__y);}
 
 //enum class cv_status
-_LIBCPP_DECLARE_STRONG_ENUM(cv_status)
+enum class _LIBCPP_ENUM_VIS cv_status
 {
     no_timeout,
     timeout
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(cv_status)
 
 class _LIBCPP_TYPE_VIS condition_variable
 {

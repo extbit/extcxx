@@ -375,102 +375,32 @@ template <class R, class Alloc> struct uses_allocator<packaged_task<R>, Alloc>;
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 //enum class future_errc
-_LIBCPP_DECLARE_STRONG_ENUM(future_errc)
+enum class _LIBCPP_ENUM_VIS future_errc
 {
     future_already_retrieved = 1,
     promise_already_satisfied,
     no_state,
     broken_promise
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(future_errc)
 
 template <>
 struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<future_errc> : public true_type {};
 
-#ifdef _LIBCPP_HAS_NO_STRONG_ENUMS
-template <>
-struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<future_errc::__lx> : public true_type { };
-#endif
-
 //enum class launch
-_LIBCPP_DECLARE_STRONG_ENUM(launch)
+enum class _LIBCPP_ENUM_VIS launch
 {
     async = 1,
     deferred = 2,
     any = async | deferred
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(launch)
-
-#ifndef _LIBCPP_HAS_NO_STRONG_ENUMS
-
-typedef underlying_type<launch>::type __launch_underlying_type;
-
-inline _LIBCPP_INLINE_VISIBILITY
-constexpr
-launch
-operator&(launch __x, launch __y)
-{
-    return static_cast<launch>(static_cast<__launch_underlying_type>(__x) &
-                               static_cast<__launch_underlying_type>(__y));
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-constexpr
-launch
-operator|(launch __x, launch __y)
-{
-    return static_cast<launch>(static_cast<__launch_underlying_type>(__x) |
-                               static_cast<__launch_underlying_type>(__y));
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-constexpr
-launch
-operator^(launch __x, launch __y)
-{
-    return static_cast<launch>(static_cast<__launch_underlying_type>(__x) ^
-                               static_cast<__launch_underlying_type>(__y));
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-constexpr
-launch
-operator~(launch __x)
-{
-    return static_cast<launch>(~static_cast<__launch_underlying_type>(__x) & 3);
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-launch&
-operator&=(launch& __x, launch __y)
-{
-    __x = __x & __y; return __x;
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-launch&
-operator|=(launch& __x, launch __y)
-{
-    __x = __x | __y; return __x;
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-launch&
-operator^=(launch& __x, launch __y)
-{
-    __x = __x ^ __y; return __x;
-}
-
-#endif  // !_LIBCPP_HAS_NO_STRONG_ENUMS
 
 //enum class future_status
-_LIBCPP_DECLARE_STRONG_ENUM(future_status)
+enum class _LIBCPP_ENUM_VIS future_status
 {
     ready,
     timeout,
     deferred
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(future_status)
 
 _LIBCPP_FUNC_VIS
 const error_category& future_category() noexcept;

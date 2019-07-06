@@ -388,19 +388,13 @@ private:
 };
 
 //enum class io_errc
-_LIBCPP_DECLARE_STRONG_ENUM(io_errc)
+enum class _LIBCPP_ENUM_VIS io_errc
 {
     stream = 1
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(io_errc)
 
 template <>
 struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<io_errc> : public true_type { };
-
-#ifdef _LIBCPP_HAS_NO_STRONG_ENUMS
-template <>
-struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<io_errc::__lx> : public true_type { };
-#endif
 
 _LIBCPP_FUNC_VIS
 const error_category& iostream_category() noexcept;
