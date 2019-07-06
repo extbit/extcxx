@@ -363,13 +363,9 @@ private:
     int*            __index_;
     size_t          __event_size_;
     size_t          __event_cap_;
-// TODO(EricWF): Enable this for both Clang and GCC. Currently it is only
-// enabled with clang.
-#if defined(_LIBCPP_HAS_C_ATOMIC_IMP) && !defined(_LIBCPP_HAS_NO_THREADS)
+
     static atomic<int> __xindex_;
-#else
-    static int      __xindex_;
-#endif
+
     long*           __iarray_;
     size_t          __iarray_size_;
     size_t          __iarray_cap_;

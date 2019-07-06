@@ -15,7 +15,7 @@
 
 #if defined(_LIBCPP_HAS_THREAD_API_EXTERNAL)
 # include <__external_threading>
-#elif !defined(_LIBCPP_HAS_NO_THREADS)
+#else
 
 typedef ::timespec __libcpp_timespec_t;
 
@@ -388,4 +388,4 @@ int __libcpp_tls_set(__libcpp_tls_key __key, void *__p)
 
 _LIBCPP_END_NAMESPACE_STD
 
-#endif // !_LIBCPP_HAS_NO_THREADS
+#endif // _LIBCPP_HAS_THREAD_API_EXTERNAL

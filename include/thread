@@ -94,10 +94,6 @@ namespace std
 
 #define __STDCPP_THREADS__ __cplusplus
 
-#ifdef _LIBCPP_HAS_NO_THREADS
-#error <thread> is not supported on this single threaded system
-#else // !_LIBCPP_HAS_NO_THREADS
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _Tp> class __thread_specific_ptr;
@@ -419,5 +415,3 @@ void yield() noexcept {__libcpp_thread_yield();}
 }  // this_thread
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // !_LIBCPP_HAS_NO_THREADS
