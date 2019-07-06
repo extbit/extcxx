@@ -17,7 +17,7 @@
 #include "cxa_exception.hpp"
 #include "cxa_handlers.hpp"
 #include "fallback_malloc.h"
-#include "include/atomic_support.h"
+#include "atomic_support.h"
 
 #if __has_feature(address_sanitizer)
 extern "C" void __asan_handle_no_return(void);

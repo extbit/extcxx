@@ -171,11 +171,11 @@
 #    define _LIBCPP_CLANG_VER (__clang_major__ * 100 + __clang_minor__)
 #  endif
 #elif defined(__GNUC__)
-#  define _LIBCPP_COMPILER_GCC
+#  error "GCC may not be supported" // _LIBCPP_COMPILER_GCC
 #elif defined(_MSC_VER)
-#  define _LIBCPP_COMPILER_MSVC
+#  error "MSVC may not be supported" // _LIBCPP_COMPILER_MSVC
 #elif defined(__IBMCPP__)
-#  define _LIBCPP_COMPILER_IBM
+#  error "IBMCPP may not be supported" // _LIBCPP_COMPILER_IBM
 #endif
 
 #ifndef _LIBCPP_CLANG_VER
@@ -749,8 +749,12 @@ typedef __char32_t char32_t;
 
 // Inline namespaces are available in Clang/GCC/MSVC regardless of C++ dialect.
 #define _LIBCPP_BEGIN_NAMESPACE_STD namespace std { inline namespace _LIBCPP_ABI_NAMESPACE {
+#define _LIBCPP_BEGIN_NAMESPACE_STD_IMP namespace std { inline namespace _LIBCPP_ABI_NAMESPACE { namespace imp {
 #define _LIBCPP_END_NAMESPACE_STD  } }
+#define _LIBCPP_END_NAMESPACE_STD_IMP  } } }
 #define _VSTD std::_LIBCPP_ABI_NAMESPACE
+#define _VIMP std::_LIBCPP_ABI_NAMESPACE::imp
+
 _LIBCPP_BEGIN_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
 
 #if _LIBCPP_STD_VER >= 17

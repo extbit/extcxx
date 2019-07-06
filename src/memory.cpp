@@ -7,13 +7,8 @@
 //===----------------------------------------------------------------------===//
 
 #include "memory"
-#ifndef _LIBCPP_HAS_NO_THREADS
 #include "mutex"
 #include "thread"
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
-#endif
 #include "include/atomic_support.h"
 
 _LIBCPP_BEGIN_NAMESPACE_STD
@@ -22,8 +17,7 @@ const allocator_arg_t allocator_arg = allocator_arg_t();
 
 bad_weak_ptr::~bad_weak_ptr() noexcept {}
 
-const char*
-bad_weak_ptr::what() const noexcept
+const char* bad_weak_ptr::what() const noexcept
 {
     return "bad_weak_ptr";
 }
@@ -235,3 +229,7 @@ align(size_t alignment, size_t size, void*& ptr, size_t& space)
 }
 
 _LIBCPP_END_NAMESPACE_STD
+
+#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#pragma comment(lib, "pthread")
+#endif

@@ -5,8 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef LIBCXXABI_SRC_INCLUDE_CXA_GUARD_IMPL_H
-#define LIBCXXABI_SRC_INCLUDE_CXA_GUARD_IMPL_H
+#pragma once
 
 /* cxa_guard_impl.h - Implements the C++ runtime support for function local
  * static guards.
@@ -38,22 +37,14 @@
  */
 
 #include "__cxxabi_config.h"
-#include "include/atomic_support.h"
+#include "atomic_support.h"
 #include <unistd.h>
 #include <sys/types.h>
-#if defined(__has_include)
-# if __has_include(<sys/syscall.h>)
-#   include <sys/syscall.h>
-# endif
+#if __has_include(<sys/syscall.h>)
+#  include <sys/syscall.h>
 #endif
-
 #include <stdlib.h>
 #include <__threading_support>
-#ifndef _LIBCXXABI_HAS_NO_THREADS
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCXXABI_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
-#endif
 
 // To make testing possible, this header is included from both cxa_guard.cpp
 // and a number of tests.
@@ -235,7 +226,6 @@ struct InitByteNoThreads : GuardObject<InitByteNoThreads> {
 struct LibcppMutex;
 struct LibcppCondVar;
 
-#ifndef _LIBCXXABI_HAS_NO_THREADS
 struct LibcppMutex {
   LibcppMutex() = default;
   LibcppMutex(LibcppMutex const&) = delete;
@@ -262,11 +252,6 @@ struct LibcppCondVar {
 private:
   std::__libcpp_condvar_t cond = _LIBCPP_CONDVAR_INITIALIZER;
 };
-#else
-struct LibcppMutex {};
-struct LibcppCondVar {};
-#endif // !defined(_LIBCXXABI_HAS_NO_THREADS)
-
 
 template <class Mutex, class CondVar, Mutex& global_mutex, CondVar& global_cond,
           uint32_t (*GetThreadID)() = PlatformThreadID>
@@ -547,12 +532,10 @@ struct SelectImplementation<Implementation::Futex> {
 // TODO(EricWF): We should prefer the futex implementation when available. But
 // it should be done in a separate step from adding the implementation.
 constexpr Implementation CurrentImplementation =
-#if defined(_LIBCXXABI_HAS_NO_THREADS)
-    Implementation::NoThreads;
-#elif defined(_LIBCXXABI_USE_FUTEX)
-    Implementation::Futex;
+#if defined(_LIBCXXABI_USE_FUTEX)
+  Implementation::Futex;
 #else
-   Implementation::GlobalLock;
+  Implementation::GlobalLock;
 #endif
 
 static_assert(CurrentImplementation != Implementation::Futex
@@ -564,4 +547,6 @@ using SelectedImplementation =
 } // end namespace
 } // end namespace __cxxabiv1
 
-#endif // LIBCXXABI_SRC_INCLUDE_CXA_GUARD_IMPL_H
+#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCXXABI_HAS_COMMENT_LIB_PRAGMA)
+#pragma comment(lib, "pthread")
+#endif

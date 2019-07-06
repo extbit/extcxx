@@ -8,12 +8,8 @@
 // This file implements the functionality associated with the terminate_handler,
 //   unexpected_handler, and new_handler.
 //===----------------------------------------------------------------------===//
-
-#ifndef _CXA_HANDLERS_H
-#define _CXA_HANDLERS_H
-
+#pragma once
 #include <__cxxabi_config.h>
-
 #include <exception>
 
 namespace std
@@ -24,8 +20,7 @@ void
 __unexpected(unexpected_handler func);
 
 _LIBCXXABI_HIDDEN _LIBCXXABI_NORETURN
-void
-__terminate(terminate_handler func) _NOEXCEPT;
+void __terminate(terminate_handler func) noexcept;
 
 }  // std
 
@@ -51,5 +46,3 @@ _LIBCXXABI_DATA_VIS extern void (*__cxa_new_handler)();
 */
 
 } // extern "C"
-
-#endif  // _CXA_HANDLERS_H

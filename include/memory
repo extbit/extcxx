@@ -61,7 +61,9 @@ public:
     typedef const void*       const_pointer;
     typedef void              value_type;
 
-    template <class _Up> struct rebind {typedef allocator<_Up> other;};
+    template <class _Up> struct rebind {
+      typedef allocator<_Up> other;
+    };
 };
 
 template <>
@@ -72,7 +74,9 @@ public:
     typedef const void*       const_pointer;
     typedef const void        value_type;
 
-    template <class _Up> struct rebind {typedef allocator<_Up> other;};
+    template <class _Up> struct rebind {
+      typedef allocator<_Up> other;
+    };
 };
 
 // pointer_traits
@@ -82,7 +86,8 @@ struct __has_element_type : false_type {};
 
 template <class _Tp>
 struct __has_element_type<_Tp,
-              typename __void_t<typename _Tp::element_type>::type> : true_type {};
+  typename __void_t<typename _Tp::element_type>::type>
+  : true_type {};
 
 template <class _Ptr, bool = __has_element_type<_Ptr>::value>
 struct __pointer_traits_element_type;
@@ -110,7 +115,8 @@ struct __has_difference_type : false_type {};
 
 template <class _Tp>
 struct __has_difference_type<_Tp,
-            typename __void_t<typename _Tp::difference_type>::type> : true_type {};
+  typename __void_t<typename _Tp::difference_type>::type>
+  : true_type {};
 
 template <class _Ptr, bool = __has_difference_type<_Ptr>::value>
 struct __pointer_traits_difference_type
@@ -201,22 +207,23 @@ struct __has_pointer_type : false_type {};
 
 template <class _Tp>
 struct __has_pointer_type<_Tp,
-          typename __void_t<typename _Tp::pointer>::type> : true_type {};
+  typename __void_t<typename _Tp::pointer>::type>
+  : true_type {};
 
 namespace __pointer_type_imp
 {
 
-template <class _Tp, class _Dp, bool = __has_pointer_type<_Dp>::value>
-struct __pointer_type
-{
+  template <class _Tp, class _Dp, bool = __has_pointer_type<_Dp>::value>
+  struct __pointer_type
+  {
     typedef _LIBCPP_NODEBUG_TYPE typename _Dp::pointer type;
-};
+  };
 
-template <class _Tp, class _Dp>
-struct __pointer_type<_Tp, _Dp, false>
-{
+  template <class _Tp, class _Dp>
+  struct __pointer_type<_Tp, _Dp, false>
+  {
     typedef _LIBCPP_NODEBUG_TYPE _Tp* type;
-};
+  };
 
 }  // __pointer_type_imp
 
@@ -231,7 +238,8 @@ struct __has_const_pointer : false_type {};
 
 template <class _Tp>
 struct __has_const_pointer<_Tp,
-            typename __void_t<typename _Tp::const_pointer>::type> : true_type {};
+  typename __void_t<typename _Tp::const_pointer>::type>
+  : true_type {};
 
 template <class _Tp, class _Ptr, class _Alloc, bool = __has_const_pointer<_Alloc>::value>
 struct __const_pointer
@@ -250,7 +258,8 @@ struct __has_void_pointer : false_type {};
 
 template <class _Tp>
 struct __has_void_pointer<_Tp,
-               typename __void_t<typename _Tp::void_pointer>::type> : true_type {};
+  typename __void_t<typename _Tp::void_pointer>::type>
+  : true_type {};
 
 template <class _Ptr, class _Alloc, bool = __has_void_pointer<_Alloc>::value>
 struct __void_pointer
@@ -269,7 +278,8 @@ struct __has_const_void_pointer : false_type {};
 
 template <class _Tp>
 struct __has_const_void_pointer<_Tp,
-            typename __void_t<typename _Tp::const_void_pointer>::type> : true_type {};
+  typename __void_t<typename _Tp::const_void_pointer>::type>
+  : true_type {};
 
 template <class _Ptr, class _Alloc, bool = __has_const_void_pointer<_Alloc>::value>
 struct __const_void_pointer
@@ -293,8 +303,7 @@ __to_raw_pointer(_Tp* __p) noexcept
 
 template <class _Pointer>
 inline _LIBCPP_INLINE_VISIBILITY
-auto
-__to_raw_pointer(const _Pointer& __p) noexcept
+auto __to_raw_pointer(const _Pointer& __p) noexcept
 -> decltype(pointer_traits<_Pointer>::to_address(__p))
 {
     return pointer_traits<_Pointer>::to_address(__p);
@@ -302,16 +311,14 @@ __to_raw_pointer(const _Pointer& __p) noexcept
 
 template <class _Pointer, class... _None>
 inline _LIBCPP_INLINE_VISIBILITY
-auto
-__to_raw_pointer(const _Pointer& __p, _None...) noexcept
+auto __to_raw_pointer(const _Pointer& __p, _None...) noexcept
 {
     return _VSTD::__to_raw_pointer(__p.operator->());
 }
 
 template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY constexpr
-_Tp*
-to_address(_Tp* __p) noexcept
+_Tp* to_address(_Tp* __p) noexcept
 {
     static_assert(!is_function_v<_Tp>, "_Tp is a function type");
     return __p;
@@ -319,8 +326,7 @@ to_address(_Tp* __p) noexcept
 
 template <class _Pointer>
 inline _LIBCPP_INLINE_VISIBILITY
-auto
-to_address(const _Pointer& __p) noexcept
+auto to_address(const _Pointer& __p) noexcept
 {
     return _VSTD::__to_raw_pointer(__p);
 }
@@ -330,7 +336,8 @@ struct __has_size_type : false_type {};
 
 template <class _Tp>
 struct __has_size_type<_Tp,
-               typename __void_t<typename _Tp::size_type>::type> : true_type {};
+  typename __void_t<typename _Tp::size_type>::type>
+  : true_type {};
 
 template <class _Alloc, class _DiffType, bool = __has_size_type<_Alloc>::value>
 struct __size_type
@@ -349,8 +356,8 @@ struct __has_propagate_on_container_copy_assignment : false_type {};
 
 template <class _Tp>
 struct __has_propagate_on_container_copy_assignment<_Tp,
-    typename __void_t<typename _Tp::propagate_on_container_copy_assignment>::type>
-        : true_type {};
+  typename __void_t<typename _Tp::propagate_on_container_copy_assignment>::type>
+  : true_type {};
 
 template <class _Alloc, bool = __has_propagate_on_container_copy_assignment<_Alloc>::value>
 struct __propagate_on_container_copy_assignment
@@ -369,8 +376,8 @@ struct __has_propagate_on_container_move_assignment : false_type {};
 
 template <class _Tp>
 struct __has_propagate_on_container_move_assignment<_Tp,
-           typename __void_t<typename _Tp::propagate_on_container_move_assignment>::type>
-               : true_type {};
+  typename __void_t<typename _Tp::propagate_on_container_move_assignment>::type>
+  : true_type {};
 
 template <class _Alloc, bool = __has_propagate_on_container_move_assignment<_Alloc>::value>
 struct __propagate_on_container_move_assignment
@@ -389,8 +396,8 @@ struct __has_propagate_on_container_swap : false_type {};
 
 template <class _Tp>
 struct __has_propagate_on_container_swap<_Tp,
-           typename __void_t<typename _Tp::propagate_on_container_swap>::type>
-               : true_type {};
+  typename __void_t<typename _Tp::propagate_on_container_swap>::type>
+  : true_type {};
 
 template <class _Alloc, bool = __has_propagate_on_container_swap<_Alloc>::value>
 struct __propagate_on_container_swap
@@ -409,8 +416,8 @@ struct __has_is_always_equal : false_type {};
 
 template <class _Tp>
 struct __has_is_always_equal<_Tp,
-           typename __void_t<typename _Tp::is_always_equal>::type>
-               : true_type {};
+  typename __void_t<typename _Tp::is_always_equal>::type>
+  : true_type {};
 
 template <class _Alloc, bool = __has_is_always_equal<_Alloc>::value>
 struct __is_always_equal
@@ -492,44 +499,40 @@ __has_construct_test(const _Alloc& __a, _Pointer&& __p, _Args&& ...__args);
 
 template <class _Alloc, class _Pointer, class ..._Args>
 struct __has_construct
-    : integral_constant<bool,
+  : integral_constant<bool,
         is_same<
             decltype(_VSTD::__has_construct_test(declval<_Alloc>(),
-                                          declval<_Pointer>(),
-                                          declval<_Args>()...)),
+                                                 declval<_Pointer>(),
+                                                 declval<_Args>()...)),
             true_type>::value>
 {
 };
 
 template <class _Alloc, class _Pointer>
-auto
-__has_destroy_test(_Alloc&& __a, _Pointer&& __p)
-    -> decltype(__a.destroy(__p), true_type());
+auto __has_destroy_test(_Alloc&& __a, _Pointer&& __p)
+  -> decltype(__a.destroy(__p), true_type());
 
 template <class _Alloc, class _Pointer>
-auto
-__has_destroy_test(const _Alloc& __a, _Pointer&& __p)
-    -> false_type;
+auto __has_destroy_test(const _Alloc& __a, _Pointer&& __p)
+  -> false_type;
 
 template <class _Alloc, class _Pointer>
 struct __has_destroy
     : integral_constant<bool,
         is_same<
             decltype(_VSTD::__has_destroy_test(declval<_Alloc>(),
-                                        declval<_Pointer>())),
+                                               declval<_Pointer>())),
             true_type>::value>
 {
 };
 
 template <class _Alloc>
-auto
-__has_max_size_test(_Alloc&& __a)
-    -> decltype(__a.max_size(), true_type());
+auto __has_max_size_test(_Alloc&& __a)
+  -> decltype(__a.max_size(), true_type());
 
 template <class _Alloc>
-auto
-__has_max_size_test(const volatile _Alloc& __a)
-    -> false_type;
+auto __has_max_size_test(const volatile _Alloc& __a)
+  -> false_type;
 
 template <class _Alloc>
 struct __has_max_size
@@ -541,14 +544,12 @@ struct __has_max_size
 };
 
 template <class _Alloc>
-auto
-__has_select_on_container_copy_construction_test(_Alloc&& __a)
-    -> decltype(__a.select_on_container_copy_construction(), true_type());
+auto __has_select_on_container_copy_construction_test(_Alloc&& __a)
+  -> decltype(__a.select_on_container_copy_construction(), true_type());
 
 template <class _Alloc>
-auto
-__has_select_on_container_copy_construction_test(const volatile _Alloc& __a)
-    -> false_type;
+auto __has_select_on_container_copy_construction_test(const volatile _Alloc& __a)
+  -> false_type;
 
 template <class _Alloc>
 struct __has_select_on_container_copy_construction
@@ -575,12 +576,13 @@ template <class _Tp>
 struct __is_default_allocator : false_type {};
 
 template <class _Tp>
-struct __is_default_allocator<_VSTD::allocator<_Tp> > : true_type {};
+struct __is_default_allocator<_VSTD::allocator<_Tp> >
+  : true_type {};
 
 template <class _Alloc>
 struct _LIBCPP_TEMPLATE_VIS allocator_traits
 {
-    typedef _Alloc                              allocator_type;
+    typedef _Alloc   allocator_type;
     typedef typename allocator_type::value_type value_type;
 
     typedef typename __pointer_type<value_type, allocator_type>::type pointer;
@@ -600,8 +602,7 @@ struct _LIBCPP_TEMPLATE_VIS allocator_traits
     typedef typename __is_always_equal<allocator_type>::type
                      is_always_equal;
 
-    template <class _Tp> using rebind_alloc =
-                  typename __allocator_traits_rebind<allocator_type, _Tp>::type;
+    template <class _Tp> using rebind_alloc = typename __allocator_traits_rebind<allocator_type, _Tp>::type;
     template <class _Tp> using rebind_traits = allocator_traits<rebind_alloc<_Tp> >;
 
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
@@ -972,9 +973,10 @@ void return_temporary_buffer(_Tp* __p) noexcept
 }
 
 template <class _Tp, int _Idx,
-          bool _CanBeEmptyBase =
-              is_empty<_Tp>::value && !__libcpp_is_final<_Tp>::value>
-struct __compressed_pair_elem {
+          bool _CanBeEmptyBase
+          = is_empty<_Tp>::value && !__libcpp_is_final<_Tp>::value>
+struct __compressed_pair_elem
+{
   typedef _Tp _ParamT;
   typedef _Tp& reference;
   typedef const _Tp& const_reference;
@@ -987,9 +989,9 @@ struct __compressed_pair_elem {
   _LIBCPP_INLINE_VISIBILITY
   constexpr explicit
   __compressed_pair_elem(_Up&& __u)
-      : __value_(_VSTD::forward<_Up>(__u))
-    {
-    }
+    : __value_(_VSTD::forward<_Up>(__u))
+  {
+  }
 
   template <class... _Args, size_t... _Indexes>
   _LIBCPP_INLINE_VISIBILITY constexpr
@@ -1006,7 +1008,8 @@ private:
 };
 
 template <class _Tp, int _Idx>
-struct __compressed_pair_elem<_Tp, _Idx, true> : private _Tp {
+struct __compressed_pair_elem<_Tp, _Idx, true> : private _Tp
+{
   typedef _Tp _ParamT;
   typedef _Tp& reference;
   typedef const _Tp& const_reference;

@@ -17,40 +17,35 @@
 #include "cxa_handlers.hpp"
 #include "cxa_exception.hpp"
 #include "private_typeinfo.h"
-#include "include/atomic_support.h"
+#include "../include/atomic_support.h"
 
 namespace std
 {
 
-unexpected_handler
-get_unexpected() _NOEXCEPT
+unexpected_handler get_unexpected() noexcept
 {
     return __libcpp_atomic_load(&__cxa_unexpected_handler, _AO_Acquire);
 }
 
-void
-__unexpected(unexpected_handler func)
+void __unexpected(unexpected_handler func)
 {
     func();
     // unexpected handler should not return
     abort_message("unexpected_handler unexpectedly returned");
 }
 
-__attribute__((noreturn))
-void
-unexpected()
+[[noreturn]]
+void unexpected()
 {
     __unexpected(get_unexpected());
 }
 
-terminate_handler
-get_terminate() _NOEXCEPT
+terminate_handler get_terminate() noexcept
 {
     return __libcpp_atomic_load(&__cxa_terminate_handler, _AO_Acquire);
 }
 
-void
-__terminate(terminate_handler func) _NOEXCEPT
+void __terminate(terminate_handler func) noexcept
 {
 #ifndef _LIBCXXABI_NO_EXCEPTIONS
     try
@@ -69,9 +64,8 @@ __terminate(terminate_handler func) _NOEXCEPT
 #endif  // _LIBCXXABI_NO_EXCEPTIONS
 }
 
-__attribute__((noreturn))
-void
-terminate() _NOEXCEPT
+[[noreturn]]
+void terminate() noexcept
 {
     // If there might be an uncaught exception
     using namespace __cxxabiv1;
@@ -91,17 +85,15 @@ terminate() _NOEXCEPT
 }
 
 extern "C" {
-new_handler __cxa_new_handler = 0;
+  new_handler __cxa_new_handler = 0;
 }
 
-new_handler
-set_new_handler(new_handler handler) _NOEXCEPT
+new_handler set_new_handler(new_handler handler) noexcept
 {
     return __libcpp_atomic_exchange(&__cxa_new_handler, handler, _AO_Acq_Rel);
 }
 
-new_handler
-get_new_handler() _NOEXCEPT
+new_handler get_new_handler() noexcept
 {
     return __libcpp_atomic_load(&__cxa_new_handler, _AO_Acquire);
 }

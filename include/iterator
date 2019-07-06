@@ -1743,7 +1743,6 @@ auto crend(const _Cp& __c) -> decltype(_VSTD::rend(__c))
     return _VSTD::rend(__c);
 }
 
-// #if _LIBCPP_STD_VER > 11
 // template <>
 // struct _LIBCPP_TEMPLATE_VIS plus<void>
 // {
@@ -1755,7 +1754,6 @@ auto crend(const _Cp& __c) -> decltype(_VSTD::rend(__c))
 //         { return        _VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u); }
 //     typedef void is_transparent;
 // };
-// #endif
 
 template <class _Cont>
 _LIBCPP_INLINE_VISIBILITY

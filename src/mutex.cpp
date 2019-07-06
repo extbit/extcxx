@@ -12,14 +12,7 @@
 #include "include/atomic_support.h"
 #include "__undef_macros"
 
-#ifndef _LIBCPP_HAS_NO_THREADS
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
-#ifndef _LIBCPP_HAS_NO_THREADS
 
 const defer_lock_t  defer_lock = {};
 const try_to_lock_t try_to_lock = {};
@@ -190,42 +183,18 @@ recursive_timed_mutex::unlock() noexcept
     }
 }
 
-#endif // !_LIBCPP_HAS_NO_THREADS
-
 // If dispatch_once_f ever handles C++ exceptions, and if one can get to it
 // without illegal macros (unexpected macros not beginning with _UpperCase or
 // __lowercase), and if it stops spinning waiting threads, then call_once should
 // call into dispatch_once_f instead of here. Relevant radar this code needs to
 // keep in sync with:  7741191.
 
-#ifndef _LIBCPP_HAS_NO_THREADS
 _LIBCPP_SAFE_STATIC static __libcpp_mutex_t mut = _LIBCPP_MUTEX_INITIALIZER;
 _LIBCPP_SAFE_STATIC static __libcpp_condvar_t cv = _LIBCPP_CONDVAR_INITIALIZER;
-#endif
 
 void __call_once(volatile once_flag::_State_type& flag, void* arg,
                  void (*func)(void*))
 {
-#if defined(_LIBCPP_HAS_NO_THREADS)
-    if (flag == 0)
-    {
-#ifndef _LIBCPP_NO_EXCEPTIONS
-        try
-        {
-#endif  // _LIBCPP_NO_EXCEPTIONS
-            flag = 1;
-            func(arg);
-            flag = ~once_flag::_State_type(0);
-#ifndef _LIBCPP_NO_EXCEPTIONS
-        }
-        catch (...)
-        {
-            flag = 0;
-            throw;
-        }
-#endif  // _LIBCPP_NO_EXCEPTIONS
-    }
-#else // !_LIBCPP_HAS_NO_THREADS
     __libcpp_mutex_lock(&mut);
     while (flag == 1)
         __libcpp_condvar_wait(&cv, &mut);
@@ -257,7 +226,10 @@ void __call_once(volatile once_flag::_State_type& flag, void* arg,
     }
     else
         __libcpp_mutex_unlock(&mut);
-#endif // !_LIBCPP_HAS_NO_THREADS
 }
 
 _LIBCPP_END_NAMESPACE_STD
+
+#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#pragma comment(lib, "pthread")
+#endif

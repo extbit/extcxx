@@ -7,17 +7,10 @@
 //===----------------------------------------------------------------------===//
 
 #include "__config"
-
-#ifndef _LIBCPP_HAS_NO_THREADS
-
 #include "condition_variable"
 #include "thread"
 #include "system_error"
 #include "__undef_macros"
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -93,4 +86,6 @@ notify_all_at_thread_exit(condition_variable& cond, unique_lock<mutex> lk)
 
 _LIBCPP_END_NAMESPACE_STD
 
-#endif // !_LIBCPP_HAS_NO_THREADS
+#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#pragma comment(lib, "pthread")
+#endif

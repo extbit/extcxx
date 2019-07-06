@@ -7,14 +7,10 @@
 //===----------------------------------------------------------------------===//
 
 #include "experimental/memory_resource"
-
 #ifndef _LIBCPP_HAS_NO_ATOMIC_HEADER
 #include "atomic"
-#elif !defined(_LIBCPP_HAS_NO_THREADS)
+#else
 #include "mutex"
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
 #endif
 
 _LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
@@ -88,9 +84,7 @@ union ResourceInitHelper {
 
 // When compiled in C++14 this initialization should be a constant expression.
 // Only in C++11 is "init_priority" needed to ensure initialization order.
-#if _LIBCPP_STD_VER > 11
 _LIBCPP_SAFE_STATIC
-#endif
 ResourceInitHelper res_init _LIBCPP_INIT_PRIORITY_MAX;
 
 } // end namespace
@@ -122,7 +116,7 @@ __default_memory_resource(bool set = false, memory_resource * new_res = nullptr)
         return _VSTD::atomic_load_explicit(
             &__res, memory_order::memory_order_acquire);
     }
-#elif !defined(_LIBCPP_HAS_NO_THREADS)
+#else
     _LIBCPP_SAFE_STATIC static memory_resource * res = &res_init.resources.new_delete_res;
     static mutex res_lock;
     if (set) {
@@ -133,16 +127,6 @@ __default_memory_resource(bool set = false, memory_resource * new_res = nullptr)
         return old_res;
     } else {
         lock_guard<mutex> guard(res_lock);
-        return res;
-    }
-#else
-    _LIBCPP_SAFE_STATIC static memory_resource* res = &res_init.resources.new_delete_res;
-    if (set) {
-        new_res = new_res ? new_res : new_delete_resource();
-        memory_resource * old_res = res;
-        res = new_res;
-        return old_res;
-    } else {
         return res;
     }
 #endif
@@ -159,3 +143,7 @@ memory_resource * set_default_resource(memory_resource * __new_res) _NOEXCEPT
 }
 
 _LIBCPP_END_NAMESPACE_LFTS_PMR
+
+#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#pragma comment(lib, "pthread")
+#endif
