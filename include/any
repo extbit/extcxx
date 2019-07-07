@@ -8,10 +8,9 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-/*
-   any synopsis
-
-namespace std {
+#if defined(any_synopsis)
+namespace std
+{
 
   class bad_any_cast : public bad_cast
   {
@@ -30,7 +29,7 @@ namespace std {
     any(any&& other) noexcept;
 
     template <class ValueType>
-      any(ValueType&& value);
+    any(ValueType&& value);
 
     ~any();
 
@@ -43,9 +42,10 @@ namespace std {
 
     // 6.3.3 any modifiers
     template <class ValueType, class... Args>
-      decay_t<ValueType>& emplace(Args&&... args);
+    decay_t<ValueType>& emplace(Args&&... args);
     template <class ValueType, class U, class... Args>
-      decay_t<ValueType>& emplace(initializer_list<U>, Args&&...);
+    decay_t<ValueType>& emplace(initializer_list<U>, Args&&...);
+
     void reset() noexcept;
     void swap(any& rhs) noexcept;
 
@@ -58,25 +58,24 @@ namespace std {
   void swap(any& x, any& y) noexcept;
 
   template <class T, class ...Args>
-    any make_any(Args&& ...args);
+  any make_any(Args&& ...args);
   template <class T, class U, class ...Args>
-    any make_any(initializer_list<U>, Args&& ...args);
+  any make_any(initializer_list<U>, Args&& ...args);
 
   template<class ValueType>
-    ValueType any_cast(const any& operand);
+  ValueType any_cast(const any& operand);
   template<class ValueType>
-    ValueType any_cast(any& operand);
+  ValueType any_cast(any& operand);
   template<class ValueType>
-    ValueType any_cast(any&& operand);
+  ValueType any_cast(any&& operand);
 
   template<class ValueType>
-    const ValueType* any_cast(const any* operand) noexcept;
+  const ValueType* any_cast(const any* operand) noexcept;
   template<class ValueType>
-    ValueType* any_cast(any* operand) noexcept;
+  ValueType* any_cast(any* operand) noexcept;
 
 } // namespace std
-
-*/
+#endif // any_synopsis
 
 #include <experimental/__config>
 #include <memory>
@@ -300,7 +299,7 @@ private:
     _LIBCPP_INLINE_VISIBILITY
     void * __call(_Action __a, any * __other = nullptr,
                   type_info const * __info = nullptr,
-                   const void* __fallback_info = nullptr) const
+                  const void* __fallback_info = nullptr) const
     {
         return __h(__a, this, __other, __info, __fallback_info);
     }

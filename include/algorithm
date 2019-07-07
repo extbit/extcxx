@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
 #if defined(algorithm_synopsis)
 #include <initializer_list>
 namespace std

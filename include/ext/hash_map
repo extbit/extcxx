@@ -8,11 +8,8 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-/*
-
-    hash_map synopsis
-
-namespace __gnu_cxx
+#if defined(hash_map_synopsis)
+namespace ext
 {
 
 template <class Key, class T, class Hash = hash<Key>, class Pred = equal_to<Key>,
@@ -192,9 +189,8 @@ template <class Key, class T, class Hash, class Pred, class Alloc>
     operator!=(const hash_multimap<Key, T, Hash, Pred, Alloc>& x,
                const hash_multimap<Key, T, Hash, Pred, Alloc>& y);
 
-}  // __gnu_cxx
-
-*/
+}  // ext
+#endif // hash_map_synopsis
 
 #include <__config>
 #include <__hash_table>
@@ -211,7 +207,8 @@ template <class Key, class T, class Hash, class Pred, class Alloc>
 #endif
 #endif
 
-namespace __gnu_cxx {
+namespace ext
+{
 
 template <class _Tp, class _Hash,
           bool = std::is_empty<_Hash>::value && !std::__libcpp_is_final<_Hash>::value
@@ -960,4 +957,4 @@ operator!=(const hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
     return !(__x == __y);
 }
 
-} // __gnu_cxx
+} // ext
