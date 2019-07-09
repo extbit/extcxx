@@ -13,10 +13,6 @@
 #include <chrono>
 #include <errno.h>
 
-#if defined(_LIBCPP_HAS_THREAD_API_EXTERNAL)
-# include <__external_threading>
-#else
-
 typedef ::timespec __libcpp_timespec_t;
 
 #if defined(_LIBCPP_HAS_THREAD_API_PTHREAD)
@@ -387,5 +383,3 @@ int __libcpp_tls_set(__libcpp_tls_key __key, void *__p)
 #endif // !_LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL || _LIBCPP_BUILDING_THREAD_LIBRARY_EXTERNAL
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // _LIBCPP_HAS_THREAD_API_EXTERNAL

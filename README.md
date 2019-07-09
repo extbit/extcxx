@@ -10,3 +10,4 @@ extc++ - the standard C++ library for ExtBit is based on [libc++](http://libcxx.
 * Threading is always enabled.
 * Built specifically to work for ExtBit.
 * Security first.
+* More extensions

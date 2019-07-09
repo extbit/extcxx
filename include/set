@@ -813,26 +813,26 @@ public:
 template<class _InputIterator,
          class _Compare = less<typename iterator_traits<_InputIterator>::value_type>,
          class _Allocator = allocator<typename iterator_traits<_InputIterator>::value_type>,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type,
-         class = typename enable_if<!__is_allocator<_Compare>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type,
+         class = typename enable_if<!is_allocator_v<_Compare>, void>::type>
 set(_InputIterator, _InputIterator, _Compare = _Compare(), _Allocator = _Allocator())
   -> set<typename iterator_traits<_InputIterator>::value_type, _Compare, _Allocator>;
 
 template<class _Key, class _Compare = less<_Key>,
          class _Allocator = allocator<_Key>,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type,
-         class = typename enable_if<!__is_allocator<_Compare>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type,
+         class = typename enable_if<!is_allocator_v<_Compare>, void>::type>
 set(initializer_list<_Key>, _Compare = _Compare(), _Allocator = _Allocator())
   -> set<_Key, _Compare, _Allocator>;
 
 template<class _InputIterator, class _Allocator,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type>
 set(_InputIterator, _InputIterator, _Allocator)
   -> set<typename iterator_traits<_InputIterator>::value_type,
          less<typename iterator_traits<_InputIterator>::value_type>, _Allocator>;
 
 template<class _Key, class _Allocator,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type>
 set(initializer_list<_Key>, _Allocator)
   -> set<_Key, less<_Key>, _Allocator>;
 #endif
@@ -1302,26 +1302,26 @@ public:
 template<class _InputIterator,
          class _Compare = less<typename iterator_traits<_InputIterator>::value_type>,
          class _Allocator = allocator<typename iterator_traits<_InputIterator>::value_type>,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type,
-         class = typename enable_if<!__is_allocator<_Compare>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type,
+         class = typename enable_if<!is_allocator_v<_Compare>, void>::type>
 multiset(_InputIterator, _InputIterator, _Compare = _Compare(), _Allocator = _Allocator())
   -> multiset<typename iterator_traits<_InputIterator>::value_type, _Compare, _Allocator>;
 
 template<class _Key, class _Compare = less<_Key>,
          class _Allocator = allocator<_Key>,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type,
-         class = typename enable_if<!__is_allocator<_Compare>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type,
+         class = typename enable_if<!is_allocator_v<_Compare>, void>::type>
 multiset(initializer_list<_Key>, _Compare = _Compare(), _Allocator = _Allocator())
   -> multiset<_Key, _Compare, _Allocator>;
 
 template<class _InputIterator, class _Allocator,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type>
 multiset(_InputIterator, _InputIterator, _Allocator)
   -> multiset<typename iterator_traits<_InputIterator>::value_type,
          less<typename iterator_traits<_InputIterator>::value_type>, _Allocator>;
 
 template<class _Key, class _Allocator,
-         class = typename enable_if<__is_allocator<_Allocator>::value, void>::type>
+         class = typename enable_if<is_allocator_v<_Allocator>, void>::type>
 multiset(initializer_list<_Key>, _Allocator)
   -> multiset<_Key, less<_Key>, _Allocator>;
 #endif

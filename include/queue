@@ -323,15 +323,15 @@ public:
 
 #ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 template<class _Container,
-         class = typename enable_if<!__is_allocator<_Container>::value, nullptr_t>::type
+         class = typename enable_if<!is_allocator_v<_Container>, nullptr_t>::type
 >
 queue(_Container)
     -> queue<typename _Container::value_type, _Container>;
 
 template<class _Container,
          class _Alloc,
-         class = typename enable_if<!__is_allocator<_Container>::value, nullptr_t>::type,
-         class = typename enable_if< __is_allocator<_Alloc>::value, nullptr_t>::type
+         class = typename enable_if<!is_allocator_v<_Container>, nullptr_t>::type,
+         class = typename enable_if< is_allocator_v<_Alloc>, nullptr_t>::type
 >
 queue(_Container, _Alloc)
     -> queue<typename _Container::value_type, _Container>;
@@ -524,8 +524,8 @@ public:
 #ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 template <class _Compare,
           class _Container,
-          class = typename enable_if<!__is_allocator<_Compare>::value, nullptr_t>::type,
-          class = typename enable_if<!__is_allocator<_Container>::value, nullptr_t>::type
+          class = typename enable_if<!is_allocator_v<_Compare>, nullptr_t>::type,
+          class = typename enable_if<!is_allocator_v<_Container>, nullptr_t>::type
 >
 priority_queue(_Compare, _Container)
     -> priority_queue<typename _Container::value_type, _Container, _Compare>;
@@ -534,8 +534,8 @@ template<class _InputIterator,
          class _Compare   = less<typename iterator_traits<_InputIterator>::value_type>,
          class _Container = vector<typename iterator_traits<_InputIterator>::value_type>,
          class = typename enable_if< __is_input_iterator<_InputIterator>::value, nullptr_t>::type,
-         class = typename enable_if<!__is_allocator<_Compare>::value, nullptr_t>::type,
-         class = typename enable_if<!__is_allocator<_Container>::value, nullptr_t>::type
+         class = typename enable_if<!is_allocator_v<_Compare>, nullptr_t>::type,
+         class = typename enable_if<!is_allocator_v<_Container>, nullptr_t>::type
 >
 priority_queue(_InputIterator, _InputIterator, _Compare = _Compare(), _Container = _Container())
     -> priority_queue<typename iterator_traits<_InputIterator>::value_type, _Container, _Compare>;
@@ -543,9 +543,9 @@ priority_queue(_InputIterator, _InputIterator, _Compare = _Compare(), _Container
 template<class _Compare,
          class _Container,
          class _Alloc,
-         class = typename enable_if<!__is_allocator<_Compare>::value, nullptr_t>::type,
-         class = typename enable_if<!__is_allocator<_Container>::value, nullptr_t>::type,
-         class = typename enable_if< __is_allocator<_Alloc>::value, nullptr_t>::type
+         class = typename enable_if<!is_allocator_v<_Compare>, nullptr_t>::type,
+         class = typename enable_if<!is_allocator_v<_Container>, nullptr_t>::type,
+         class = typename enable_if< is_allocator_v<_Alloc>, nullptr_t>::type
 >
 priority_queue(_Compare, _Container, _Alloc)
     -> priority_queue<typename _Container::value_type, _Container, _Compare>;
