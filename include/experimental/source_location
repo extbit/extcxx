@@ -1,0 +1,53 @@
+// -*- C++ -*-
+//===-------------------------- source_location ---------------------------===//
+//
+//    Copyright (c) 2018-2019 Duzy Chan at ExtBit Limited.
+//
+//    This file is part of ExtC++, the ExtBit C++ standard library.
+//
+//===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
+#if defined(experimental_source_location_synopsis)
+namespace std {
+namespace experimental {
+inline namespace fundamentals_v2 {
+
+  struct source_location {
+    // source_location creation
+    static constexpr source_location current() noexcept;
+
+    constexpr source_location() noexcept;
+
+    // source_location field access
+    constexpr uint_least32_t line() const noexcept;
+    constexpr uint_least32_t column() const noexcept;
+    constexpr const char* file_name() const noexcept;
+    constexpr const char* function_name() const noexcept;
+  };
+
+} // namespace fundamentals_v2
+} // namespace experimental
+} // namespace std
+#endif
+
+#include <experimental/__config>
+#include <stdint.h>
+
+_LIBCPP_BEGIN_NAMESPACE_LFTS_V2
+
+struct source_location {
+  static constexpr source_location current() noexcept { return {}; }
+  constexpr source_location() noexcept {}
+  constexpr uint_least32_t line() const noexcept { return __line; }
+  constexpr uint_least32_t column() const noexcept { return __column; }
+  constexpr const char* file_name() const noexcept { return __file; }
+  constexpr const char* function_name() const noexcept { return __function; }
+private:
+  const char *__file = __builtin_FILE();
+  const char *__function = __builtin_FUNCTION();
+  unsigned    __line = __builtin_LINE();
+  unsigned    __column = __builtin_COLUMN();
+};
+
+_LIBCPP_END_NAMESPACE_LFTS_V2
