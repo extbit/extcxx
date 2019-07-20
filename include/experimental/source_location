@@ -37,17 +37,32 @@ inline namespace fundamentals_v2 {
 _LIBCPP_BEGIN_NAMESPACE_LFTS_V2
 
 struct source_location {
-  static constexpr source_location current() noexcept { return {}; }
+  static constexpr source_location current(
+      const char *f1 = __builtin_FILE(),
+      const char *f2 = __builtin_FUNCTION(),
+      unsigned l = __builtin_LINE(),
+      unsigned c = __builtin_COLUMN()) noexcept {
+    source_location loc(nullptr);
+    loc.__file = f1;
+    loc.__function = f2;
+    loc.__line = l;
+    loc.__column = c;
+    return loc;
+  }
   constexpr source_location() noexcept {}
   constexpr uint_least32_t line() const noexcept { return __line; }
   constexpr uint_least32_t column() const noexcept { return __column; }
   constexpr const char* file_name() const noexcept { return __file; }
   constexpr const char* function_name() const noexcept { return __function; }
 private:
+  constexpr source_location(const decltype(nullptr)) noexcept
+    : __file(nullptr), __function(nullptr), __line(0), __column(0)
+  {}
+
   const char *__file = __builtin_FILE();
   const char *__function = __builtin_FUNCTION();
-  unsigned    __line = __builtin_LINE();
-  unsigned    __column = __builtin_COLUMN();
+  unsigned __line = __builtin_LINE();
+  unsigned __column = __builtin_COLUMN();
 };
 
 _LIBCPP_END_NAMESPACE_LFTS_V2
