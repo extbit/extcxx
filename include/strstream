@@ -314,7 +314,7 @@ public:
     int pcount() const  {return __sb_.pcount();}
 
 private:
-    strstreambuf __sb_; // exposition only
+    strstreambuf __sb_;
 };
 
 class _LIBCPP_TYPE_VIS strstream
@@ -373,7 +373,7 @@ public:
     char* str()        {return __sb_.str();}
 
 private:
-    strstreambuf __sb_; // exposition only
+    strstreambuf __sb_;
 };
 
 _LIBCPP_END_NAMESPACE_STD

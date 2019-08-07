@@ -8,9 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-/*
-    iterator synopsis
-
+#if defined(iterator_synopsis)
 namespace std
 {
 
@@ -411,8 +409,7 @@ template <class T, size_t N> constexpr T* data(T (&array)[N]) noexcept;         
 template <class E> constexpr const E* data(initializer_list<E> il) noexcept;      // C++17
 
 }  // std
-
-*/
+#endif
 
 #include <__config>
 #include <iosfwd> // for forward declarations of vector and string.

@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
 #if defined(limits_synopsis)
 namespace std
 {

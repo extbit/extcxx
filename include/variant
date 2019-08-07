@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
 #if defined(variant_synopsis)
 namespace std {
 
@@ -617,7 +616,7 @@ union _LIBCPP_TEMPLATE_VIS __union<_DestructibleTrait, _Index> {};
 
 #define _LIBCPP_VARIANT_UNION(destructible_trait, destructor)                  \
   template <size_t _Index, class _Tp, class... _Types>                         \
-  union _LIBCPP_TEMPLATE_VIS __union<destructible_trait,                      \
+  union _LIBCPP_TEMPLATE_VIS __union<destructible_trait,                       \
                                       _Index,                                  \
                                       _Tp,                                     \
                                       _Types...> {                             \
