@@ -455,4 +455,8 @@ wstring to_wstring(float val)       { return as_string(get_swprintf(), initial_s
 wstring to_wstring(double val)      { return as_string(get_swprintf(), initial_string<wstring>()(),  L"%f", val); }
 wstring to_wstring(long double val) { return as_string(get_swprintf(), initial_string<wstring>()(), L"%Lf", val); }
 
+namespace __format
+{
+} // __format
+
 _LIBCPP_END_NAMESPACE_STD

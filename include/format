@@ -30,7 +30,7 @@ namespace std {
   template<class Context> class basic_format_arg;
 
   template<class Visitor, class Context>
-    see below visit_format_arg(Visitor&& vis, basic_format_arg<Context> arg);
+    see_below visit_format_arg(Visitor&& vis, basic_format_arg<Context> arg);
 
   template<class Context, class... Args> struct format_arg_store; // exposition only
 
@@ -88,6 +88,7 @@ namespace std {
 #endif
 
 #include <__config>
+#include <charconv>
 #include <stdexcept>
 #include <string_view>
 #include <string>
@@ -197,8 +198,6 @@ namespace __format
   template <typename Iterator>
   inline Iterator&& reserve(Iterator&& it, _VSTD::size_t) { return it; }
 
-  enum class alignment { none, left, right, numeric, center };
-
   struct data final
   {
     static const uint64_t powers_of_10_64[];
@@ -283,21 +282,21 @@ namespace __format
 
   template <> int count_digits<4>(_VSTD::uintptr_t n);
 
-  template <typename Char, typename FormatContext, typename Value>
-  inline void format_char(FormatContext& fc, Value value) {
-    auto out = fc.out();
-    *out++ = static_cast<Char>(value);
-    fc.advance_to(out);
+  template <typename Spec, typename Value>
+  inline void write_char(const Spec& spec, Value value) {
+    auto out = spec.format_context.out();
+    *out++ = static_cast<typename Spec::char_type>(value);
+    spec.format_context.advance_to(out);
   }
 
-  template <typename FormatContext, typename Int>
-  void format_decimal(FormatContext& fc, Int value) {
-    using char_type = typename FormatContext::char_type;
+  template <typename Spec, typename Int>
+  void write_decimal(const Spec& spec, Int value) {
+    using char_type = typename Spec::char_type;
     using uint_type = uint_best_fit_t<Int>;
     auto absvalue = static_cast<uint_type>(value);
     auto negative = is_negative(value);
     auto num_digits = 0;
-    auto out = fc.out();
+    auto out = spec.format_context.out();
     if (negative) {
       absvalue = 0 - absvalue;
       num_digits = count_digits(absvalue);
@@ -337,107 +336,282 @@ namespace __format
       //add_thousands_sep(buffer);
       *--ptr = static_cast<char_type>(data::digits[index]);
     }
-    fc.advance_to(_VSTD::copy(ptr, end, out));
+    spec.format_context.advance_to(_VSTD::copy(ptr, end, out));
   }
 
-  template<typename T> struct handle {
-#if __has_feature(ASSOCIATED_TYPENAME_SPECIALIZATION)
-    handle() = delete;
+  template <typename Spec, typename Float>
+  void write_floating(const Spec& spec, Float value) {
+#if 0
+    if (!_VSTD::isfinite(value)) {
+      const char * const str = _VSTD::isinf(value) 
+        ? (spec.upper ? "INF" : "inf") 
+        : (spec.upper ? "NAN" : "nan");
+      auto out = spec.format_context.out();
+      out = _VSTD::copy(str, str+3, out);
+      if (spec.percentage)
+        *++out = static_cast<typename Spec::char_type>('%');
+      spec.format_context.advance_to(out);
+      return;
+    }
+#endif
+    auto out = spec.format_context.out();
+    if (spec.percentage) {
+      const auto& s = _VSTD::to_string(value*100);
+      out = _VSTD::copy(s.begin(), s.end(), out);
+      *++out = static_cast<typename Spec::char_type>('%');
+    } else {
+      const auto& s = _VSTD::to_string(value);
+      out = _VSTD::copy(s.begin(), s.end(), out);
+    }
+    spec.format_context.advance_to(out);
+  }
+
+  struct specbits {
+    unsigned fill = 0;
+    unsigned width = 0;
+    //sign_enum sign = sign_enum::none; // default to minus
+    //bool hash : 1 = false;
+    bool zero : 1 = false;
+    bool upper : 1 = false;
+    bool percentage : 1 = false;
+  };
+
+  struct none_aligner : specbits {
+    // arg
+  };
+
+  struct left_aligner : specbits {
+  };
+
+  struct right_aligner : specbits {
+  };
+
+  struct numeric_aligner : specbits {
+  };
+
+  struct center_aligner : specbits {
+  };
+
+  template <typename Bits>
+  struct none_signer : Bits {
+  };
+
+  template <typename Bits>
+  struct plus_signer : Bits {
+  };
+
+  template <typename Bits>
+  struct minus_signer : Bits {
+  };
+
+  template <typename Bits>
+  struct space_signer : Bits {
+  };
+
+  template <typename Bits>
+  struct alternate : Bits { // #
+  };
+
+  template <typename Bits, chars_format Fmt>
+  struct floating : Bits {
+    unsigned precision = 0;
+  };
+
+  template<typename ParseContext, typename FormatContext>
+  struct specification {
+    using parse_context_type = ParseContext;
+    using format_context_type = FormatContext;
+    using char_type = typename FormatContext::char_type;
+    ParseContext& parse_context;
+    FormatContext& format_context;
+  };
+
+  template<typename Value, unsigned Base> struct integral_traits {
+    static constexpr auto digits = numeric_limits<Value>::digits * 3 / Base + 1;
+    template<typename Iterator>
+    inline static auto chars(Iterator begin, Iterator end, Value value)
+    { return to_chars(begin, end, value, Base); }
+  };
+  template<typename Value> struct integral_traits<Value,0> {
+    // digits and thousands separators
+    // buffer_size = __traits::digits + __traits::digits / 3,
+    static constexpr auto digits = numeric_limits<Value>::digits10+1;
+    template<typename Iterator>
+    inline static auto chars(Iterator begin, Iterator end, Value value)
+    { return to_chars(begin, end, value); }
+  };
+
+  template<typename Value, typename ParseContext, typename FormatContext, unsigned Base = 0>
+  struct integral_spec : specification<ParseContext,FormatContext> {
+    inline void operator()(const Value& value) {
+      using __traits = integral_traits<Value,Base>;
+      using char_type = typename FormatContext::char_type;
+      enum { size = __traits::digits };
+      char_type buffer[size];
+      auto res = __traits::chars(buffer, buffer+size, value);
+      if (res.ec != errc(0))
+        __throw_format_error("format integer value error");
+      else {
+        auto out = this->format_context.out();
+        out = copy(buffer, res.ptr, out);
+        this->format_context.advance_to(out);
+      }
+    }
+  };
+
+  template<typename Char = char> struct bool_cstr {
+    auto cstr(bool value) const { return value ? "true" : "false"; }
+  };
+  template<> struct bool_cstr<wchar_t> {
+    auto cstr(bool value) const { return value ? L"true" : L"false"; }
+  };
+
+  template<typename SpecBase, typename Char, unsigned Base>
+  struct bool_presentation : SpecBase {
+    inline void operator()(bool value) {
+#if true
+      auto out = this->format_context.out();
+      *out++ = static_cast<Char>(value ? '1' : '0');
+      this->format_context.advance_to(out);
 #else
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, typename basic_format_arg<FormatContext>::handle h) const {
-      h.format(pc, fc);
-    }
-#endif // ASSOCIATED_TYPENAME_SPECIALIZATION
-  };
-  template<> struct handle<_VSTD::monostate> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, _VSTD::monostate) const {}
-  };
-  template<> struct handle<char> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, char val) const {
-      format_char<typename FormatContext::char_type>(fc, val);
+      enum { size = 1 };
+      Char buffer[size];
+      auto res = to_chars(buffer, buffer+size, unsigned(value), Base);
+      if (res.ec != errc(0))
+        __throw_format_error("format integer value error");
+      else {
+        auto out = this->format_context.out();
+        out = copy(buffer, res.ptr, out);
+        this->format_context.advance_to(out);
+      }
+#endif
     }
   };
-  template<> struct handle<wchar_t> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, wchar_t val) const {
-      format_char<typename FormatContext::char_type>(fc, val);
+
+  template<typename SpecBase, typename Char>
+  struct bool_presentation<SpecBase,Char,0> : SpecBase, bool_cstr<Char> {
+    inline void operator()(bool value) {
+      basic_string_view<Char> __s(this->cstr(value));
+      auto out = this->format_context.out();
+      out = copy(__s.begin(), __s.end(), out);
+      this->format_context.advance_to(out);
     }
   };
-  template<> struct handle<signed int> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, signed int val) const {
-      format_decimal(fc, val);
+
+  template<typename ParseContext, typename FormatContext, unsigned Base>
+  struct integral_spec<bool,ParseContext,FormatContext,Base>
+    : bool_presentation<specification<ParseContext,FormatContext>,
+                        typename FormatContext::char_type,Base> {
+    integral_spec(ParseContext& pc, FormatContext& fc)
+      : bool_presentation<specification<ParseContext,FormatContext>,
+                          typename FormatContext::char_type,Base>{pc, fc} {}
+  };
+
+  template<typename ParseContext, typename FormatContext>
+  struct integral_spec<char,ParseContext,FormatContext,0>
+    : specification<ParseContext,FormatContext> {
+    inline void operator()(char value) {
+      using char_type = typename FormatContext::char_type;
+      auto out = this->format_context.out();
+      *out++ = static_cast<char_type>(value); // FIXME: unicode charconv
+      this->format_context.advance_to(out);
     }
   };
-  template<> struct handle<unsigned int> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, unsigned int val) const {
-      format_decimal(fc, val);
+
+  template<typename ParseContext, typename FormatContext>
+  struct integral_spec<wchar_t,ParseContext,FormatContext,0>
+    : specification<ParseContext,FormatContext> {
+    inline void operator()(wchar_t value) {
+      using char_type = typename FormatContext::char_type;
+      auto out = this->format_context.out();
+      *out++ = static_cast<char_type>(value); // FIXME: unicode charconv
+      this->format_context.advance_to(out);
     }
   };
-  template<> struct handle<signed long long> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, signed long long val) const {
-      format_decimal(fc, val);
+
+  template<typename Value, typename ParseContext, typename FormatContext>
+  struct floating_spec : specification<ParseContext,FormatContext> {
+    unsigned precision = 0;
+    bool percentage : 1 = false;
+    void operator()(const Value& value) {
+      // TODO: deal with precision, etc....
+      auto out = this->format_context.out();
+      if (this->percentage) {
+        using char_type = typename FormatContext::char_type;
+        const auto& s = _VSTD::to_string(value*100);
+        out = _VSTD::copy(s.begin(), s.end(), out);
+        *out++ = static_cast<char_type>('%');
+      } else {
+        const auto& s = _VSTD::to_string(value);
+        out = _VSTD::copy(s.begin(), s.end(), out);
+      }
+      this->format_context.advance_to(out);
     }
   };
-  template<> struct handle<unsigned long long> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, unsigned long long val) const {
-      format_decimal(fc, val);
+
+  template<typename ParseContext, typename FormatContext>
+  struct default_spec : specification<ParseContext,FormatContext> {
+    void operator()(const char* value) {
+      this->operator()(basic_string_view<char>(value));
+    }
+    void operator()(const wchar_t* value) {
+      this->operator()(basic_string_view<wchar_t>(value));
+    }
+    template<typename Char>
+    void operator()(const basic_string<Char>& __s) {
+      this->copy_str(__s.begin(), __s.end());
+    }
+    template<typename Char>
+    void operator()(basic_string_view<Char> __s) {
+      this->copy_str(__s.begin(), __s.end());
+    }
+
+    template<typename Value>
+    void operator()(const Value& value) {
+      __throw_format_error("default specification for unexpected value");
+    }
+
+  private:
+    template<typename Iterator>
+    void copy_str(Iterator begin, Iterator end) const {
+      auto out = this->format_context.out();
+      out = copy(begin, end, out);
+      this->format_context.advance_to(out);
     }
   };
-  template<> struct handle<double> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, double) const {
-      _VSTD::clog<<"TODO: "<<"double"<<endl;
+
+  template<typename ParseContext, typename FormatContext>
+  struct pointer_spec : specification<ParseContext,FormatContext> {
+    template<typename T> inline void operator()(const T* value) {
+      using __traits = integral_traits<uintptr_t,16>;
+      using char_type = typename FormatContext::char_type;
+      enum { size = __traits::digits };
+      char_type buffer[size];
+      auto __v = reinterpret_cast<uintptr_t>(value);
+      auto res = __traits::chars(buffer, buffer+size, __v);
+      if (res.ec != errc(0))
+        __throw_format_error("format integer value error");
+      else {
+        auto out = this->format_context.out();
+        *out++ = static_cast<char_type>('0');
+        *out++ = static_cast<char_type>('x'); // FIXME: upper 'X'
+        out = copy(buffer, res.ptr, out);
+        this->format_context.advance_to(out);
+      }
     }
   };
-  template<> struct handle<long double> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, long double) const {
-      _VSTD::clog<<"TODO: "<<"long double"<<endl;
-    }
-  };
-  template<typename T> struct handle<_VSTD::basic_string_view<T>> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, _VSTD::basic_string_view<T> val) const {
-      _VSTD::copy(val.begin(), val.end(), fc.out());
-    }
-  };
-  template<> struct handle<bool> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, bool val) const {
-      using view = _VSTD::string_view;
-      handle<view>().format(pc, fc, view(val ? "true" : "false"));
-    }
-  };
-  template<> struct handle<const char*> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, const char* val) const {
-      using view = _VSTD::basic_string_view<char>;
-      handle<view>().format(pc, fc, view(val));
-    }
-  };
-  template<> struct handle<const wchar_t*> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, const wchar_t* val) const {
-      using view = _VSTD::basic_string_view<wchar_t>;
-      handle<view>().format(pc, fc, view(val));
-    }
-  };
-  template<> struct handle<const void*> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, const void* val) const {
-      _VSTD::clog<<"TODO: (const void*) "<<val<<endl;
+
+  template<typename ParseContext, typename FormatContext>
+  struct unmatched_type_spec : specification<ParseContext,FormatContext> {
+    template<typename Value>
+    void operator()(const Value& value) {
+      __throw_format_error("format value of unmatched type");
     }
   };
 
   template <typename OutIter, typename Char> class driver final {
-    basic_format_context<OutIter,Char> format_context;
+    using FormatContext = basic_format_context<OutIter,Char>;
+    FormatContext format_context;
 
     template <typename Iterator>
     void chars(Iterator& pos, const Iterator end) {
@@ -488,7 +662,6 @@ namespace __format
 
     template <typename ParseContext, typename Iterator>
     void replacement(ParseContext& pc, Iterator& pos, const Iterator end) {
-      _VSTD::clog<<"replacement: "<<string(pos, end)<<endl;
       assert(*pos == '{' && "unexpected replacement openning");
       ++pos;
       if (pos == end) {
@@ -499,207 +672,300 @@ namespace __format
         __throw_format_error("malform format string");
       } else if (*pos == ':') {
         ++pos;
-        this->spec(pc, id, pos, end);
+        this->spec_align(pc, id, pos, end);
       } else if (*pos == '}') {
         ++pos;
-        this->replace(pc, format_context.arg(id));
+        this->handle_arg(pc, format_context.arg(id), none_aligner{});
       } else {
         __throw_format_error("malform format replacement");
       }
     }
 
     template <typename ParseContext, typename Iterator>
-    void spec(ParseContext& pc, _VSTD::size_t id, Iterator& pos, const Iterator end) {
+    void spec_align(ParseContext& pc, _VSTD::size_t id, Iterator& pos, const Iterator end) {
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if (*pos == '}') {
         ++pos;
-        this->replace(pc, format_context.arg(id));
+        this->handle_arg(pc, format_context.arg(id), none_aligner{});
         return;
-      }
-      _VSTD::remove_cvref_t<decltype(*pos)> fill = 0;
-      auto align = alignment::none;
-      auto next = pos + 1;
-      if (next != end) {
+      } else if (auto next = pos + 1; next != end) {
         switch (*next) {
-        case '<': align = alignment::left;
-        case '>': align = alignment::right;
-        case '=': align = alignment::numeric;
-        case '^': align = alignment::center;
-        }
-        if (align != alignment::none) {
-          fill = *pos;
-          if (fill == '{')
+        case '<': {
+          left_aligner bits{ static_cast<unsigned>(*pos) };
+          if (bits.fill == '{')
             __throw_format_error("invalid fill character '{'");
           pos += 2;
-          if (pos == end) {
-            __throw_format_error("malform format replacement spec");
+          this->spec_sign(bits, pc, id, pos, end);
+        } break;
+        case '>': {
+          right_aligner bits{ static_cast<unsigned>(*pos) };
+          if (bits.fill == '{')
+            __throw_format_error("invalid fill character '{'");
+          pos += 2;
+          this->spec_sign(bits, pc, id, pos, end);
+        } break;
+        case '=': {
+          numeric_aligner bits{ static_cast<unsigned>(*pos) };
+          if (bits.fill == '{')
+            __throw_format_error("invalid fill character '{'");
+          pos += 2;
+          this->spec_sign(bits, pc, id, pos, end);
+        } break;
+        case '^': {
+          center_aligner bits{ static_cast<unsigned>(*pos) };
+          if (bits.fill == '{')
+            __throw_format_error("invalid fill character '{'");
+          pos += 2;
+          this->spec_sign(bits, pc, id, pos, end);
+        } break;
+        default:
+          switch (*pos) {
+          case '<':
+            pos = next;
+            this->spec_sign(left_aligner{}, pc, id, pos, end);
+            break;
+          case '>':
+            pos = next;
+            this->spec_sign(right_aligner{}, pc, id, pos, end);
+            break;
+          case '=':
+            pos = next;
+            this->spec_sign(numeric_aligner{}, pc, id, pos, end);
+            break;
+          case '^':
+            pos = next;
+            this->spec_sign(center_aligner{}, pc, id, pos, end);
+            break;
+          default:
+            this->spec_sign(none_aligner{}, pc, id, pos, end);
+            break;
           }
         }
-      }
-      auto sign = *pos;
-      if (sign == '+' || sign == '-' || sign == ' ') {
-        ++pos;
       } else {
-        sign = 0;
+        __throw_format_error("malform format spec");
       }
-      auto sharp = false, zero = false;
+    }
+
+    template <typename Bits, typename ParseContext, typename Iterator>
+    void spec_sign(Bits bits, ParseContext& pc, _VSTD::size_t id, Iterator& pos, const Iterator end) {
+      if (pos == end)
+        __throw_format_error("malform format spec");
+      switch (*pos) {
+      case '+':
+        ++pos;
+        this->spec_alt(plus_signer<Bits>{ bits }, pc, id, pos, end);
+        break;
+      case '-':
+        ++pos;
+        this->spec_alt(minus_signer<Bits>{ bits }, pc, id, pos, end);
+        break;
+      case ' ':
+        ++pos;
+        this->spec_alt(space_signer<Bits>{ bits }, pc, id, pos, end);
+        break;
+      default:
+        this->spec_alt(none_signer<Bits>{ bits }, pc, id, pos, end);
+        break;
+      }
+    }
+
+    template <typename Bits, typename ParseContext, typename Iterator>
+    void spec_alt(Bits bits, ParseContext& pc, _VSTD::size_t id, Iterator& pos, const Iterator end) {
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if (*pos == '#') {
         ++pos;
-        sharp = true;
+        this->spec_width(alternate<Bits>{ bits }, pc, id, pos, end);
+      } else {
+        this->spec_width(bits, pc, id, pos, end);
       }
+    }
+
+    template <typename Bits, typename ParseContext, typename Iterator>
+    void spec_width(Bits bits, ParseContext& pc, _VSTD::size_t id, Iterator& pos, const Iterator end) {
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if (*pos == '0') {
+        bits.zero = true;
         ++pos;
-        zero = true;
       }
-      unsigned width = 0, precision = 0;
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if ('1' <= *pos && *pos <= '9') {
-        width = positive_int(pos, end);
-        if (pos != end && *pos == '.') {
-          ++pos;
-          if (pos == end) {
-            __throw_format_error("malform format replacement spec");
-          } else {
-            precision = positive_int(pos, end);
-          }
+        bits.width = positive_int(pos, end);
+      }
+      unsigned precision = 0;
+      if (pos != end && *pos == '.') {
+        if (++pos == end) {
+          __throw_format_error("malform format replacement spec");
+        } else {
+          precision = positive_int(pos, end);
         }
       }
       if (pos == end)
         __throw_format_error("malform format replacement spec");
-      const auto type = *pos;
-      ++pos;
+      const auto type = *pos++;
       if (type == '}') {
-        this->general(pc, id, align, fill, width, precision, false);
+        this->handle_arg(pc, format_context.arg(id), bits);
         return;
       }
       if (*pos != '}') {
         __throw_format_error("malform format replacement spec");
       } else {
+        auto arg = format_context.arg(id);
         ++pos;
-        switch (type) {
+        switch (type) { // presentation type
         case 'a':
-          this->hex(pc, id, align, fill, width, precision, false);
+          this->handle_floating(pc, arg, floating<Bits,chars_format::hex>{ bits, precision });
           break;
         case 'A':
-          this->hex(pc, id, align, fill, width, precision, true);
+          bits.upper = true;
+          this->handle_floating(pc, arg, floating<Bits,chars_format::hex>{ bits, precision });
           break;
         case 'b':
-          this->binary(pc, id, align, fill, width, precision, false);
+          this->handle_integral<2>(pc, arg, bits);
           break;
         case 'B':
-          this->binary(pc, id, align, fill, width, precision, true);
+          bits.upper = true;
+          this->handle_integral<2>(pc, arg, bits);
           break;
         case 'c':
-          this->character(pc, id, align, fill, width, precision);
+          this->handle_character(pc, arg, bits);
           break;
         case 'd':
-          this->decimal(pc, id, align, fill, width, precision);
+          this->handle_integral<10>(pc, arg, bits);
           break;
         case 'e':
-          this->scientific(pc, id, align, fill, width, precision, false);
+          if (precision == 0) precision = 6;
+          this->handle_floating(pc, arg, floating<Bits,chars_format::scientific>{ bits, precision });
           break;
         case 'E':
-          this->scientific(pc, id, align, fill, width, precision, true);
+          bits.upper = true;
+          if (precision == 0) precision = 6;
+          this->handle_floating(pc, arg, floating<Bits,chars_format::scientific>{ bits, precision });
           break;
         case 'f':
-          this->fixed(pc, id, align, fill, width, precision, false);
+          if (precision == 0) precision = 6;
+          this->handle_floating(pc, arg, floating<Bits,chars_format::fixed>{ bits, precision });
           break;
         case 'F':
-          this->fixed(pc, id, align, fill, width, precision, true);
+          bits.upper = true;
+          if (precision == 0) precision = 6;
+          this->handle_floating(pc, arg, floating<Bits,chars_format::fixed>{ bits, precision });
           break;
         case 'g':
-          this->general(pc, id, align, fill, width, precision, false);
+          if (precision == 0) precision = 6;
+          this->handle_floating(pc, arg, floating<Bits,chars_format::general>{ bits, precision });
           break;
         case 'G':
-          this->general(pc, id, align, fill, width, precision, true);
+          bits.upper = true;
+          if (precision == 0) precision = 6;
+          this->handle_floating(pc, arg, floating<Bits,chars_format::general>{ bits, precision });
           break;
         case 'n':
-          this->general_n(pc, id, align, fill, width, precision);
+          this->handle_numeric(pc, arg, bits);
           break;
         case 'o':
-          this->octal(pc, id, align, fill, width, precision);
+          this->handle_integral<8>(pc, arg, bits);
           break;
         case 'p':
-          this->ptr(pc, id, align, fill, width, precision);
+          this->handle_pointer(pc, arg, bits);
           break;
         case 's':
-          this->str(pc, id, align, fill, width, precision);
+          this->handle_string(pc, arg, bits);
           break;
         case 'x':
-          this->hex(pc, id, align, fill, width, precision, false);
+          this->handle_integral<16>(pc, arg, bits);
           break;
         case 'X':
-          this->hex(pc, id, align, fill, width, precision, true);
+          bits.upper = true;
+          this->handle_integral<16>(pc, arg, bits);
+          break;
+        case '%':
+          // TODO: floating point as percentage
           break;
         }
       }
     }
 
-    template <typename ParseContext, typename FormatArg>
-    void replace(ParseContext& pc, FormatArg arg) {
-      handle<FormatArg>().format(pc, format_context, arg);
-      //format_context.advance_to(out);
+    template <typename ParseContext, typename FormatArg, typename Bits>
+    void handle_arg(ParseContext& parse_context, FormatArg arg, Bits bits) {
+      visit_format_arg([this, &parse_context](const auto &value){
+        using Value = remove_cvref_t<decltype(value)>;
+        conditional_t<is_floating_point_v<Value>,floating_spec<Value,ParseContext,FormatContext>,
+        conditional_t<is_integral_v<Value>,integral_spec<Value,ParseContext,FormatContext>,
+                      default_spec<ParseContext,FormatContext>>>
+          spec{ parse_context, format_context };
+        spec(value);
+      }, arg);
     }
 
-    template <typename ParseContext, typename Fill>
-    void general(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision, bool upper) {
-      _VSTD::clog<<"TODO:general: "<<id<<endl;
+    template <typename ParseContext, typename FormatArg, typename Bits>
+    void handle_floating(ParseContext& parse_context, FormatArg arg, Bits bits) {
+      visit_format_arg([this, &parse_context](const auto &value){
+        using Value = remove_cvref_t<decltype(value)>;
+        conditional_t<is_floating_point_v<Value>,floating_spec<Value,ParseContext,FormatContext>,
+                      unmatched_type_spec<ParseContext,FormatContext>>
+          spec{ parse_context, format_context };
+        spec(value);
+      }, arg);
     }
 
-    template <typename ParseContext, typename Fill>
-    void general_n(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision) {
-      _VSTD::clog<<"TODO:general_n: "<<id<<endl;
+    template <unsigned Base, typename ParseContext, typename FormatArg, typename Bits>
+    void handle_integral(ParseContext& parse_context, FormatArg arg, Bits bits) {
+      visit_format_arg([this, &parse_context](const auto &value){
+        using Value = remove_cvref_t<decltype(value)>;
+        conditional_t<is_integral_v<Value>,integral_spec<Value,ParseContext,FormatContext,Base>,
+                      unmatched_type_spec<ParseContext,FormatContext>>
+          spec{ parse_context, format_context };
+        spec(value);
+      }, arg);
     }
 
-    template <typename ParseContext, typename Fill>
-    void binary(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision, bool upper) {
-      _VSTD::clog<<"TODO:binary: "<<id<<endl;
+    template <typename ParseContext, typename FormatArg, typename Bits>
+    void handle_numeric(ParseContext& parse_context, FormatArg arg, Bits bits) {
+      visit_format_arg([this, &parse_context](const auto &value){
+        using Value = remove_cvref_t<decltype(value)>;
+        conditional_t<is_floating_point_v<Value>,floating_spec<Value,ParseContext,FormatContext>,
+        conditional_t<is_integral_v<Value>,integral_spec<Value,ParseContext,FormatContext,10>,
+                      unmatched_type_spec<ParseContext,FormatContext>>>
+          spec{ parse_context, format_context };
+        spec(value);
+      }, arg);
     }
 
-    template <typename ParseContext, typename Fill>
-    void decimal(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision) {
-      _VSTD::clog<<"TODO:decimal: "<<id<<endl;
+    template <typename ParseContext, typename FormatArg, typename Bits>
+    void handle_character(ParseContext& parse_context, FormatArg arg, Bits bits) {
+      visit_format_arg([this, &parse_context](const auto &value){
+        using Value = remove_cvref_t<decltype(value)>;
+        conditional_t<is_char_v<Value>,integral_spec<Value,ParseContext,FormatContext,0>,
+                      unmatched_type_spec<ParseContext,FormatContext>>
+          spec{ parse_context, format_context };
+        spec(value);
+      }, arg);
     }
 
-    template <typename ParseContext, typename Fill>
-    void octal(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision) {
-      _VSTD::clog<<"TODO:octal: "<<id<<endl;
+    template <typename ParseContext, typename FormatArg, typename Bits>
+    void handle_pointer(ParseContext& parse_context, FormatArg arg, Bits bits) {
+      visit_format_arg([this, &parse_context](const auto &value){
+        using Value = remove_cvref_t<decltype(value)>;
+        conditional_t<is_pointer_v<Value>,pointer_spec<ParseContext,FormatContext>,
+                      unmatched_type_spec<ParseContext,FormatContext>>
+          spec{ parse_context, format_context };
+        spec(value);
+      }, arg);
     }
 
-    template <typename ParseContext, typename Fill>
-    void hex(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision, bool upper) {
-      _VSTD::clog<<"TODO:hex: "<<id<<endl;
-    }
-
-    template <typename ParseContext, typename Fill>
-    void scientific(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision, bool upper) {
-      _VSTD::clog<<"TODO:scientific: "<<id<<endl;
-    }
-
-    template <typename ParseContext, typename Fill>
-    void fixed(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision, bool upper) {
-      _VSTD::clog<<"TODO:fixed: "<<id<<endl;
-    }
-
-    template <typename ParseContext, typename Fill>
-    void character(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision) {
-      _VSTD::clog<<"TODO:character: "<<id<<endl;
-    }
-
-    template <typename ParseContext, typename Fill>
-    void str(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision) {
-      _VSTD::clog<<"TODO:str: "<<id<<endl;
-    }
-
-    template <typename ParseContext, typename Fill>
-    void ptr(ParseContext& pc, _VSTD::size_t id, alignment align, Fill fill, unsigned width, unsigned precision) {
-      _VSTD::clog<<"TODO:ptr: "<<id<<endl;
+    template <typename ParseContext, typename FormatArg, typename Bits>
+    void handle_string(ParseContext& parse_context, FormatArg arg, Bits bits) {
+      visit_format_arg([this, &parse_context](const auto &value){
+        using Value = remove_cvref_t<decltype(value)>;
+        conditional_t<is_char_v<Value>,default_spec<ParseContext,FormatContext>,
+                      unmatched_type_spec<ParseContext,FormatContext>>
+          spec{ parse_context, format_context };
+        spec(value);
+      }, arg);
     }
 
   public:
@@ -838,15 +1104,27 @@ private:
   struct integer : __format::fit_integer<T>
   {
     using typename __format::fit_integer<T>::type;
-    type val(const T& v) noexcept { return static_cast<type>(v); }
+    type val(const T& v) const noexcept { return static_cast<type>(v); }
   };
 
   template <typename T> struct integer<T,false> {
-    handle val(const T& v) noexcept { return handle(v); }
+    handle val(const T& v) const noexcept { return handle(v); }
   };
 
+  template <typename T> struct identical {
+    T val(T v) const noexcept { return v; }
+  };
+
+  template <typename T> struct best_store : integer<T> {};
+  template <> struct best_store<bool> : identical<bool> {};
+  template <> struct best_store<char> : identical<char> {};
+  template <> struct best_store<wchar_t> : identical<wchar_t> {};
+  template <> struct best_store<char8_t> : identical<char8_t> {};
+  template <> struct best_store<char16_t> : identical<char16_t> {};
+  template <> struct best_store<char32_t> : identical<char32_t> {};
+
   template<class T> explicit basic_format_arg(const T& v) noexcept
-    : var(integer<T>().val(v)) {}
+    : var(best_store<T>().val(v)) {}
 
   explicit basic_format_arg(float n) noexcept : var(static_cast<double>(n)) {}
   explicit basic_format_arg(double n) noexcept : var(n) {}
@@ -911,22 +1189,23 @@ public:
 
 namespace __format
 {
+#if 0
   template<typename T> struct handle<basic_format_arg<T>> {
-    template<typename ParseContext, typename FormatContext>
-    void format(ParseContext& pc, FormatContext& fc, basic_format_arg<T> arg) const {
-      visit_format_arg([this, &pc, &fc](const auto& val){
-        using char_type = typename FormatContext::char_type;
+    template<typename Spec>
+    void format(const Spec& spec, basic_format_arg<T> arg) const {
+      visit_format_arg([this, &spec](const auto& val){
         using val_type = _VSTD::remove_cvref_t<decltype(val)>;
-        handle<val_type>().format(pc, fc, val);
+        handle<val_type>().format(spec, val);
       }, arg);
     }
   };
+#endif
 #if __has_feature(ASSOCIATED_TYPENAME_SPECIALIZATION)
   template<typename FormatContext>
   struct handle<typename basic_format_arg<FormatContext>::handle> {
     template<typename ParseContext>
-    void format(ParseContext& pc, FormatContext& fc, typename basic_format_arg<FormatContext>::handle h) const {
-      h.format(pc, fc);
+    void format(const Spec& spec, typename basic_format_arg<FormatContext>::handle h) const {
+      h.format(spec);
     }
   };
 #endif // ASSOCIATED_TYPENAME_SPECIALIZATION

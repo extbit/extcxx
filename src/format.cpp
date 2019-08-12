@@ -113,8 +113,4 @@ void __format::specifiers::add(specifier* ptr) noexcept {
 
 #endif
 
-#if 0
-static auto test_automatic = format("{},{},{},{},{},{}", 1, 2.0, char(3), true, '5', "6");
-static auto test_manual = format("{0},{1},{2},{3},{4},{5}", 1, 2.0, char(3), true, '5', "6");
-#endif
 _LIBCPP_END_NAMESPACE_STD
