@@ -1140,6 +1140,24 @@ namespace __format
       parse_context.advance_to(pos);
       return format_context.out();
     }
+
+    template <typename FormatArgs>
+    driver(OutIter out, FormatArgs args)
+      : parse_context(basic_string_view<Char>())
+      , format_context(out, args) {}
+
+    OutIter __lit(size_t __n)
+    {
+      for (auto __i = 0; __i < __n; ++__i) {
+        if (__i > 0) {
+          auto out = format_context.out();
+          *out++ = static_cast<Char>(' ');
+          format_context.advance_to(out);
+        }
+        this->handle_arg(default_align_bits<Char,OutIter>{ __i });
+      }
+      return format_context.out();
+    }
   };
 
   template <typename Char>
