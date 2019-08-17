@@ -33,6 +33,7 @@ inline namespace fundamentals_v2 {
 
 #include <experimental/__config>
 #include <stdint.h>
+#include <ostream>
 
 _LIBCPP_BEGIN_NAMESPACE_LFTS_V2
 
@@ -58,7 +59,6 @@ private:
   constexpr source_location(const decltype(nullptr)) noexcept
     : __file(nullptr), __function(nullptr), __line(0), __column(0)
   {}
-
   const char *__file = __builtin_FILE();
   const char *__function = __builtin_FUNCTION();
   unsigned __line = __builtin_LINE();
@@ -66,3 +66,13 @@ private:
 };
 
 _LIBCPP_END_NAMESPACE_LFTS_V2
+
+namespace std {
+  template<class _CharT, class _Traits>
+  inline basic_ostream<_CharT, _Traits>&
+  operator<<(basic_ostream<_CharT, _Traits>& __os, _VSTD_LFTS_V2::source_location __loc)
+  {
+    __os<<__loc.file_name()<<":"<<__loc.line()<<":"<<__loc.column()<<":";
+    return __os;
+  }
+}
