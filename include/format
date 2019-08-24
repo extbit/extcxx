@@ -95,7 +95,6 @@ namespace std {
 #include <stdint.h>
 #include <variant>
 #include <array>
-#include <iostream>
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -193,6 +192,159 @@ public:
   void advance_to(iterator it) { out_ = it; }
 };
 
+template<class T, class Char> struct formatter
+{
+  // T is unsupported by standard formatter, you have to specialize
+  // std::formatter<T,Char> in your code.
+  formatter() = delete;
+};
+
+namespace __format
+{
+  // selecting smaller type
+
+  template <typename T, typename... Types> struct smaller;
+  template <typename T, typename Type>
+  struct smaller<T,Type> { using type = Type; };
+
+  template <typename T, typename Type, typename... Rest>
+  struct smaller<T,Type,Rest...> : conditional_t<(sizeof(T)<=sizeof(Type)),
+    smaller<T,Type>, smaller<T,Rest...>> {};
+
+  template <typename T, typename... Types>
+  using smaller_t = typename smaller<T,Types...>::type;
+
+# if 0
+  template <typename T, bool = is_integral_v<T>> struct integer
+  {
+    using Int = conditional_t<
+      is_unsigned_v<T>,
+      smaller_t<T,unsigned int,unsigned long long int>,
+      smaller_t<T,int,long long int>>;
+    Int val(const T& v) noexcept { return static_cast<Int>(v); }
+  };
+# endif
+
+  // integer
+
+  template <typename T, bool = is_unsigned_v<T>>
+  struct fit_integer
+  {
+    using type = smaller_t<T,unsigned int,unsigned long long int>;
+  };
+  template <typename T> struct fit_integer<T,false>
+  {
+    using type = smaller_t<T,int,long long int>;
+  };
+} // __format
+
+template<class Context, class... Args> struct format_arg_store;
+
+template<class Context> class basic_format_arg {
+public:
+  class handle;
+
+private:
+  using char_type = typename Context::char_type;
+
+  variant<
+    monostate, bool, char_type, int, unsigned int,
+    long long int, unsigned long long int, double, long double,
+    const char_type*, basic_string_view<char_type>,
+    const void*, handle> var;
+
+  template<class X, class... Args>
+  friend struct format_arg_store;
+
+  // integer
+
+  template <typename T, bool = is_integral_v<T>>
+  struct integer : __format::fit_integer<T>
+  {
+    using typename __format::fit_integer<T>::type;
+    type val(const T& v) const noexcept { return static_cast<type>(v); }
+  };
+
+  template <typename T> struct integer<T,false> {
+    handle val(const T& v) const noexcept { return handle(v); }
+  };
+
+  template <typename T> struct identical {
+    T val(T v) const noexcept { return v; }
+  };
+
+  template <typename T> struct best_store : integer<T> {};
+  template <> struct best_store<bool> : identical<bool> {};
+  template <> struct best_store<char> : identical<char> {};
+  template <> struct best_store<wchar_t> : identical<wchar_t> {};
+  template <> struct best_store<char8_t> : identical<char8_t> {};
+  template <> struct best_store<char16_t> : identical<char16_t> {};
+  template <> struct best_store<char32_t> : identical<char32_t> {};
+
+  template<class T> explicit basic_format_arg(const T& v) noexcept
+    : var(best_store<T>().val(v)) {}
+
+  explicit basic_format_arg(float n) noexcept : var(static_cast<double>(n)) {}
+  explicit basic_format_arg(double n) noexcept : var(n) {}
+  explicit basic_format_arg(long double n) noexcept : var(n) {}
+  explicit basic_format_arg(const char_type* s) : var(s) {}
+
+  template<class Traits>
+  explicit basic_format_arg(basic_string_view<char_type,Traits> s) noexcept
+    : var(s) {}
+
+  template<class Traits, class Allocator>
+  explicit basic_format_arg(const basic_string<char_type,Traits,Allocator>& s) noexcept
+    : basic_format_arg(basic_string_view(s.data(), s.size())) {}
+
+  explicit basic_format_arg(nullptr_t) noexcept
+    : var(static_cast<const void*>(nullptr)) {}
+
+  explicit basic_format_arg(const void* p) noexcept
+    : var(p) {}
+
+  template<class Visitor, class Ctx>
+  friend auto visit_format_arg(Visitor&& visit, basic_format_arg<Ctx> arg)
+    -> decltype(visit(0));
+
+  template<class Ctx, class... Args>
+  friend format_arg_store<Ctx, Args...> make_format_args(const Args&... args);
+
+public:
+  basic_format_arg() noexcept {}
+  explicit operator bool() const noexcept {
+    return !holds_alternative<monostate>(var);
+  }
+};
+
+template<class Context>
+class basic_format_arg<Context>::handle {
+  friend class basic_format_arg<Context>;
+
+  using char_type = typename Context::char_type;
+  using parse_context = basic_format_parse_context<char_type>;
+
+  template<typename T>
+  using formatter = typename Context::template formatter_type<T>;
+
+  const void* __v;
+  void (*__f)(parse_context&, Context&, const void*);
+
+  template<class T> explicit handle(const T& val) noexcept
+    : __v(&val)
+    , __f([](parse_context& parse_ctx, Context& format_ctx, const void* ptr) {
+        formatter<T> __f;
+        auto __p = static_cast<const T*>(ptr);
+        parse_ctx.advance_to(__f.parse(parse_ctx));
+        format_ctx.advance_to(__f.format(*__p, format_ctx));
+      })
+  {}
+
+public:
+  void format(parse_context& parse_ctx, Context& format_ctx) const
+  { __f(parse_ctx, format_ctx, __v); }
+};
+
 namespace __format
 {
   template <typename Iterator>
@@ -226,6 +378,30 @@ namespace __format
 
   template <typename Char>
   inline constexpr bool is_char_v = is_char<Char>::value;
+
+
+  void as_string_view(...);
+
+  template<typename Char, enable_if<is_char_v<Char>>>
+  inline basic_string_view<Char>
+  as_string_view(const Char* s) { return {s}; }
+
+  template<typename Char, typename Traits, typename Allocator>
+  inline basic_string_view<Char>
+  as_string_view(const basic_string<Char,Traits,Allocator>& s)
+  { return {s.data(), s.size()}; }
+
+  template<typename Char, typename Traits>
+  inline basic_string_view<Char>
+  as_string_view(basic_string_view<Char,Traits> s)
+  { return {s.data(), s.size()}; }
+
+  template <typename S>
+  struct is_string : is_class<decltype(as_string_view(declval<S>()))> {};
+  template <> struct is_string<void> : false_type {};
+
+  template<typename S>
+  inline constexpr bool is_string_v = is_string<S>::value;
 
   template <typename Int> using uint_32_64_t =
     conditional_t<numeric_limits<Int>::digits <= 32,
@@ -411,8 +587,15 @@ namespace __format
     return negative;
   }
 
-  template<typename Char, typename Iterator>
+  template<typename ParseContext, typename FormatContext>
   struct specbits {
+    using format_context_t = FormatContext;
+    using Char = typename FormatContext::char_type;
+    using Iterator = typename FormatContext::iterator;
+
+    ParseContext& parse_context;
+    FormatContext& format_context;
+
     size_t id;
     Char fill = static_cast<Char>(' ');
     unsigned width = 0; // minimum field width
@@ -423,58 +606,59 @@ namespace __format
     bool upper : 1 = false;
     bool percentage : 1 = false;
     chars_format fmt = chars_format::general;
+
+    explicit specbits(ParseContext& __pc, FormatContext& __fc, unsigned __id)
+      : parse_context(__pc), format_context(__fc), id(__id) {}
+
     virtual Iterator padding_left(Iterator out, unsigned, bool=false) const { return out; }
     virtual Iterator padding_right(Iterator out, unsigned, bool=false) const { return out; }
     virtual bool check_padding(bool) const { return false; }
   };
 
-  template<typename ParseContext, typename FormatContext>
+  template<typename FormatContext>
   struct specification {
-    using parse_context_type = ParseContext;
-    using format_context_type = FormatContext;
-    using char_type = typename FormatContext::char_type;
-    using iterator = typename FormatContext::iterator;
-    using bits_t = specbits<char_type,iterator>;
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+    using Char = typename FormatContext::char_type;
 
-    ParseContext& parse_context;
-    FormatContext& format_context;
-
-    template<unsigned Base, typename Distance>
-    iterator padding_integral_prefix(const bits_t& bits, Distance& len, bool negative) const {
-      auto out = format_context.out();
+    template<unsigned Base, typename ParseContext, typename Distance>
+    auto padding_integral_prefix(const bits_t<ParseContext>& bits, Distance& len, bool negative) const {
+      auto out = bits.format_context.out();
       auto num = bits.check_padding(true);
       auto sign = bits.sign(out, negative);
       if (sign) len += 1;
       if (bits.hash) {
-        using __prefix = integral_prefix<char_type,Base>;
+        using __prefix = integral_prefix<Char,Base>;
         auto __s = __prefix::value;
         len += __s.size();
         if (!bits.zero && !num)
           out = bits.padding_left(out, len, true);
         if (/*(Base == 16 || Base == 2) &&*/ bits.upper)
-          out = transform(__s.begin(), __s.end(), out, upper_char<char_type>);
+          out = transform(__s.begin(), __s.end(), out, upper_char<Char>);
         else
           out = copy(__s.begin(), __s.end(), out);
       }
       if ((bits.zero || (num && sign)) && bits.width > len)
-        out = fill_n(out, bits.width - len, static_cast<char_type>('0'));
+        out = fill_n(out, bits.width - len, static_cast<Char>('0'));
       else if (!bits.hash)
         out = bits.padding_left(out, len, true);
       return out;
     }
 
-    template<typename Distance>
-    iterator padding_nonarith_prefix(const bits_t& bits, Distance& len) const {
-      auto out = format_context.out();
+    template<typename ParseContext, typename Distance>
+    auto padding_nonarith_prefix(const bits_t<ParseContext>& bits, Distance& len) const {
+      auto out = bits.format_context.out();
       bits.check_padding(true);
       out = bits.padding_left(out, len, false);
       return out;
     }
   };
 
-  template<typename Char, typename Iterator>
-  struct default_align_bits : specbits<Char,Iterator> {
-    explicit default_align_bits(unsigned id) { this->id = id; }
+  template<typename ParseContext, typename FormatContext>
+  struct default_align_bits : specbits<ParseContext,FormatContext> {
+    using typename specbits<ParseContext,FormatContext>::Iterator;
+    explicit default_align_bits(ParseContext& pc, FormatContext& fc, unsigned id)
+      : specbits<ParseContext,FormatContext>{ pc, fc, id } {}
     Iterator padding_left(Iterator out, unsigned size, bool __on) const override {
       if (__on && /*this->width &&*/ this->width > size) {
         out = fill_n(out, this->width - size, this->fill);
@@ -489,9 +673,11 @@ namespace __format
     }
   };
 
-  template<typename Char, typename Iterator>
-  struct left_align_bits : specbits<Char,Iterator> {
-    explicit left_align_bits(unsigned id) { this->id = id; }
+  template<typename ParseContext, typename FormatContext>
+  struct left_align_bits : specbits<ParseContext,FormatContext> {
+    using typename specbits<ParseContext,FormatContext>::Iterator;
+    explicit left_align_bits(ParseContext& pc, FormatContext& fc, unsigned id)
+      : specbits<ParseContext,FormatContext>{ pc, fc, id } {}
     Iterator padding_right(Iterator out, unsigned size, bool) const override {
       if (/*this->width &&*/ this->width > size) {
         out = fill_n(out, this->width - size, this->fill);
@@ -500,9 +686,11 @@ namespace __format
     }
   };
 
-  template<typename Char, typename Iterator>
-  struct right_align_bits : specbits<Char,Iterator> {
-    explicit right_align_bits(unsigned id) { this->id = id; }
+  template<typename ParseContext, typename FormatContext>
+  struct right_align_bits : specbits<ParseContext,FormatContext> {
+    using typename specbits<ParseContext,FormatContext>::Iterator;
+    explicit right_align_bits(ParseContext& pc, FormatContext& fc, unsigned id)
+      : specbits<ParseContext,FormatContext>{ pc, fc, id } {}
     Iterator padding_left(Iterator out, unsigned size, bool) const override {
       if (/*this->width &&*/ this->width > size) {
         out = fill_n(out, this->width - size, this->fill);
@@ -510,9 +698,11 @@ namespace __format
     }
   };
 
-  template<typename Char, typename Iterator>
-  struct numeric_align_bits : specbits<Char,Iterator> {
-    explicit numeric_align_bits(unsigned id) { this->id = id; }
+  template<typename ParseContext, typename FormatContext>
+  struct numeric_align_bits : specbits<ParseContext,FormatContext> {
+    using typename specbits<ParseContext,FormatContext>::Iterator;
+    explicit numeric_align_bits(ParseContext& pc, FormatContext& fc, unsigned id)
+      : specbits<ParseContext,FormatContext>{ pc, fc, id } {}
     Iterator padding_left(Iterator out, unsigned size, bool __on) const override {
       if (__on && /*this->width &&*/ this->width > size) {
         out = fill_n(out, this->width - size, this->fill);
@@ -525,9 +715,11 @@ namespace __format
     }
   };
 
-  template<typename Char, typename Iterator>
-  struct center_align_bits : specbits<Char,Iterator> {
-    explicit center_align_bits(unsigned id) { this->id = id; }
+  template<typename ParseContext, typename FormatContext>
+  struct center_align_bits : specbits<ParseContext,FormatContext> {
+    using typename specbits<ParseContext,FormatContext>::Iterator;
+    explicit center_align_bits(ParseContext& pc, FormatContext& fc, unsigned id)
+      : specbits<ParseContext,FormatContext>{ pc, fc, id } {}
     Iterator padding_left(Iterator out, unsigned size, bool) const override {
       if (/*this->width &&*/ this->width > size) {
         out = fill_n(out, (this->width - size)/2, this->fill);
@@ -557,10 +749,13 @@ namespace __format
     { return to_chars(begin, end, value); }
   };
 
-  template<typename Value, typename ParseContext, typename FormatContext, unsigned Base = 0>
-  struct integral_spec : specification<ParseContext,FormatContext> {
-    using typename specification<ParseContext,FormatContext>::bits_t;
-    void operator()(const bits_t& bits, const Value& value) {
+  template<typename Value, typename FormatContext, unsigned Base = 0>
+  struct integral_spec : specification<FormatContext> {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, const Value& value) const {
       using Char = typename FormatContext::char_type;
       using __traits = integral_traits<Value,Base>;
       enum { size = __traits::digits };
@@ -577,7 +772,7 @@ namespace __format
           out = copy(buffer, res.ptr, out);
         if (!bits.zero)
           out = bits.padding_right(out, len, false);
-        this->format_context.advance_to(out);
+        bits.format_context.advance_to(out);
       }
     }
   };
@@ -596,63 +791,70 @@ namespace __format
         : basic_string_view<wchar_t>(L"false",5);
     }
   };
-  template<typename ParseContext, typename FormatContext, unsigned Base>
-  struct bool_spec : specification<ParseContext,FormatContext> {
-    using typename specification<ParseContext,FormatContext>::bits_t;
+  template<typename FormatContext, unsigned Base>
+  struct bool_spec : specification<FormatContext> {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
     using Char = typename FormatContext::char_type;
-    void operator()(const bits_t& bits, bool value) {
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, bool value) const {
       unsigned len = 1;
       auto out = this->template padding_integral_prefix<Base>(bits, len, false);
       *out++ = static_cast<Char>(value ? '1' : '0');
       out = bits.padding_right(out, len);
-      this->format_context.advance_to(out);
+      bits.format_context.advance_to(out);
     }
   };
-  template<typename ParseContext, typename FormatContext>
-  struct bool_spec<ParseContext,FormatContext,0>
-    : specification<ParseContext,FormatContext>
+  template<typename FormatContext>
+  struct bool_spec<FormatContext,0>
+    : specification<FormatContext>
     , bool_sv<typename FormatContext::char_type> 
   {
-    using typename specification<ParseContext,FormatContext>::bits_t;
-    void operator()(const bits_t& bits, bool value) {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, bool value) const {
       auto __s = this->__sv(value);
       auto len = __s.size();
       auto out = this->padding_nonarith_prefix(bits, len);
       out = copy(__s.begin(), __s.end(), out);
       out = bits.padding_right(out, len, true);
-      this->format_context.advance_to(out);
+      bits.format_context.advance_to(out);
     }
   };
-  template<typename ParseContext, typename FormatContext, unsigned Base>
-  struct integral_spec<bool,ParseContext,FormatContext,Base>
-    : bool_spec<ParseContext,FormatContext,Base> {};
+  template<typename FormatContext, unsigned Base>
+  struct integral_spec<bool,FormatContext,Base>
+    : bool_spec<FormatContext,Base> {};
 
-  template<typename ParseContext, typename FormatContext, typename Value>
-  struct char_spec : specification<ParseContext,FormatContext> {
-    using typename specification<ParseContext,FormatContext>::bits_t;
-    using Char = typename FormatContext::char_type;
-    inline void operator()(const bits_t& bits, Value value) {
+  template<typename Char, typename FormatContext>
+  struct char_spec : specification<FormatContext> {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, Char __c) const {
       unsigned len = 1;
       auto out = this->padding_nonarith_prefix(bits, len);
-      *out++ = static_cast<Char>(value); // FIXME: unicode charconv
+      *out++ = static_cast<typename FormatContext::char_type>(__c); // FIXME: unicode charconv
       out = bits.padding_right(out, len, true);
-      this->format_context.advance_to(out);
+      bits.format_context.advance_to(out);
     }
   };
-  template<typename ParseContext, typename FormatContext>
-  struct integral_spec<char,ParseContext,FormatContext,0>
-    : char_spec<ParseContext,FormatContext,char> {};
-  template<typename ParseContext, typename FormatContext>
-  struct integral_spec<wchar_t,ParseContext,FormatContext,0>
-    : char_spec<ParseContext,FormatContext,wchar_t> {};
+  template<typename FormatContext>
+  struct integral_spec<char,FormatContext,0>
+    : char_spec<char,FormatContext> {};
+  template<typename FormatContext>
+  struct integral_spec<wchar_t,FormatContext,0>
+    : char_spec<wchar_t,FormatContext> {};
 
-  template<typename Value, typename ParseContext, typename FormatContext>
-  struct floating_spec : specification<ParseContext,FormatContext> {
-    using typename specification<ParseContext,FormatContext>::bits_t;
-    void operator()(const bits_t& bits, const Value& value) {
+  template<typename Value, typename FormatContext>
+  struct floating_spec : specification<FormatContext> {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, const Value& value) const {
       // TODO: deal with precision, etc....
       // TODO: extend and using to_chars instead
-      auto out = this->format_context.out();
+      auto out = bits.format_context.out();
       if (bits.percentage) {
         using char_type = typename FormatContext::char_type;
         const auto& s = to_string(value*100);
@@ -662,48 +864,16 @@ namespace __format
         const auto& s = to_string(value);
         out = copy(s.begin(), s.end(), out);
       }
-      this->format_context.advance_to(out);
+      bits.format_context.advance_to(out);
     }
   };
 
-  template<typename ParseContext, typename FormatContext>
-  struct default_spec : specification<ParseContext,FormatContext> {
-    using typename specification<ParseContext,FormatContext>::bits_t;
-    void operator()(const bits_t& bits, const char* value) {
-      this->operator()(bits, basic_string_view<char>(value));
-    }
-    void operator()(const bits_t& bits, const wchar_t* value) {
-      this->operator()(bits, basic_string_view<wchar_t>(value));
-    }
-    template<typename Char>
-    void operator()(const bits_t& bits, const basic_string<Char>& __s) {
-      this->copy_str(bits, __s.begin(), __s.end());
-    }
-    template<typename Char>
-    void operator()(const bits_t& bits, basic_string_view<Char> __s) {
-      this->copy_str(bits, __s.begin(), __s.end());
-    }
-
-    template<typename Value>
-    void operator()(const bits_t& bits, const Value& value) {
-      __throw_format_error("default specification for unexpected value");
-    }
-
-  private:
-    template<typename Iterator>
-    void copy_str(const bits_t& bits, Iterator begin, Iterator end) const {
-      auto len = distance(begin, end);
-      auto out = this->padding_nonarith_prefix(bits, len);
-      out = bits.padding_right(copy(begin, end, out), len, true);
-      this->format_context.advance_to(out);
-    }
-  };
-
-  template<typename ParseContext, typename FormatContext>
-  struct pointer_spec : specification<ParseContext,FormatContext> {
-    using typename specification<ParseContext,FormatContext>::bits_t;
-    template<typename T>
-    void operator()(const bits_t& bits, const T* value) {
+  template<typename FormatContext>
+  struct pointer_spec : specification<FormatContext> {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+    template <typename ParseContext, typename T>
+    void operator()(const bits_t<ParseContext>& bits, T* value) const {
       using __traits = integral_traits<uintptr_t,16>;
       using char_type = typename FormatContext::char_type;
       enum { size = __traits::digits };
@@ -713,39 +883,101 @@ namespace __format
       if (res.ec != errc(0))
         __throw_format_error("format integer value error");
       else {
-        auto out = this->format_context.out();
+        auto out = bits.format_context.out();
         *out++ = static_cast<char_type>('0');
         *out++ = static_cast<char_type>('x'); // FIXME: upper 'X'
         out = copy(buffer, res.ptr, out);
-        this->format_context.advance_to(out);
+        bits.format_context.advance_to(out);
       }
     }
   };
 
-  template<typename ParseContext, typename FormatContext>
-  struct unmatched_type_spec : specification<ParseContext,FormatContext> {
-    using typename specification<ParseContext,FormatContext>::bits_t;
-    template<typename Value>
-    void operator()(const bits_t& bits, const Value& value) {
+  template<typename FormatContext>
+  struct string_spec : specification<FormatContext> {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, const char* value) const {
+      this->operator()(bits, basic_string_view<char>(value));
+    }
+
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, const wchar_t* value) const {
+      this->operator()(bits, basic_string_view<wchar_t>(value));
+    }
+
+    template<typename ParseContext, typename Char>
+    void operator()(const bits_t<ParseContext>& bits, const basic_string<Char>& __s) const {
+      this->copy_str(bits, __s.begin(), __s.end());
+    }
+
+    template<typename ParseContext, typename Char>
+    void operator()(const bits_t<ParseContext>& bits, const basic_string_view<Char> __s) const {
+      this->copy_str(bits, __s.begin(), __s.end());
+    }
+
+  private:
+    template<typename ParseContext, typename Iterator>
+    void copy_str(const bits_t<ParseContext>& bits, Iterator begin, Iterator end) const {
+      auto len = distance(begin, end);
+      auto out = this->padding_nonarith_prefix(bits, len);
+      out = bits.padding_right(copy(begin, end, out), len, true);
+      bits.format_context.advance_to(out);
+    }
+  };
+
+  template<typename FormatContext>
+  using handle_t = typename basic_format_arg<FormatContext>::handle;
+
+  template<typename H>
+  using format_handle = enable_if_t<is_member_function_pointer_v<&H::format>,H>;
+
+  template<typename FormatContext>
+  struct default_spec : specification<FormatContext>
+  {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, monostate) const {}
+
+    template <typename ParseContext>
+    void operator()(const bits_t<ParseContext>& bits, const handle_t<FormatContext>& __h) const {
+      __h.format(bits.parse_context, bits.format_context);
+    }
+
+#if 0
+    template<typename ParseContext, typename Value>
+    void operator()(const bits_t<ParseContext>& bits, const Value& value) const {
+      __throw_format_error("default specification unexpected value");
+    }
+#endif
+  };
+
+  template<typename FormatContext>
+  struct unmatched_type_spec : specification<FormatContext> {
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
+    template<typename ParseContext, typename Value>
+    void operator()(const bits_t<ParseContext>& bits, const Value& value) const {
       __throw_format_error("format value of unmatched type");
     }
   };
 
-  template <typename Char, typename OutIter> class driver final {
-    using ParseContext = basic_format_parse_context<Char>;
-    using FormatContext = basic_format_context<OutIter,Char>;
-    using InputIter = typename ParseContext::iterator;
-    using bits_t = specbits<Char,OutIter>;
+  template <typename T> using iterator_t = typename T::iterator;
 
-    ParseContext parse_context;
-    FormatContext format_context;
+  template <typename Char, typename OutIter> class driver final {
+  public:
+    using FormatContext = basic_format_context<OutIter,Char>;
+
+    template <typename ParseContext>
+    using bits_t = specbits<ParseContext,FormatContext>;
 
     static_assert(is_same<OutIter,typename FormatContext::iterator>());
 
-    void chars(InputIter& pos, const InputIter end) {
-      auto out = copy(pos, end, format_context.out());
-      format_context.advance_to(out);
-    }
+  private:
+    FormatContext& format_context;
 
     void escape(Char character) {
       auto out = format_context.out();
@@ -754,7 +986,14 @@ namespace __format
       format_context.advance_to(out);
     }
 
-    int positive_int(InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    void chars(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end) {
+      auto out = copy(pos, end, format_context.out());
+      format_context.advance_to(out);
+    }
+
+    template <typename ParseContext>
+    int positive_int(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end) {
       assert(pos != end && '0' <= *pos && *pos <= '9');
       if (*pos == '0') {
         ++pos;
@@ -774,11 +1013,12 @@ namespace __format
       return static_cast<int>(val);
     }
 
-    auto arg_id(InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    auto arg_id(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end) {
       size_t id;
       auto c = *pos;
       if ('0' <= c && c <= '9') {
-        id = this->positive_int(pos, end);
+        id = this->positive_int(parse_context, pos, end);
         parse_context.check_arg_id(id);
       } else {
         id = parse_context.next_arg_id();
@@ -786,88 +1026,91 @@ namespace __format
       return id;
     }
 
-    void replacement(InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    void replacement(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end) {
       assert(*pos == '{' && "unexpected replacement openning");
       ++pos;
       if (pos == end) {
         __throw_format_error("malform format string");
       }
-      const auto id = this->arg_id(pos, end);
+      const auto id = this->arg_id(parse_context, pos, end);
       if (pos == end) {
         __throw_format_error("malform format string");
       } else if (*pos == ':') {
         ++pos;
-        this->spec_align(id, pos, end);
+        this->spec_align(parse_context, pos, end, id);
       } else if (*pos == '}') {
         ++pos;
-        this->handle_arg(default_align_bits<Char,OutIter>{ id });
+        this->handle_arg(default_align_bits<ParseContext,FormatContext>{ parse_context, format_context, id });
       } else {
         __throw_format_error("malform format replacement");
       }
     }
 
-    void spec_align(size_t id, InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    void spec_align(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end,
+                    size_t id) {
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if (*pos == '}') {
         ++pos;
-        this->handle_arg(default_align_bits<Char,OutIter>{ id });
+        this->handle_arg(default_align_bits<ParseContext,FormatContext>{ parse_context, format_context, id });
         return;
       } else if (auto next = pos + 1; next != end) {
         switch (*next) {
         case '<': {
-          left_align_bits<Char,OutIter> bits{ id };
+          left_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
           if ((bits.fill = *pos) == '{')
             __throw_format_error("invalid fill character '{'");
           pos += 2;
-          this->spec_sign(bits, pos, end);
+          this->spec_sign(parse_context, pos, end, bits);
         } break;
         case '>': {
-          right_align_bits<Char,OutIter> bits{ id };
+          right_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
           if ((bits.fill = *pos) == '{')
             __throw_format_error("invalid fill character '{'");
           pos += 2;
-          this->spec_sign(bits, pos, end);
+          this->spec_sign(parse_context, pos, end, bits);
         } break;
         case '=': {
-          numeric_align_bits<Char,OutIter> bits{ id };
+          numeric_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
           if ((bits.fill = *pos) == '{')
             __throw_format_error("invalid fill character '{'");
           pos += 2;
-          this->spec_sign(bits, pos, end);
+          this->spec_sign(parse_context, pos, end, bits);
         } break;
         case '^': {
-          center_align_bits<Char,OutIter> bits{ id };
+          center_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
           if ((bits.fill = *pos) == '{')
             __throw_format_error("invalid fill character '{'");
           pos += 2;
-          this->spec_sign(bits, pos, end);
+          this->spec_sign(parse_context, pos, end, bits);
         } break;
         default:
           switch (*pos) {
           case '<': {
-            left_align_bits<Char,OutIter> bits{ id };
+            left_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
             pos = next;
-            this->spec_sign(bits, pos, end);
+            this->spec_sign(parse_context, pos, end, bits);
           } break;
           case '>': {
-            right_align_bits<Char,OutIter> bits{ id };
+            right_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
             pos = next;
-            this->spec_sign(bits, pos, end);
+            this->spec_sign(parse_context, pos, end, bits);
           } break;
           case '=': {
-            numeric_align_bits<Char,OutIter> bits{ id };
+            numeric_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
             pos = next;
-            this->spec_sign(bits, pos, end);
+            this->spec_sign(parse_context, pos, end, bits);
           } break;
           case '^': {
-            center_align_bits<Char,OutIter> bits{ id };
+            center_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
             pos = next;
-            this->spec_sign(bits, pos, end);
+            this->spec_sign(parse_context, pos, end, bits);
           } break;
           default: {
-            default_align_bits<Char,OutIter> bits{ id };
-            this->spec_sign(bits, pos, end);
+            default_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
+            this->spec_sign(parse_context, pos, end, bits);
           } break;
           }
         }
@@ -876,7 +1119,9 @@ namespace __format
       }
     }
 
-    void spec_sign(bits_t& bits, InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    void spec_sign(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end,
+                   bits_t<ParseContext>& bits) {
       if (pos == end)
         __throw_format_error("malform format spec");
       switch (*pos) {
@@ -893,20 +1138,24 @@ namespace __format
         ++pos;
         break;
       }
-      this->spec_alt(bits, pos, end);
+      this->spec_alt(parse_context, pos, end, bits);
     }
 
-    void spec_alt(bits_t& bits, InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    void spec_alt(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end,
+                  bits_t<ParseContext>& bits) {
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if (*pos == '#') {
         bits.hash = true;
         ++pos;
       }
-      this->spec_width(bits, pos, end);
+      this->spec_width(parse_context, pos, end, bits);
     }
 
-    void spec_width(bits_t& bits, InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    void spec_width(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end,
+                    bits_t<ParseContext>& bits) {
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if (*pos == '0') {
@@ -916,19 +1165,21 @@ namespace __format
       if (pos == end) {
         __throw_format_error("malform format replacement spec");
       } else if ('1' <= *pos && *pos <= '9') {
-        bits.width = positive_int(pos, end);
+        bits.width = this->positive_int(parse_context, pos, end);
       }
       if (pos != end && *pos == '.') {
         if (++pos == end) {
           __throw_format_error("malform format replacement spec");
         } else {
-          bits.precision = positive_int(pos, end);
+          bits.precision = this->positive_int(parse_context, pos, end);
         }
       }
-      this->spec_type(bits, pos, end);
+      this->spec_type(parse_context, pos, end, bits);
     }
 
-    void spec_type(bits_t& bits, InputIter& pos, const InputIter end) {
+    template <typename ParseContext>
+    void spec_type(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end,
+                   bits_t<ParseContext>& bits) {
       if (pos == end)
         __throw_format_error("malform format replacement spec");
       const auto type = *pos++;
@@ -1022,91 +1273,92 @@ namespace __format
       }
     }
 
-    void handle_arg(const specbits<Char,OutIter>& bits) {
+    template <typename ParseContext>
+    void handle_arg(const bits_t<ParseContext>& bits) {
       visit_format_arg([this, &bits](const auto &value){
         using Value = remove_cvref_t<decltype(value)>;
-        conditional_t<is_floating_point_v<Value>,floating_spec<Value,ParseContext,FormatContext>,
-                      conditional_t<is_integral_v<Value>,integral_spec<Value,ParseContext,FormatContext>,
-                                    default_spec<ParseContext,FormatContext>>>
-          spec{ parse_context, format_context };
+        conditional_t<is_floating_point_v<Value>,floating_spec<Value,FormatContext>,
+          conditional_t<is_integral_v<Value>,integral_spec<Value,FormatContext>,
+            conditional_t<is_string_v<Value>,string_spec<FormatContext>,
+              conditional_t<is_pointer_v<Value>,pointer_spec<FormatContext>,
+                            default_spec<FormatContext>>>>> spec;
         spec(bits, value);
       }, format_context.arg(bits.id));
     }
 
-    void handle_floating(const specbits<Char,OutIter>& bits) {
+    template <typename ParseContext>
+    void handle_floating(const bits_t<ParseContext>& bits) {
       visit_format_arg([this, &bits](const auto &value){
         using Value = remove_cvref_t<decltype(value)>;
-        conditional_t<is_floating_point_v<Value>,floating_spec<Value,ParseContext,FormatContext>,
-                      unmatched_type_spec<ParseContext,FormatContext>>
-          spec{ parse_context, format_context };
+        conditional_t<is_floating_point_v<Value>,floating_spec<Value,FormatContext>,
+                      unmatched_type_spec<FormatContext>> spec;
         spec(bits, value);
       }, format_context.arg(bits.id));
     }
 
-    template <unsigned Base>
-    void handle_integral(const specbits<Char,OutIter>& bits) {
+    template <unsigned Base, typename ParseContext>
+    void handle_integral(const bits_t<ParseContext>& bits) {
       visit_format_arg([this, &bits](const auto &value){
         using Value = remove_cvref_t<decltype(value)>;
-        conditional_t<is_integral_v<Value>,integral_spec<Value,ParseContext,FormatContext,Base>,
-                      unmatched_type_spec<ParseContext,FormatContext>>
-          spec{ parse_context, format_context };
+        conditional_t<is_integral_v<Value>,integral_spec<Value,FormatContext,Base>,
+                      unmatched_type_spec<FormatContext>> spec;
         spec(bits, value);
       }, format_context.arg(bits.id));
     }
 
-    void handle_numeric(const specbits<Char,OutIter>& bits) {
+    template <typename ParseContext>
+    void handle_numeric(const bits_t<ParseContext>& bits) {
       visit_format_arg([this, &bits](const auto &value){
         using Value = remove_cvref_t<decltype(value)>;
-        conditional_t<is_floating_point_v<Value>,floating_spec<Value,ParseContext,FormatContext>,
-                      conditional_t<is_integral_v<Value>,integral_spec<Value,ParseContext,FormatContext,10>,
-                                    unmatched_type_spec<ParseContext,FormatContext>>>
-          spec{ parse_context, format_context };
+        conditional_t<is_floating_point_v<Value>,floating_spec<Value,FormatContext>,
+          conditional_t<is_integral_v<Value>,integral_spec<Value,FormatContext,10>,
+                        unmatched_type_spec<FormatContext>>> spec;
         spec(bits, value);
       }, format_context.arg(bits.id));
     }
 
-    void handle_character(const specbits<Char,OutIter>& bits) {
+    template <typename ParseContext>
+    void handle_character(const bits_t<ParseContext>& bits) {
       visit_format_arg([this, &bits](const auto &value){
         using Value = remove_cvref_t<decltype(value)>;
-        conditional_t<is_char_v<Value>,integral_spec<Value,ParseContext,FormatContext,0>,
-                      unmatched_type_spec<ParseContext,FormatContext>>
-          spec{ parse_context, format_context };
+        conditional_t<is_char_v<Value>,integral_spec<Value,FormatContext,0>,
+                      unmatched_type_spec<FormatContext>> spec;
         spec(bits, value);
       }, format_context.arg(bits.id));
     }
 
-    void handle_pointer(const specbits<Char,OutIter>& bits) {
+    template <typename ParseContext>
+    void handle_pointer(const bits_t<ParseContext>& bits) {
       visit_format_arg([this, &bits](const auto &value){
         using Value = remove_cvref_t<decltype(value)>;
-        conditional_t<is_pointer_v<Value>,pointer_spec<ParseContext,FormatContext>,
-                      unmatched_type_spec<ParseContext,FormatContext>>
-          spec{ parse_context, format_context };
+        conditional_t<is_pointer_v<Value>,pointer_spec<FormatContext>,
+                      unmatched_type_spec<FormatContext>> spec;
         spec(bits, value);
       }, format_context.arg(bits.id));
     }
 
-    void handle_string(const specbits<Char,OutIter>& bits) {
+    template <typename ParseContext>
+    void handle_string(const bits_t<ParseContext>& bits) {
       visit_format_arg([this, &bits](const auto &value){
         using Value = remove_cvref_t<decltype(value)>;
-        conditional_t<is_char_v<Value>,default_spec<ParseContext,FormatContext>,
-                      unmatched_type_spec<ParseContext,FormatContext>>
-          spec{ parse_context, format_context };
+        conditional_t<is_string_v<Value>,string_spec<FormatContext>,
+                      unmatched_type_spec<FormatContext>> spec;
         spec(bits, value);
       }, format_context.arg(bits.id));
     }
 
   public:
-    template <typename S, typename FormatArgs>
-    constexpr driver(const S& fmt, OutIter out, FormatArgs args)
-      : parse_context(fmt), format_context(out, args) {}
-    constexpr OutIter operator()() {
+    constexpr explicit driver(FormatContext& fc) : format_context(fc) {}
+
+    template <typename ParseContext>
+    constexpr OutIter operator()(ParseContext& parse_context) {
       auto const end = parse_context.end();
       auto pos = parse_context.begin();
       auto last = pos;
       while (pos != end) {
         switch (*pos) {
         case '{': {
-          if (last < pos) this->chars(last, pos);
+          if (last < pos) this->chars(parse_context, last, pos);
           auto next = pos + 1;
           if (next == end) {
             // finish
@@ -1115,12 +1367,12 @@ namespace __format
             this->escape(*pos);
             pos = next;
           } else {
-            this->replacement(pos, end);
+            this->replacement(parse_context, pos, end);
           }
           last = pos;
         } break;
         case '}': { // unbalanced close brace
-          if (last < pos) this->chars(last, pos);
+          if (last < pos) this->chars(parse_context, last, pos);
           auto next = pos + 1;
           if (next == end) {
             pos = end; // finish
@@ -1129,32 +1381,30 @@ namespace __format
             this->escape(*pos);
             last = pos = next;
           } else {
-            this->chars(pos, next);
+            this->chars(parse_context, pos, next);
             last = pos = end;
           }
         } break;
         default: ++pos;
         }
       }
-      if (last < pos) this->chars(last, pos);
+      if (last < pos) this->chars(parse_context, last, pos);
       parse_context.advance_to(pos);
       return format_context.out();
     }
 
-    template <typename FormatArgs>
-    driver(OutIter out, FormatArgs args)
-      : parse_context(basic_string_view<Char>())
-      , format_context(out, args) {}
-
     OutIter __lit(size_t __n)
     {
+      using ParseContext = basic_format_parse_context<char>;
+      ParseContext __placeholder("");
       for (auto __i = 0; __i < __n; ++__i) {
         if (__i > 0) {
           auto out = format_context.out();
           *out++ = static_cast<Char>(' ');
           format_context.advance_to(out);
         }
-        this->handle_arg(default_align_bits<Char,OutIter>{ __i });
+        this->handle_arg(default_align_bits<ParseContext,FormatContext>{
+            __placeholder, format_context, __i });
       }
       return format_context.out();
     }
@@ -1177,172 +1427,8 @@ namespace __format
 using format_context = __format::basic_string_format_context<char>;
 using wformat_context = __format::basic_string_format_context<wchar_t>;
 
-template<class T, class Char> struct formatter
-{
-  // T is unsupported by standard formatter, you have to specialize
-  // std::formatter<T,Char> in your code.
-  formatter() = delete;
-};
-
 namespace __format
 {
-  // selecting smaller type
-
-  template <typename T, typename... Types> struct smaller;
-  template <typename T, typename Type>
-  struct smaller<T,Type> { using type = Type; };
-
-  template <typename T, typename Type, typename... Rest>
-  struct smaller<T,Type,Rest...> : conditional_t<(sizeof(T)<=sizeof(Type)),
-    smaller<T,Type>, smaller<T,Rest...>> {};
-
-  template <typename T, typename... Types>
-  using smaller_t = typename smaller<T,Types...>::type;
-
-# if 0
-  template <typename T, bool = is_integral_v<T>> struct integer
-  {
-    using Int = conditional_t<
-      is_unsigned_v<T>,
-      smaller_t<T,unsigned int,unsigned long long int>,
-      smaller_t<T,int,long long int>>;
-    Int val(const T& v) noexcept { return static_cast<Int>(v); }
-  };
-# endif
-
-  // integer
-
-  template <typename T, bool = is_unsigned_v<T>>
-  struct fit_integer
-  {
-    using type = smaller_t<T,unsigned int,unsigned long long int>;
-  };
-  template <typename T> struct fit_integer<T,false>
-  {
-    using type = smaller_t<T,int,long long int>;
-  };
-} // __format
-
-template<class Context, class... Args> struct format_arg_store;
-
-template<class Context> class basic_format_arg {
-public:
-  class handle;
-
-private:
-  using char_type = typename Context::char_type;
-
-  variant<
-    monostate, bool, char_type, int, unsigned int,
-    long long int, unsigned long long int, double, long double,
-    const char_type*, basic_string_view<char_type>,
-    const void*, handle> var;
-
-  template<class X, class... Args>
-  friend struct format_arg_store;
-
-  // integer
-
-  template <typename T, bool = is_integral_v<T>>
-  struct integer : __format::fit_integer<T>
-  {
-    using typename __format::fit_integer<T>::type;
-    type val(const T& v) const noexcept { return static_cast<type>(v); }
-  };
-
-  template <typename T> struct integer<T,false> {
-    handle val(const T& v) const noexcept { return handle(v); }
-  };
-
-  template <typename T> struct identical {
-    T val(T v) const noexcept { return v; }
-  };
-
-  template <typename T> struct best_store : integer<T> {};
-  template <> struct best_store<bool> : identical<bool> {};
-  template <> struct best_store<char> : identical<char> {};
-  template <> struct best_store<wchar_t> : identical<wchar_t> {};
-  template <> struct best_store<char8_t> : identical<char8_t> {};
-  template <> struct best_store<char16_t> : identical<char16_t> {};
-  template <> struct best_store<char32_t> : identical<char32_t> {};
-
-  template<class T> explicit basic_format_arg(const T& v) noexcept
-    : var(best_store<T>().val(v)) {}
-
-  explicit basic_format_arg(float n) noexcept : var(static_cast<double>(n)) {}
-  explicit basic_format_arg(double n) noexcept : var(n) {}
-  explicit basic_format_arg(long double n) noexcept : var(n) {}
-  explicit basic_format_arg(const char_type* s) : var(s) {}
-
-  template<class Traits>
-  explicit basic_format_arg(basic_string_view<char_type,Traits> s) noexcept
-    : var(s) {}
-
-  template<class Traits, class Allocator>
-  explicit basic_format_arg(const basic_string<char_type,Traits,Allocator>& s) noexcept
-    : basic_format_arg(basic_string_view(s.data(), s.size())) {}
-
-  explicit basic_format_arg(nullptr_t) noexcept
-    : var(static_cast<const void*>(nullptr)) {}
-
-  explicit basic_format_arg(const void* p) noexcept
-    : var(p) {}
-
-  template<class Visitor, class Ctx>
-  friend auto visit_format_arg(Visitor&& visit, basic_format_arg<Ctx> arg)
-    -> decltype(visit(0));
-
-  template<class Ctx, class... Args>
-  friend format_arg_store<Ctx, Args...> make_format_args(const Args&... args);
-
-public:
-  basic_format_arg() noexcept {}
-  explicit operator bool() const noexcept {
-    return !holds_alternative<monostate>(var);
-  }
-};
-
-template<class Context>
-class basic_format_arg<Context>::handle {
-  friend class basic_format_arg<Context>;
-
-  using char_type = typename Context::char_type;
-  using parse_context = basic_format_parse_context<char_type>;
-
-  template<typename T>
-  using formatter = typename Context::template formatter_type<T>;
-
-  const void* ptr;
-  void (*fmt)(parse_context&, Context&, const void*);
-
-  template<class T> explicit handle(const T& val) noexcept
-    : ptr(&val)
-    , fmt([](parse_context& parse_ctx, Context& format_ctx, const void* ptr) {
-        formatter<T> __f;
-        auto& val = *static_cast<const T*>(ptr);
-        parse_ctx.advance_to(__f.parse(parse_ctx));
-        format_ctx.advance_to(__f.format(val, format_ctx));
-      })
-  {}
-
-public:
-  void format(parse_context& parse_ctx, Context& format_ctx) const
-  { fmt(parse_ctx, format_ctx, ptr); }
-};
-
-namespace __format
-{
-#if 0
-  template<typename T> struct handle<basic_format_arg<T>> {
-    template<typename Spec>
-    void format(const Spec& spec, basic_format_arg<T> arg) const {
-      visit_format_arg([this, &spec](const auto& val){
-        using val_type = remove_cvref_t<decltype(val)>;
-        handle<val_type>().format(spec, val);
-      }, arg);
-    }
-  };
-#endif
 #if __has_feature(ASSOCIATED_TYPENAME_SPECIALIZATION)
   template<typename FormatContext>
   struct handle<typename basic_format_arg<FormatContext>::handle> {
@@ -1354,55 +1440,9 @@ namespace __format
 #endif // ASSOCIATED_TYPENAME_SPECIALIZATION
 }
 
-#if false
-
-namespace __format
-{
-  template<class Ret, class Visitor, typename... Types> struct visit_by_type;
-  template<class Ret, class Visitor> struct visit_by_type<Ret, Visitor>
-  {
-    template<class Ctx>
-    Ret apply(Visitor&& visit, basic_format_arg<Ctx> arg)
-    { return visit(monostate()); }
-  };
-
-  template<class Ret, class Visitor, typename T, typename... Rest>
-  struct visit_by_type<Ret, Visitor, T, Rest...>
-  {
-    template<class Ctx>
-    Ret apply(Visitor&& visit, basic_format_arg<Ctx> arg)
-    {
-      if (arg.type == &typeid(T))
-        return visit(*reinterpret_cast<T*>(&arg.int_value));
-      else
-        return visit_by_type<Ret,Visitor,Rest...>().apply(visit, arg);
-    }
-  };
-} // __format
-
 template<class Visitor, class Ctx> inline auto
 visit_format_arg(Visitor&& visitor, basic_format_arg<Ctx> arg)
-  -> decltype(visitor(0))
-{
-  using handle = typename basic_format_arg<Ctx>::handle;
-  using char_type = typename basic_format_arg<Ctx>::char_type;
-  __format::visit_by_type
-    <decltype(visitor(0)), Visitor,
-     monostate, bool, char_type, int, unsigned int,
-     long long int, unsigned long long int, double, long double,
-     const char_type*, basic_string_view<char_type>,
-     const void*, handle> by_type;
-  return by_type.apply(move(visitor), arg);
-}
-
-#else
-
-template<class Visitor, class Ctx> inline auto
-visit_format_arg(Visitor&& visitor, basic_format_arg<Ctx> arg)
-  -> decltype(visitor(0))
-{ return visit(move(visitor), arg.var); }
-
-#endif
+  -> decltype(visitor(0)) { return visit(move(visitor), arg.var); }
 
 namespace __format
 {
@@ -1430,7 +1470,6 @@ namespace __format
   OutputIt copy_str(InputIt begin, InputIt end, OutputIt it) {
     return transform(begin, end, it, to_char8_t);
   }
-
 } // __format
 
 template<class Context, class... Args>
@@ -1463,48 +1502,38 @@ public:
   { return i < num_args ? args[i] : basic_format_arg<Context>(); }
 };
 
-#if 0
-template<typename T,typename Char>
-struct formatter<T,Char>
+template<typename Char> struct formatter<void*,Char>
 {
+  template <typename ParseContext>
+  constexpr auto parse(ParseContext& context) -> decltype(context.begin())
+  {
+    return context.begin();
+  }
+
   template <typename FormatContext>
   constexpr typename FormatContext::iterator
-  format(FormatContext& context) {
-    auto specifier = this->parsed_specifier();
-    if (specifier) specifier->write(context, 0);
+  format(void* value, FormatContext& context) {
+    default_align_bits<ParseContext,FormatContext> bits{ parse_context, format_context, id };
+    __format::pointer_spec<FormatContext> spec;
+    spec(bits, value);
     return context.out();
   }
 };
-#endif
+
+template<typename T,typename Char>
+struct formatter<T*,Char> : formatter<void*,Char>
+{
+  template <typename FormatContext>
+  constexpr typename FormatContext::iterator
+  format(T* value, FormatContext& context) {
+    return this->formatter<void*,Char>::format(static_cast<void*>(value), context);
+  }
+};
 
 namespace __format
 {
   template<typename Char>
   using basic_string_format_args = basic_format_args<basic_string_format_context<Char>>;
-
-  void as_string_view(...);
-
-  template<typename Char, enable_if<is_char_v<Char>>>
-  inline basic_string_view<Char>
-  as_string_view(const Char* s) { return {s}; }
-
-  template<typename Char, typename Traits, typename Allocator>
-  inline basic_string_view<Char>
-  as_string_view(const basic_string<Char,Traits,Allocator>& s)
-  { return {s.data(), s.size()}; }
-
-  template<typename Char, typename Traits>
-  inline basic_string_view<Char>
-  as_string_view(basic_string_view<Char,Traits> s)
-  { return {s.data(), s.size()}; }
-
-  template <typename S>
-  struct is_string : is_class<decltype(as_string_view(declval<S>()))> {};
-
-  template <> struct is_string<void> : false_type {};
-
-  template<typename S>
-  inline constexpr bool is_string_v = is_string<S>::value;
 
   template<typename S, typename=void> struct associated_char {};
   template<typename S> struct associated_char<S,enable_if_t<is_string_v<S>>> {
@@ -1524,7 +1553,10 @@ using format_args_t = basic_format_args<basic_format_context<Out,Char>>;
 
 template <typename Out, typename S, typename Char = __format::char_t<S>>
 inline Out vformat_to(Out out, const S& fmt, format_args_t<Out,Char> args) {
-  return __format::driver<Char,Out>(fmt, out, args)();
+  using driver = __format::driver<Char,Out>;
+  typename driver::ParseContext parse_context(fmt);
+  typename driver::FormatContext format_context(out, args);
+  return driver(format_context)(parse_context);
 }
 
 template<class S, class Context, typename Char = __format::char_t<S>>

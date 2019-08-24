@@ -92,7 +92,7 @@ namespace std
   inline constexpr adopt_lock_t  adopt_lock{};
 
   template <class Mutex>
-  class lock_guard
+  class [[deprecated]] lock_guard
   {
   public:
     typedef Mutex mutex_type;
