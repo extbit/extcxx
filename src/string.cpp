@@ -497,7 +497,7 @@ namespace __format
     if (is_same_v<Float,long double>)
       *__f++ = 'L';
 
-    if (__t == '%')
+    if (__t == '%') // percentage: 100%
       __t = 'f';
     else if (__t == 0 || __t == 'n')
       __t = 'g';
