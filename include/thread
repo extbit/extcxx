@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
 #if defined(thread_synopsis)
 #define __STDCPP_THREADS__ __cplusplus
 namespace std
