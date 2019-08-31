@@ -6,13 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_CTYPE_H
-#define _LIBCPP_CTYPE_H
-
-/*
-    ctype.h synopsis
-
+#if defined(ctype_h_synopsis)
 int isalnum(int c);
 int isalpha(int c);
 int isblank(int c);  // C99
@@ -27,13 +24,9 @@ int isupper(int c);
 int isxdigit(int c);
 int tolower(int c);
 int toupper(int c);
-*/
+#endif // ctype_h_synopsis
 
 #include <__config>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 #include_next <ctype.h>
 
@@ -55,5 +48,3 @@ int toupper(int c);
 #undef toupper
 
 #endif
-
-#endif  // _LIBCPP_CTYPE_H

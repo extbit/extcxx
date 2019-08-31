@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_TGMATH_H
-#define _LIBCPP_TGMATH_H
-
+#pragma once
+#pragma GCC system_header
 /*
     tgmath.h synopsis
 
@@ -19,18 +17,8 @@
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 #ifdef __cplusplus
-
-#include <ctgmath>
-
+#  include <ctgmath>
 #else  // __cplusplus
-
-#include_next <tgmath.h>
-
+#  include_next <tgmath.h>
 #endif  // __cplusplus
-
-#endif  // _LIBCPP_TGMATH_H

@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_FENV_H
-#define _LIBCPP_FENV_H
-
+#pragma once
+#pragma GCC system_header
 
 /*
     fenv.h synopsis
@@ -51,10 +49,6 @@ int feupdateenv(const fenv_t* envp);
 */
 
 #include <__config>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 #include_next <fenv.h>
 
@@ -112,5 +106,3 @@ extern "C++" {
 } // extern "C++"
 
 #endif // defined(__cplusplus)
-
-#endif // _LIBCPP_FENV_H

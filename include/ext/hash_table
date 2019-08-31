@@ -1,0 +1,22 @@
+// -*- C++ -*-
+//===------------------------- hash_set ------------------------------------===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
+#include <ext/__config>
+#include <__hash_table>
+#include <functional>
+#include <utility>
+
+_LIBCPP_BEGIN_NAMESPACE_EXTBIT
+
+template <class _Value, class _Hash = std::hash<_Value>, class _Pred = std::equal_to<_Value>,
+          class _Alloc = std::allocator<_Value> >
+using hash_table = std::__hash_table<_Value, _Hash, _Pred, _Alloc>;
+
+_LIBCPP_END_NAMESPACE_EXTBIT

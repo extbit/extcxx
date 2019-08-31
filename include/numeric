@@ -6,140 +6,136 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_NUMERIC
-#define _LIBCPP_NUMERIC
-
-/*
-    numeric synopsis
-
+#if defined(numeric_synopsis)
 namespace std
 {
 
-template <class InputIterator, class T>
-    T
-    accumulate(InputIterator first, InputIterator last, T init);
+  template <class InputIterator, class T>
+  T
+  accumulate(InputIterator first, InputIterator last, T init);
 
-template <class InputIterator, class T, class BinaryOperation>
-    T
-    accumulate(InputIterator first, InputIterator last, T init, BinaryOperation binary_op);
+  template <class InputIterator, class T, class BinaryOperation>
+  T
+  accumulate(InputIterator first, InputIterator last, T init, BinaryOperation binary_op);
 
-template<class InputIterator>
-    typename iterator_traits<InputIterator>::value_type
-    reduce(InputIterator first, InputIterator last);  // C++17
+  template<class InputIterator>
+  typename iterator_traits<InputIterator>::value_type
+  reduce(InputIterator first, InputIterator last);  // C++17
 
-template<class InputIterator, class T>
-    T
-    reduce(InputIterator first, InputIterator last, T init);  // C++17
+  template<class InputIterator, class T>
+  T
+  reduce(InputIterator first, InputIterator last, T init);  // C++17
 
-template<class InputIterator, class T, class BinaryOperation>
-    T
-    reduce(InputIterator first, InputIterator last, T init, BinaryOperation binary_op);  // C++17
+  template<class InputIterator, class T, class BinaryOperation>
+  T
+  reduce(InputIterator first, InputIterator last, T init, BinaryOperation binary_op);  // C++17
 
-template <class InputIterator1, class InputIterator2, class T>
-    T
-    inner_product(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, T init);
+  template <class InputIterator1, class InputIterator2, class T>
+  T
+  inner_product(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, T init);
 
-template <class InputIterator1, class InputIterator2, class T, class BinaryOperation1, class BinaryOperation2>
-    T
-    inner_product(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
-                  T init, BinaryOperation1 binary_op1, BinaryOperation2 binary_op2);
+  template <class InputIterator1, class InputIterator2, class T, class BinaryOperation1, class BinaryOperation2>
+  T
+  inner_product(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
+                T init, BinaryOperation1 binary_op1, BinaryOperation2 binary_op2);
 
 
-template<class InputIterator1, class InputIterator2, class T>
-    T
-    transform_reduce(InputIterator1 first1, InputIterator1 last1,
-                     InputIterator2 first2, T init);  // C++17
+  template<class InputIterator1, class InputIterator2, class T>
+  T
+  transform_reduce(InputIterator1 first1, InputIterator1 last1,
+                   InputIterator2 first2, T init);  // C++17
 
-template<class InputIterator1, class InputIterator2, class T, class BinaryOperation1, class BinaryOperation2>
-    T
-    transform_reduce(InputIterator1 first1, InputIterator1 last1,
-                     InputIterator2 first2, T init,
-                     BinaryOperation1 binary_op1, BinaryOperation2 binary_op2);  // C++17
+  template<class InputIterator1, class InputIterator2, class T, class BinaryOperation1, class BinaryOperation2>
+  T
+  transform_reduce(InputIterator1 first1, InputIterator1 last1,
+                   InputIterator2 first2, T init,
+                   BinaryOperation1 binary_op1, BinaryOperation2 binary_op2);  // C++17
 
-template<class InputIterator, class T, class BinaryOperation, class UnaryOperation>
-    T
-    transform_reduce(InputIterator first, InputIterator last, T init,
-                     BinaryOperation binary_op, UnaryOperation unary_op);  // C++17
+  template<class InputIterator, class T, class BinaryOperation, class UnaryOperation>
+  T
+  transform_reduce(InputIterator first, InputIterator last, T init,
+                   BinaryOperation binary_op, UnaryOperation unary_op);  // C++17
 
-template <class InputIterator, class OutputIterator>
-    OutputIterator
-    partial_sum(InputIterator first, InputIterator last, OutputIterator result);
+  template <class InputIterator, class OutputIterator>
+  OutputIterator
+  partial_sum(InputIterator first, InputIterator last, OutputIterator result);
 
-template <class InputIterator, class OutputIterator, class BinaryOperation>
-    OutputIterator
-    partial_sum(InputIterator first, InputIterator last, OutputIterator result, BinaryOperation binary_op);
+  template <class InputIterator, class OutputIterator, class BinaryOperation>
+  OutputIterator
+  partial_sum(InputIterator first, InputIterator last, OutputIterator result, BinaryOperation binary_op);
 
-template<class InputIterator, class OutputIterator, class T>
-    OutputIterator
-    exclusive_scan(InputIterator first, InputIterator last,
-                   OutputIterator result, T init); // C++17
+  template<class InputIterator, class OutputIterator, class T>
+  OutputIterator
+  exclusive_scan(InputIterator first, InputIterator last,
+                 OutputIterator result, T init); // C++17
 
-template<class InputIterator, class OutputIterator, class T, class BinaryOperation>
-    OutputIterator
-    exclusive_scan(InputIterator first, InputIterator last,
-                   OutputIterator result, T init, BinaryOperation binary_op); // C++17
+  template<class InputIterator, class OutputIterator, class T, class BinaryOperation>
+  OutputIterator
+  exclusive_scan(InputIterator first, InputIterator last,
+                 OutputIterator result, T init, BinaryOperation binary_op); // C++17
 
-template<class InputIterator, class OutputIterator>
-    OutputIterator
-    inclusive_scan(InputIterator first, InputIterator last, OutputIterator result);  // C++17
+  template<class InputIterator, class OutputIterator>
+  OutputIterator
+  inclusive_scan(InputIterator first, InputIterator last, OutputIterator result);  // C++17
 
-template<class InputIterator, class OutputIterator, class BinaryOperation>
-    OutputIterator
-    inclusive_scan(InputIterator first, InputIterator last,
-                   OutputIterator result, BinaryOperation binary_op);  // C++17
+  template<class InputIterator, class OutputIterator, class BinaryOperation>
+  OutputIterator
+  inclusive_scan(InputIterator first, InputIterator last,
+                 OutputIterator result, BinaryOperation binary_op);  // C++17
 
-template<class InputIterator, class OutputIterator, class BinaryOperation, class T>
-    OutputIterator
-    inclusive_scan(InputIterator first, InputIterator last,
-                   OutputIterator result, BinaryOperation binary_op, T init);  // C++17
+  template<class InputIterator, class OutputIterator, class BinaryOperation, class T>
+  OutputIterator
+  inclusive_scan(InputIterator first, InputIterator last,
+                 OutputIterator result, BinaryOperation binary_op, T init);  // C++17
 
-template<class InputIterator, class OutputIterator, class T,
-         class BinaryOperation, class UnaryOperation>
-    OutputIterator
-    transform_exclusive_scan(InputIterator first, InputIterator last,
-                             OutputIterator result, T init,
-                             BinaryOperation binary_op, UnaryOperation unary_op);  // C++17
+  template<class InputIterator, class OutputIterator, class T,
+           class BinaryOperation, class UnaryOperation>
+  OutputIterator
+  transform_exclusive_scan(InputIterator first, InputIterator last,
+                           OutputIterator result, T init,
+                           BinaryOperation binary_op, UnaryOperation unary_op);  // C++17
 
-template<class InputIterator, class OutputIterator,
-         class BinaryOperation, class UnaryOperation>
-    OutputIterator
-    transform_inclusive_scan(InputIterator first, InputIterator last,
-                             OutputIterator result,
-                             BinaryOperation binary_op, UnaryOperation unary_op);  // C++17
+  template<class InputIterator, class OutputIterator,
+           class BinaryOperation, class UnaryOperation>
+  OutputIterator
+  transform_inclusive_scan(InputIterator first, InputIterator last,
+                           OutputIterator result,
+                           BinaryOperation binary_op, UnaryOperation unary_op);  // C++17
 
-template<class InputIterator, class OutputIterator,
-         class BinaryOperation, class UnaryOperation, class T>
-    OutputIterator
-    transform_inclusive_scan(InputIterator first, InputIterator last,
-                             OutputIterator result,
-                             BinaryOperation binary_op, UnaryOperation unary_op,
-                             T init);  // C++17
+  template<class InputIterator, class OutputIterator,
+           class BinaryOperation, class UnaryOperation, class T>
+  OutputIterator
+  transform_inclusive_scan(InputIterator first, InputIterator last,
+                           OutputIterator result,
+                           BinaryOperation binary_op, UnaryOperation unary_op,
+                           T init);  // C++17
 
-template <class InputIterator, class OutputIterator>
-    OutputIterator
-    adjacent_difference(InputIterator first, InputIterator last, OutputIterator result);
+  template <class InputIterator, class OutputIterator>
+  OutputIterator
+  adjacent_difference(InputIterator first, InputIterator last, OutputIterator result);
 
-template <class InputIterator, class OutputIterator, class BinaryOperation>
-    OutputIterator
-    adjacent_difference(InputIterator first, InputIterator last, OutputIterator result, BinaryOperation binary_op);
+  template <class InputIterator, class OutputIterator, class BinaryOperation>
+  OutputIterator
+  adjacent_difference(InputIterator first, InputIterator last, OutputIterator result, BinaryOperation binary_op);
 
-template <class ForwardIterator, class T>
-    void iota(ForwardIterator first, ForwardIterator last, T value);
+  template <class ForwardIterator, class T>
+  void iota(ForwardIterator first, ForwardIterator last, T value);
 
-template <class M, class N>
-    constexpr common_type_t<M,N> gcd(M m, N n);    // C++17
+  template <class M, class N>
+  constexpr common_type_t<M,N> gcd(M m, N n);    // C++17
 
-template <class M, class N>
-    constexpr common_type_t<M,N> lcm(M m, N n);    // C++17
+  template <class M, class N>
+  constexpr common_type_t<M,N> lcm(M m, N n);    // C++17
 
-integer         midpoint(integer a, integer b);                  // C++20
-pointer         midpoint(pointer a, pointer b);                  // C++20
-floating_point  midpoint(floating_point a, floating_point b);    // C++20
+  integer         midpoint(integer a, integer b);                  // C++20
+  pointer         midpoint(pointer a, pointer b);                  // C++20
+  floating_point  midpoint(floating_point a, floating_point b);    // C++20
 
 }  // std
-
-*/
+#endif // numeric_synopsis
 
 #include <__config>
 #include <iterator>
@@ -147,13 +143,6 @@ floating_point  midpoint(floating_point a, floating_point b);    // C++20
 #include <functional>
 #include <cmath> // for isnormal
 #include <version>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -177,7 +166,6 @@ accumulate(_InputIterator __first, _InputIterator __last, _Tp __init, _BinaryOpe
     return __init;
 }
 
-#if _LIBCPP_STD_VER > 14
 template <class _InputIterator, class _Tp, class _BinaryOp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
@@ -204,7 +192,6 @@ reduce(_InputIterator __first, _InputIterator __last)
     return _VSTD::reduce(__first, __last,
        typename iterator_traits<_InputIterator>::value_type{});
 }
-#endif
 
 template <class _InputIterator1, class _InputIterator2, class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -227,7 +214,6 @@ inner_product(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2
     return __init;
 }
 
-#if _LIBCPP_STD_VER > 14
 template <class _InputIterator, class _Tp, class _BinaryOp, class _UnaryOp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
@@ -260,7 +246,6 @@ transform_reduce(_InputIterator1 __first1, _InputIterator1 __last1,
     return _VSTD::transform_reduce(__first1, __last1, __first2, _VSTD::move(__init),
                                    _VSTD::plus<>(), _VSTD::multiplies<>());
 }
-#endif
 
 template <class _InputIterator, class _OutputIterator>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -299,7 +284,6 @@ partial_sum(_InputIterator __first, _InputIterator __last, _OutputIterator __res
     return __result;
 }
 
-#if _LIBCPP_STD_VER > 14
 template <class _InputIterator, class _OutputIterator, class _Tp, class _BinaryOp>
 inline _LIBCPP_INLINE_VISIBILITY
 _OutputIterator
@@ -408,7 +392,6 @@ _OutputIterator transform_inclusive_scan(_InputIterator __first, _InputIterator 
 
     return __result;
 }
-#endif
 
 template <class _InputIterator, class _OutputIterator>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -459,12 +442,11 @@ iota(_ForwardIterator __first, _ForwardIterator __last, _Tp __value_)
 }
 
 
-#if _LIBCPP_STD_VER > 14
 template <typename _Result, typename _Source, bool _IsSigned = is_signed<_Source>::value> struct __ct_abs;
 
 template <typename _Result, typename _Source>
 struct __ct_abs<_Result, _Source, true> {
-    _LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+    constexpr _LIBCPP_INLINE_VISIBILITY
     _Result operator()(_Source __t) const noexcept
     {
     if (__t >= 0) return __t;
@@ -475,13 +457,13 @@ struct __ct_abs<_Result, _Source, true> {
 
 template <typename _Result, typename _Source>
 struct __ct_abs<_Result, _Source, false> {
-    _LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+    constexpr _LIBCPP_INLINE_VISIBILITY
     _Result operator()(_Source __t) const noexcept { return __t; }
 };
 
 
 template<class _Tp>
-_LIBCPP_CONSTEXPR _LIBCPP_HIDDEN
+constexpr _LIBCPP_HIDDEN
 _Tp __gcd(_Tp __m, _Tp __n)
 {
     static_assert((!is_signed<_Tp>::value), "");
@@ -490,7 +472,7 @@ _Tp __gcd(_Tp __m, _Tp __n)
 
 
 template<class _Tp, class _Up>
-_LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+constexpr _LIBCPP_INLINE_VISIBILITY
 common_type_t<_Tp,_Up>
 gcd(_Tp __m, _Up __n)
 {
@@ -505,7 +487,7 @@ gcd(_Tp __m, _Up __n)
 }
 
 template<class _Tp, class _Up>
-_LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
+constexpr _LIBCPP_INLINE_VISIBILITY
 common_type_t<_Tp,_Up>
 lcm(_Tp __m, _Up __n)
 {
@@ -522,9 +504,6 @@ lcm(_Tp __m, _Up __n)
     return __val1 * __val2;
 }
 
-#endif /* _LIBCPP_STD_VER > 14 */
-
-#if _LIBCPP_STD_VER > 17
 template <class _Tp>
 _LIBCPP_INLINE_VISIBILITY constexpr
 enable_if_t<is_integral_v<_Tp> && !is_same_v<bool, _Tp> && !is_null_pointer_v<_Tp>, _Tp>
@@ -580,10 +559,4 @@ midpoint(_Fp __a, _Fp __b) noexcept
       __a/2 + __b/2;                                         // otherwise correctly rounded
 }
 
-#endif // _LIBCPP_STD_VER > 17
-
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_NUMERIC

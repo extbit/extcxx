@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_STACK
-#define _LIBCPP_STACK
+#pragma once
+#pragma GCC system_header
 
 /*
     stack synopsis
@@ -90,10 +89,6 @@ template <class T, class Container>
 #include <__config>
 #include <deque>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 template <class _Tp, class _Container = deque<_Tp> > class _LIBCPP_TEMPLATE_VIS stack;
@@ -125,7 +120,7 @@ protected:
 public:
     _LIBCPP_INLINE_VISIBILITY
     stack()
-        _NOEXCEPT_(is_nothrow_default_constructible<container_type>::value)
+        noexcept(is_nothrow_default_constructible<container_type>::value)
         : c() {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -135,20 +130,18 @@ public:
     stack& operator=(const stack& __q) {c = __q.c; return *this;}
 
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     stack(stack&& __q)
-        _NOEXCEPT_(is_nothrow_move_constructible<container_type>::value)
+        noexcept(is_nothrow_move_constructible<container_type>::value)
         : c(_VSTD::move(__q.c)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     stack& operator=(stack&& __q)
-        _NOEXCEPT_(is_nothrow_move_assignable<container_type>::value)
+        noexcept(is_nothrow_move_assignable<container_type>::value)
         {c = _VSTD::move(__q.c); return *this;}
 
     _LIBCPP_INLINE_VISIBILITY
     explicit stack(container_type&& __c) : c(_VSTD::move(__c)) {}
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     explicit stack(const container_type& __c) : c(__c) {}
@@ -171,7 +164,7 @@ public:
               typename enable_if<uses_allocator<container_type,
                                                 _Alloc>::value>::type* = 0)
             : c(__s.c, __a) {}
-#ifndef _LIBCPP_CXX03_LANG
+
     template <class _Alloc>
         _LIBCPP_INLINE_VISIBILITY
         stack(container_type&& __c, const _Alloc& __a,
@@ -184,7 +177,6 @@ public:
               typename enable_if<uses_allocator<container_type,
                                                 _Alloc>::value>::type* = 0)
             : c(_VSTD::move(__s.c), __a) {}
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
     bool empty()     const      {return c.empty();}
@@ -197,27 +189,20 @@ public:
 
     _LIBCPP_INLINE_VISIBILITY
     void push(const value_type& __v) {c.push_back(__v);}
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     void push(value_type&& __v) {c.push_back(_VSTD::move(__v));}
 
     template <class... _Args>
         _LIBCPP_INLINE_VISIBILITY
-#if _LIBCPP_STD_VER > 14
         decltype(auto) emplace(_Args&&... __args)
         { return c.emplace_back(_VSTD::forward<_Args>(__args)...);}
-#else
-        void      emplace(_Args&&... __args)
-        {        c.emplace_back(_VSTD::forward<_Args>(__args)...);}
-#endif
-#endif  // _LIBCPP_CXX03_LANG
 
     _LIBCPP_INLINE_VISIBILITY
     void pop() {c.pop_back();}
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(stack& __s)
-        _NOEXCEPT_(__is_nothrow_swappable<container_type>::value)
+        noexcept(__is_nothrow_swappable<container_type>::value)
     {
         using _VSTD::swap;
         swap(c, __s.c);
@@ -236,15 +221,15 @@ public:
 
 #ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 template<class _Container,
-         class = typename enable_if<!__is_allocator<_Container>::value, nullptr_t>::type
+         class = typename enable_if<!is_allocator_v<_Container>, nullptr_t>::type
 >
 stack(_Container)
     -> stack<typename _Container::value_type, _Container>;
 
 template<class _Container,
          class _Alloc,
-         class = typename enable_if<!__is_allocator<_Container>::value, nullptr_t>::type,
-         class = typename enable_if< __is_allocator<_Alloc>::value, nullptr_t>::type
+         class = typename enable_if<!is_allocator_v<_Container>, nullptr_t>::type,
+         class = typename enable_if< is_allocator_v<_Alloc>, nullptr_t>::type
          >
 stack(_Container, _Alloc)
     -> stack<typename _Container::value_type, _Container>;
@@ -305,7 +290,7 @@ typename enable_if<
     void
 >::type
 swap(stack<_Tp, _Container>& __x, stack<_Tp, _Container>& __y)
-    _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }
@@ -317,5 +302,3 @@ struct _LIBCPP_TEMPLATE_VIS uses_allocator<stack<_Tp, _Container>, _Alloc>
 };
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_STACK

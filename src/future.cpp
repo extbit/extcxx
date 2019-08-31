@@ -7,9 +7,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "__config"
-
-#ifndef _LIBCPP_HAS_NO_THREADS
-
 #include "future"
 #include "string"
 
@@ -19,12 +16,12 @@ class _LIBCPP_HIDDEN __future_error_category
     : public __do_message
 {
 public:
-    virtual const char* name() const _NOEXCEPT;
+    virtual const char* name() const noexcept;
     virtual string message(int ev) const;
 };
 
 const char*
-__future_error_category::name() const _NOEXCEPT
+__future_error_category::name() const noexcept
 {
     return "future";
 }
@@ -65,7 +62,7 @@ __future_error_category::message(int ev) const
 #endif
 
 const error_category&
-future_category() _NOEXCEPT
+future_category() noexcept
 {
     static __future_error_category __f;
     return __f;
@@ -77,12 +74,12 @@ future_error::future_error(error_code __ec)
 {
 }
 
-future_error::~future_error() _NOEXCEPT
+future_error::~future_error() noexcept
 {
 }
 
 void
-__assoc_sub_state::__on_zero_shared() _NOEXCEPT
+__assoc_sub_state::__on_zero_shared() noexcept
 {
     delete this;
 }
@@ -273,5 +270,3 @@ shared_future<void>::operator=(const shared_future& __rhs)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // !_LIBCPP_HAS_NO_THREADS

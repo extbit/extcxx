@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_IOSTREAM
-#define _LIBCPP_IOSTREAM
+#pragma once
+#pragma GCC system_header
 
 /*
     iostream synopsis
@@ -39,10 +38,6 @@ extern wostream wclog;
 #include <istream>
 #include <ostream>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 #ifndef _LIBCPP_HAS_NO_STDIN
@@ -59,5 +54,3 @@ extern _LIBCPP_FUNC_VIS ostream clog;
 extern _LIBCPP_FUNC_VIS wostream wclog;
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_IOSTREAM

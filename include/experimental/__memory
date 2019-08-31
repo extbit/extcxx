@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_EXPERIMENTAL___MEMORY
-#define _LIBCPP_EXPERIMENTAL___MEMORY
+#pragma once
+#pragma GCC system_header
 
 #include <experimental/__config>
 #include <experimental/utility> // for erased_type
@@ -85,5 +84,3 @@ void __lfts_user_alloc_construct(
 }
 
 _LIBCPP_END_NAMESPACE_LFTS
-
-#endif /* _LIBCPP_EXPERIMENTAL___MEMORY */

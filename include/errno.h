@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_ERRNO_H
-#define _LIBCPP_ERRNO_H
+#pragma once
+#pragma GCC system_header
 
 /*
     errno.h synopsis
@@ -23,10 +22,6 @@ Macros:
 */
 
 #include <__config>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 #include_next <errno.h>
 
@@ -393,5 +388,3 @@ static const int __elast2 = 105;
 #endif
 
 #endif // __cplusplus
-
-#endif  // _LIBCPP_ERRNO_H

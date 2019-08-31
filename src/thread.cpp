@@ -7,8 +7,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "__config"
-#ifndef _LIBCPP_HAS_NO_THREADS
-
 #include "thread"
 #include "exception"
 #include "vector"
@@ -78,7 +76,7 @@ thread::detach()
 }
 
 unsigned
-thread::hardware_concurrency() _NOEXCEPT
+thread::hardware_concurrency() noexcept
 {
 #if defined(CTL_HW) && defined(HW_NCPU)
     unsigned n;
@@ -150,7 +148,7 @@ public:
 class _LIBCPP_HIDDEN __thread_struct_imp
 {
     typedef vector<__assoc_sub_state*,
-                          __hidden_allocator<__assoc_sub_state*> > _AsyncStates;
+               __hidden_allocator<__assoc_sub_state*> > _AsyncStates;
     typedef vector<pair<condition_variable*, mutex*>,
                __hidden_allocator<pair<condition_variable*, mutex*> > > _Notify;
 
@@ -221,5 +219,3 @@ __thread_struct::__make_ready_at_thread_exit(__assoc_sub_state* __s)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // !_LIBCPP_HAS_NO_THREADS

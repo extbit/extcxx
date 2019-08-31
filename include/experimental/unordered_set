@@ -6,12 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_EXPERIMENTAL_UNORDERED_SET
-#define _LIBCPP_EXPERIMENTAL_UNORDERED_SET
-/*
-    experimental/unordered_set synopsis
-
+#if defined(experimental_unordered_set_synopsis)
 // C++1z
 namespace std {
 namespace experimental {
@@ -30,16 +28,11 @@ namespace pmr {
 } // namespace fundamentals_v1
 } // namespace experimental
 } // namespace std
-
- */
+#endif // experimental_unordered_set_synopsis
 
 #include <experimental/__config>
 #include <unordered_set>
 #include <experimental/memory_resource>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
 
@@ -54,5 +47,3 @@ using unordered_multiset = _VSTD::unordered_multiset<_Value, _Hash, _Pred,
                         polymorphic_allocator<_Value>>;
 
 _LIBCPP_END_NAMESPACE_LFTS_PMR
-
-#endif /* _LIBCPP_EXPERIMENTAL_UNORDERED_SET */

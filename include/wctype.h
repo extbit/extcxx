@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_WCTYPE_H
-#define _LIBCPP_WCTYPE_H
-
+#pragma once
+#pragma GCC system_header
 /*
     wctype.h synopsis
 
@@ -46,10 +44,6 @@ wctrans_t wctrans(const char* property);
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 #include_next <wctype.h>
 
 #ifdef __cplusplus
@@ -74,5 +68,3 @@ wctrans_t wctrans(const char* property);
 #undef wctrans
 
 #endif  // __cplusplus
-
-#endif  // _LIBCPP_WCTYPE_H

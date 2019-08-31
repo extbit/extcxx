@@ -6,12 +6,11 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCPP_FILESYSTEM
-#define _LIBCPP_FILESYSTEM
-/*
-    filesystem synopsis
+#pragma once
+#pragma GCC system_header
 
-    namespace std { namespace filesystem {
+#if defined(filesystem_synopsis)
+namespace std { namespace filesystem {
 
     class path;
 
@@ -37,9 +36,9 @@
     operator>>(basic_istream<charT, traits>& is, path& p);
 
     template <class Source>
-      path u8path(const Source& source);
+    path u8path(const Source& source);
     template <class InputIterator>
-      path u8path(InputIterator first, InputIterator last);
+    path u8path(InputIterator first, InputIterator last);
 
     class filesystem_error;
     class directory_entry;
@@ -85,17 +84,17 @@
     void copy(const path& from, const path& to, error_code& ec);
     void copy(const path& from, const path& to, copy_options options);
     void copy(const path& from, const path& to, copy_options options,
-                   error_code& ec);
+              error_code& ec);
 
     bool copy_file(const path& from, const path& to);
     bool copy_file(const path& from, const path& to, error_code& ec);
     bool copy_file(const path& from, const path& to, copy_options option);
     bool copy_file(const path& from, const path& to, copy_options option,
-                           error_code& ec);
+                   error_code& ec);
 
     void copy_symlink(const path& existing_symlink, const path& new_symlink);
     void copy_symlink(const path& existing_symlink, const path& new_symlink,
-                              error_code& ec) noexcept;
+                      error_code& ec) noexcept;
 
     bool create_directories(const path& p);
     bool create_directories(const path& p, error_code& ec);
@@ -105,19 +104,19 @@
 
     bool create_directory(const path& p, const path& attributes);
     bool create_directory(const path& p, const path& attributes,
-                                  error_code& ec) noexcept;
+                          error_code& ec) noexcept;
 
     void create_directory_symlink(const path& to, const path& new_symlink);
     void create_directory_symlink(const path& to, const path& new_symlink,
-                                          error_code& ec) noexcept;
+                                  error_code& ec) noexcept;
 
     void create_hard_link(const path& to, const path& new_hard_link);
     void create_hard_link(const path& to, const path& new_hard_link,
-                                  error_code& ec) noexcept;
+                          error_code& ec) noexcept;
 
     void create_symlink(const path& to, const path& new_symlink);
     void create_symlink(const path& to, const path& new_symlink,
-                                error_code& ec) noexcept;
+                        error_code& ec) noexcept;
 
     path current_path();
     path current_path(error_code& ec);
@@ -176,7 +175,7 @@
     file_time_type  last_write_time(const path& p, error_code& ec) noexcept;
     void last_write_time(const path& p, file_time_type new_time);
     void last_write_time(const path& p, file_time_type new_time,
-                                 error_code& ec) noexcept;
+                         error_code& ec) noexcept;
 
     void permissions(const path& p, perms prms,
                      perm_options opts=perm_options::replace);
@@ -226,8 +225,7 @@
 
 
 } }  // namespaces std::filesystem
-
-*/
+#endif // filesystem_synopsis
 
 #include <__config>
 #include <cstddef>
@@ -246,15 +244,6 @@
 #include <version>
 
 #include <__debug>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
-#ifndef _LIBCPP_CXX03_LANG
 
 _LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
@@ -1370,7 +1359,7 @@ private:
 _LIBCPP_AVAILABILITY_FILESYSTEM_PUSH
 
 template <class... _Args>
-_LIBCPP_NORETURN inline _LIBCPP_INLINE_VISIBILITY
+[[noreturn]] inline _LIBCPP_INLINE_VISIBILITY
 #ifndef _LIBCPP_NO_EXCEPTIONS
 void __throw_filesystem_error(_Args&&... __args) {
   throw filesystem_error(std::forward<_Args>(__args)...);
@@ -2635,9 +2624,3 @@ end(const recursive_directory_iterator&) noexcept {
 _LIBCPP_AVAILABILITY_FILESYSTEM_POP
 
 _LIBCPP_END_NAMESPACE_FILESYSTEM
-
-#endif // !_LIBCPP_CXX03_LANG
-
-_LIBCPP_POP_MACROS
-
-#endif // _LIBCPP_FILESYSTEM

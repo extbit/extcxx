@@ -6,20 +6,17 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_VALARRAY
-#define _LIBCPP_VALARRAY
-
-/*
-    valarray synopsis
-
+#if defined(valarray_synopsis)
 namespace std
 {
 
-template<class T>
-class valarray
-{
-public:
+  template<class T>
+  class valarray
+  {
+  public:
     typedef T value_type;
 
     // construct/destroy:
@@ -103,23 +100,23 @@ public:
     valarray apply(value_type f(value_type)) const;
     valarray apply(value_type f(const value_type&)) const;
     void resize(size_t n, value_type x = value_type());
-};
+  };
 
-class slice
-{
-public:
+  class slice
+  {
+  public:
     slice();
     slice(size_t start, size_t size, size_t stride);
 
     size_t start()  const;
     size_t size()   const;
     size_t stride() const;
-};
+  };
 
-template <class T>
-class slice_array
-{
-public:
+  template <class T>
+  class slice_array
+  {
+  public:
     typedef T value_type;
 
     const slice_array& operator=(const slice_array& sa) const;
@@ -138,24 +135,24 @@ public:
     void operator=(const value_type& x) const;
 
     slice_array() = delete;
-};
+  };
 
-class gslice
-{
-public:
+  class gslice
+  {
+  public:
     gslice();
     gslice(size_t start, const valarray<size_t>& size,
-                         const valarray<size_t>& stride);
+           const valarray<size_t>& stride);
 
     size_t           start()  const;
     valarray<size_t> size()   const;
     valarray<size_t> stride() const;
-};
+  };
 
-template <class T>
-class gslice_array
-{
-public:
+  template <class T>
+  class gslice_array
+  {
+  public:
     typedef T value_type;
 
     void operator=  (const valarray<value_type>& v) const;
@@ -176,12 +173,12 @@ public:
     void operator=(const value_type& x) const;
 
     gslice_array() = delete;
-};
+  };
 
-template <class T>
-class mask_array
-{
-public:
+  template <class T>
+  class mask_array
+  {
+  public:
     typedef T value_type;
 
     void operator=  (const valarray<value_type>& v) const;
@@ -202,12 +199,12 @@ public:
     void operator=(const value_type& x) const;
 
     mask_array() = delete;
-};
+  };
 
-template <class T>
-class indirect_array
-{
-public:
+  template <class T>
+  class indirect_array
+  {
+  public:
     typedef T value_type;
 
     void operator=  (const valarray<value_type>& v) const;
@@ -228,115 +225,114 @@ public:
     void operator=(const value_type& x) const;
 
     indirect_array() = delete;
-};
+  };
 
-template<class T> void swap(valarray<T>& x, valarray<T>& y) noexcept;
+  template<class T> void swap(valarray<T>& x, valarray<T>& y) noexcept;
 
-template<class T> valarray<T> operator* (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator* (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator* (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator* (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator* (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator* (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator/ (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator/ (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator/ (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator/ (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator/ (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator/ (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator% (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator% (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator% (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator% (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator% (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator% (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator+ (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator+ (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator+ (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator+ (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator+ (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator+ (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator- (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator- (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator- (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator- (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator- (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator- (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator^ (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator^ (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator^ (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator^ (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator^ (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator^ (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator& (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator& (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator& (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator& (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator& (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator& (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator| (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator| (const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator| (const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator| (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator| (const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator| (const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator<<(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator<<(const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator<<(const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator<<(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator<<(const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator<<(const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> operator>>(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> operator>>(const valarray<T>& x, const T& y);
-template<class T> valarray<T> operator>>(const T& x, const valarray<T>& y);
+  template<class T> valarray<T> operator>>(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> operator>>(const valarray<T>& x, const T& y);
+  template<class T> valarray<T> operator>>(const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator&&(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator&&(const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator&&(const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator&&(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator&&(const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator&&(const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator||(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator||(const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator||(const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator||(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator||(const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator||(const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator==(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator==(const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator==(const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator==(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator==(const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator==(const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator!=(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator!=(const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator!=(const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator!=(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator!=(const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator!=(const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator< (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator< (const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator< (const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator< (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator< (const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator< (const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator> (const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator> (const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator> (const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator> (const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator> (const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator> (const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator<=(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator<=(const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator<=(const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator<=(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator<=(const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator<=(const T& x, const valarray<T>& y);
 
-template<class T> valarray<bool> operator>=(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<bool> operator>=(const valarray<T>& x, const T& y);
-template<class T> valarray<bool> operator>=(const T& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator>=(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<bool> operator>=(const valarray<T>& x, const T& y);
+  template<class T> valarray<bool> operator>=(const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> abs (const valarray<T>& x);
-template<class T> valarray<T> acos (const valarray<T>& x);
-template<class T> valarray<T> asin (const valarray<T>& x);
-template<class T> valarray<T> atan (const valarray<T>& x);
+  template<class T> valarray<T> abs (const valarray<T>& x);
+  template<class T> valarray<T> acos (const valarray<T>& x);
+  template<class T> valarray<T> asin (const valarray<T>& x);
+  template<class T> valarray<T> atan (const valarray<T>& x);
 
-template<class T> valarray<T> atan2(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> atan2(const valarray<T>& x, const T& y);
-template<class T> valarray<T> atan2(const T& x, const valarray<T>& y);
+  template<class T> valarray<T> atan2(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> atan2(const valarray<T>& x, const T& y);
+  template<class T> valarray<T> atan2(const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> cos (const valarray<T>& x);
-template<class T> valarray<T> cosh (const valarray<T>& x);
-template<class T> valarray<T> exp (const valarray<T>& x);
-template<class T> valarray<T> log (const valarray<T>& x);
-template<class T> valarray<T> log10(const valarray<T>& x);
+  template<class T> valarray<T> cos (const valarray<T>& x);
+  template<class T> valarray<T> cosh (const valarray<T>& x);
+  template<class T> valarray<T> exp (const valarray<T>& x);
+  template<class T> valarray<T> log (const valarray<T>& x);
+  template<class T> valarray<T> log10(const valarray<T>& x);
 
-template<class T> valarray<T> pow(const valarray<T>& x, const valarray<T>& y);
-template<class T> valarray<T> pow(const valarray<T>& x, const T& y);
-template<class T> valarray<T> pow(const T& x, const valarray<T>& y);
+  template<class T> valarray<T> pow(const valarray<T>& x, const valarray<T>& y);
+  template<class T> valarray<T> pow(const valarray<T>& x, const T& y);
+  template<class T> valarray<T> pow(const T& x, const valarray<T>& y);
 
-template<class T> valarray<T> sin (const valarray<T>& x);
-template<class T> valarray<T> sinh (const valarray<T>& x);
-template<class T> valarray<T> sqrt (const valarray<T>& x);
-template<class T> valarray<T> tan (const valarray<T>& x);
-template<class T> valarray<T> tanh (const valarray<T>& x);
+  template<class T> valarray<T> sin (const valarray<T>& x);
+  template<class T> valarray<T> sinh (const valarray<T>& x);
+  template<class T> valarray<T> sqrt (const valarray<T>& x);
+  template<class T> valarray<T> tan (const valarray<T>& x);
+  template<class T> valarray<T> tanh (const valarray<T>& x);
 
-template <class T> unspecified1 begin(valarray<T>& v);
-template <class T> unspecified2 begin(const valarray<T>& v);
-template <class T> unspecified1 end(valarray<T>& v);
-template <class T> unspecified2 end(const valarray<T>& v);
+  template <class T> unspecified1 begin(valarray<T>& v);
+  template <class T> unspecified2 begin(const valarray<T>& v);
+  template <class T> unspecified1 end(valarray<T>& v);
+  template <class T> unspecified2 end(const valarray<T>& v);
 
-}  // std
-
-*/
+} // std
+#endif // valarray_synopsis
 
 #include <__config>
 #include <cstddef>
@@ -345,14 +341,6 @@ template <class T> unspecified2 end(const valarray<T>& v);
 #include <algorithm>
 #include <functional>
 #include <new>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -809,11 +797,9 @@ public:
     valarray(const value_type& __x, size_t __n);
     valarray(const value_type* __p, size_t __n);
     valarray(const valarray& __v);
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
-    valarray(valarray&& __v) _NOEXCEPT;
+    valarray(valarray&& __v) noexcept;
     valarray(initializer_list<value_type> __il);
-#endif  // _LIBCPP_CXX03_LANG
     valarray(const slice_array<value_type>& __sa);
     valarray(const gslice_array<value_type>& __ga);
     valarray(const mask_array<value_type>& __ma);
@@ -823,12 +809,10 @@ public:
 
     // assignment:
     valarray& operator=(const valarray& __v);
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
-    valarray& operator=(valarray&& __v) _NOEXCEPT;
+    valarray& operator=(valarray&& __v) noexcept;
     _LIBCPP_INLINE_VISIBILITY
     valarray& operator=(initializer_list<value_type>);
-#endif  // _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     valarray& operator=(const value_type& __x);
     _LIBCPP_INLINE_VISIBILITY
@@ -859,32 +843,26 @@ public:
     __val_expr<__indirect_expr<const valarray&> > operator[](const gslice& __gs) const;
     _LIBCPP_INLINE_VISIBILITY
     gslice_array<value_type>   operator[](const gslice& __gs);
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     __val_expr<__indirect_expr<const valarray&> > operator[](gslice&& __gs) const;
     _LIBCPP_INLINE_VISIBILITY
     gslice_array<value_type>                      operator[](gslice&& __gs);
-#endif  // _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     __val_expr<__mask_expr<const valarray&> >     operator[](const valarray<bool>& __vb) const;
     _LIBCPP_INLINE_VISIBILITY
     mask_array<value_type>                        operator[](const valarray<bool>& __vb);
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     __val_expr<__mask_expr<const valarray&> >     operator[](valarray<bool>&& __vb) const;
     _LIBCPP_INLINE_VISIBILITY
     mask_array<value_type>                        operator[](valarray<bool>&& __vb);
-#endif  // _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     __val_expr<__indirect_expr<const valarray&> > operator[](const valarray<size_t>& __vs) const;
     _LIBCPP_INLINE_VISIBILITY
     indirect_array<value_type>                    operator[](const valarray<size_t>& __vs);
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     __val_expr<__indirect_expr<const valarray&> > operator[](valarray<size_t>&& __vs) const;
     _LIBCPP_INLINE_VISIBILITY
     indirect_array<value_type>                    operator[](valarray<size_t>&& __vs);
-#endif  // _LIBCPP_CXX03_LANG
 
     // unary operators:
     valarray       operator+() const;
@@ -1006,7 +984,7 @@ public:
 
     // member functions:
     _LIBCPP_INLINE_VISIBILITY
-    void swap(valarray& __v) _NOEXCEPT;
+    void swap(valarray& __v) noexcept;
 
     _LIBCPP_INLINE_VISIBILITY
     size_t size() const {return static_cast<size_t>(__end_ - __begin_);}
@@ -1480,8 +1458,6 @@ public:
           __stride_(__stride)
         {__init(__start);}
 
-#ifndef _LIBCPP_CXX03_LANG
-
     _LIBCPP_INLINE_VISIBILITY
     gslice(size_t __start, const valarray<size_t>&  __size,
                                  valarray<size_t>&& __stride)
@@ -1502,8 +1478,6 @@ public:
         : __size_(move(__size)),
           __stride_(move(__stride))
         {__init(__start);}
-
-#endif  // _LIBCPP_CXX03_LANG
 
 //  gslice(const gslice&)            = default;
 //  gslice(gslice&&)                 = default;
@@ -1656,12 +1630,10 @@ private:
           __1d_(__gs.__1d_)
         {}
 
-#ifndef _LIBCPP_CXX03_LANG
     gslice_array(gslice&& __gs, const valarray<value_type>& __v)
         : __vp_(const_cast<value_type*>(__v.__begin_)),
           __1d_(move(__gs.__1d_))
         {}
-#endif  // _LIBCPP_CXX03_LANG
 
     template <class> friend class valarray;
 };
@@ -2354,15 +2326,11 @@ private:
           __1d_(__ia)
         {}
 
-#ifndef _LIBCPP_CXX03_LANG
-
     _LIBCPP_INLINE_VISIBILITY
     indirect_array(valarray<size_t>&& __ia, const valarray<value_type>& __v)
         : __vp_(const_cast<value_type*>(__v.__begin_)),
           __1d_(move(__ia))
         {}
-
-#endif  // _LIBCPP_CXX03_LANG
 
     template <class> friend class valarray;
 };
@@ -2573,15 +2541,11 @@ private:
           __1d_(__ia)
           {}
 
-#ifndef _LIBCPP_CXX03_LANG
-
     _LIBCPP_INLINE_VISIBILITY
     __indirect_expr(valarray<size_t>&& __ia, const _RmExpr& __e)
         : __expr_(__e),
           __1d_(move(__ia))
           {}
-
-#endif  // _LIBCPP_CXX03_LANG
 
 public:
     _LIBCPP_INLINE_VISIBILITY
@@ -2752,7 +2716,7 @@ __val_expr<_ValExpr>::operator valarray<__val_expr::result_type>() const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<result_type*>(
-                    _VSTD::__libcpp_allocate(__n * sizeof(result_type), _LIBCPP_ALIGNOF(result_type)));
+                    _VSTD::__libcpp_allocate(__n * sizeof(result_type), alignof(result_type)));
         for (size_t __i = 0; __i != __n; ++__r.__end_, ++__i)
             ::new (__r.__end_) result_type(__expr_[__i]);
     }
@@ -2770,7 +2734,7 @@ valarray<_Tp>::valarray(size_t __n)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-            _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+            _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -2805,7 +2769,7 @@ valarray<_Tp>::valarray(const value_type* __p, size_t __n)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-            _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+            _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -2831,7 +2795,7 @@ valarray<_Tp>::valarray(const valarray& __v)
     if (__v.size())
     {
         __begin_ = __end_ = static_cast<value_type*>(
-            _VSTD::__libcpp_allocate(__v.size() * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+            _VSTD::__libcpp_allocate(__v.size() * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -2849,11 +2813,9 @@ valarray<_Tp>::valarray(const valarray& __v)
     }
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp>
 inline
-valarray<_Tp>::valarray(valarray&& __v) _NOEXCEPT
+valarray<_Tp>::valarray(valarray&& __v) noexcept
     : __begin_(__v.__begin_),
       __end_(__v.__end_)
 {
@@ -2869,7 +2831,7 @@ valarray<_Tp>::valarray(initializer_list<value_type> __il)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-_VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+_VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -2888,8 +2850,6 @@ _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)))
     }
 }
 
-#endif  // _LIBCPP_CXX03_LANG
-
 template <class _Tp>
 valarray<_Tp>::valarray(const slice_array<value_type>& __sa)
     : __begin_(0),
@@ -2899,7 +2859,7 @@ valarray<_Tp>::valarray(const slice_array<value_type>& __sa)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-          _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+          _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -2927,7 +2887,7 @@ valarray<_Tp>::valarray(const gslice_array<value_type>& __ga)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -2957,7 +2917,7 @@ valarray<_Tp>::valarray(const mask_array<value_type>& __ma)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -2987,7 +2947,7 @@ valarray<_Tp>::valarray(const indirect_array<value_type>& __ia)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -3024,7 +2984,7 @@ valarray<_Tp>::__assign_range(const value_type* __f, const value_type* __l)
     {
         __clear(size());
         __begin_ = static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         __end_ = __begin_ + __n;
         _VSTD::uninitialized_copy(__f, __l, __begin_);
     } else {
@@ -3042,12 +3002,10 @@ valarray<_Tp>::operator=(const valarray& __v)
     return *this;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp>
 inline
 valarray<_Tp>&
-valarray<_Tp>::operator=(valarray&& __v) _NOEXCEPT
+valarray<_Tp>::operator=(valarray&& __v) noexcept
 {
     __clear(size());
     __begin_ = __v.__begin_;
@@ -3064,8 +3022,6 @@ valarray<_Tp>::operator=(initializer_list<value_type> __il)
 {
     return __assign_range(__il.begin(), __il.end());
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Tp>
 inline
@@ -3177,8 +3133,6 @@ valarray<_Tp>::operator[](const gslice& __gs)
     return gslice_array<value_type>(__gs, *this);
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp>
 inline
 __val_expr<__indirect_expr<const valarray<_Tp>&> >
@@ -3194,8 +3148,6 @@ valarray<_Tp>::operator[](gslice&& __gs)
 {
     return gslice_array<value_type>(move(__gs), *this);
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Tp>
 inline
@@ -3213,8 +3165,6 @@ valarray<_Tp>::operator[](const valarray<bool>& __vb)
     return mask_array<value_type>(__vb, *this);
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp>
 inline
 __val_expr<__mask_expr<const valarray<_Tp>&> >
@@ -3230,8 +3180,6 @@ valarray<_Tp>::operator[](valarray<bool>&& __vb)
 {
     return mask_array<value_type>(move(__vb), *this);
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Tp>
 inline
@@ -3249,8 +3197,6 @@ valarray<_Tp>::operator[](const valarray<size_t>& __vs)
     return indirect_array<value_type>(__vs, *this);
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Tp>
 inline
 __val_expr<__indirect_expr<const valarray<_Tp>&> >
@@ -3267,8 +3213,6 @@ valarray<_Tp>::operator[](valarray<size_t>&& __vs)
     return indirect_array<value_type>(move(__vs), *this);
 }
 
-#endif  // _LIBCPP_CXX03_LANG
-
 template <class _Tp>
 valarray<_Tp>
 valarray<_Tp>::operator+() const
@@ -3280,7 +3224,7 @@ valarray<_Tp>::operator+() const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         for (const value_type* __p = __begin_; __n; ++__r.__end_, ++__p, --__n)
             ::new (__r.__end_) value_type(+*__p);
     }
@@ -3298,7 +3242,7 @@ valarray<_Tp>::operator-() const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         for (const value_type* __p = __begin_; __n; ++__r.__end_, ++__p, --__n)
             ::new (__r.__end_) value_type(-*__p);
     }
@@ -3316,7 +3260,7 @@ valarray<_Tp>::operator~() const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         for (const value_type* __p = __begin_; __n; ++__r.__end_, ++__p, --__n)
             ::new (__r.__end_) value_type(~*__p);
     }
@@ -3333,7 +3277,7 @@ valarray<_Tp>::operator!() const
     {
         __r.__begin_ =
             __r.__end_ =
-                static_cast<bool*>(_VSTD::__libcpp_allocate(__n * sizeof(bool), _LIBCPP_ALIGNOF(bool)));
+                static_cast<bool*>(_VSTD::__libcpp_allocate(__n * sizeof(bool), alignof(bool)));
         for (const value_type* __p = __begin_; __n; ++__r.__end_, ++__p, --__n)
             ::new (__r.__end_) bool(!*__p);
     }
@@ -3603,7 +3547,7 @@ valarray<_Tp>::operator>>=(const _Expr& __v)
 template <class _Tp>
 inline
 void
-valarray<_Tp>::swap(valarray& __v) _NOEXCEPT
+valarray<_Tp>::swap(valarray& __v) noexcept
 {
     _VSTD::swap(__begin_, __v.__begin_);
     _VSTD::swap(__end_, __v.__end_);
@@ -3654,7 +3598,7 @@ valarray<_Tp>::shift(int __i) const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         const value_type* __sb;
         value_type* __tb;
         value_type* __te;
@@ -3693,7 +3637,7 @@ valarray<_Tp>::cshift(int __i) const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         __i %= static_cast<int>(__n);
         const value_type* __m = __i >= 0 ? __begin_ + __i : __end_ + __i;
         for (const value_type* __s = __m; __s != __end_; ++__r.__end_, ++__s)
@@ -3715,7 +3659,7 @@ valarray<_Tp>::apply(value_type __f(value_type)) const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         for (const value_type* __p = __begin_; __n; ++__r.__end_, ++__p, --__n)
             ::new (__r.__end_) value_type(__f(*__p));
     }
@@ -3733,7 +3677,7 @@ valarray<_Tp>::apply(value_type __f(const value_type&)) const
         __r.__begin_ =
             __r.__end_ =
                 static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
         for (const value_type* __p = __begin_; __n; ++__r.__end_, ++__p, --__n)
             ::new (__r.__end_) value_type(__f(*__p));
     }
@@ -3748,7 +3692,7 @@ void valarray<_Tp>::__clear(size_t __capacity)
   {
     while (__end_ != __begin_)
       (--__end_)->~value_type();
-    _VSTD::__libcpp_deallocate(__begin_, __capacity * sizeof(value_type), _LIBCPP_ALIGNOF(value_type));
+    _VSTD::__libcpp_deallocate(__begin_, __capacity * sizeof(value_type), alignof(value_type));
     __begin_ = __end_ = nullptr;
   }
 }
@@ -3761,7 +3705,7 @@ valarray<_Tp>::resize(size_t __n, value_type __x)
     if (__n)
     {
         __begin_ = __end_ = static_cast<value_type*>(
-           _VSTD::__libcpp_allocate(__n * sizeof(value_type), _LIBCPP_ALIGNOF(value_type)));
+           _VSTD::__libcpp_allocate(__n * sizeof(value_type), alignof(value_type)));
 #ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
@@ -3782,7 +3726,7 @@ valarray<_Tp>::resize(size_t __n, value_type __x)
 template<class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-swap(valarray<_Tp>& __x, valarray<_Tp>& __y) _NOEXCEPT
+swap(valarray<_Tp>& __x, valarray<_Tp>& __y) noexcept
 {
     __x.swap(__y);
 }
@@ -4936,7 +4880,3 @@ end(const valarray<_Tp>& __v)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_VALARRAY

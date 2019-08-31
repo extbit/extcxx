@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_IBM_LOCALE_MGMT_AIX_H
-#define _LIBCPP_SUPPORT_IBM_LOCALE_MGMT_AIX_H
+#pragma once
+#pragma GCC system_header
 
 #if defined(_AIX)
 #include "cstdlib"
@@ -81,4 +80,3 @@ locale_t uselocale(locale_t newloc)
 }
 #endif
 #endif // defined(_AIX)
-#endif // _LIBCPP_SUPPORT_IBM_LOCALE_MGMT_AIX_H

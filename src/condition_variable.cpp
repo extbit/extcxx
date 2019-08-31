@@ -7,17 +7,10 @@
 //===----------------------------------------------------------------------===//
 
 #include "__config"
-
-#ifndef _LIBCPP_HAS_NO_THREADS
-
 #include "condition_variable"
 #include "thread"
 #include "system_error"
 #include "__undef_macros"
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -27,19 +20,19 @@ condition_variable::~condition_variable()
 }
 
 void
-condition_variable::notify_one() _NOEXCEPT
+condition_variable::notify_one() noexcept
 {
     __libcpp_condvar_signal(&__cv_);
 }
 
 void
-condition_variable::notify_all() _NOEXCEPT
+condition_variable::notify_all() noexcept
 {
     __libcpp_condvar_broadcast(&__cv_);
 }
 
 void
-condition_variable::wait(unique_lock<mutex>& lk) _NOEXCEPT
+condition_variable::wait(unique_lock<mutex>& lk) noexcept
 {
     if (!lk.owns_lock())
         __throw_system_error(EPERM,
@@ -51,7 +44,7 @@ condition_variable::wait(unique_lock<mutex>& lk) _NOEXCEPT
 
 void
 condition_variable::__do_timed_wait(unique_lock<mutex>& lk,
-     chrono::time_point<chrono::system_clock, chrono::nanoseconds> tp) _NOEXCEPT
+     chrono::time_point<chrono::system_clock, chrono::nanoseconds> tp) noexcept
 {
     using namespace chrono;
     if (!lk.owns_lock())
@@ -63,7 +56,7 @@ condition_variable::__do_timed_wait(unique_lock<mutex>& lk,
     __libcpp_timespec_t ts;
     seconds s = duration_cast<seconds>(d);
     typedef decltype(ts.tv_sec) ts_sec;
-    _LIBCPP_CONSTEXPR ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
+    constexpr ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
     if (s.count() < ts_sec_max)
     {
         ts.tv_sec = static_cast<ts_sec>(s.count());
@@ -93,4 +86,6 @@ notify_all_at_thread_exit(condition_variable& cond, unique_lock<mutex> lk)
 
 _LIBCPP_END_NAMESPACE_STD
 
-#endif // !_LIBCPP_HAS_NO_THREADS
+#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#pragma comment(lib, "pthread")
+#endif

@@ -6,13 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_VARIANT
-#define _LIBCPP_VARIANT
-
-/*
-   variant synopsis
-
+#pragma once
+#pragma GCC system_header
+#if defined(variant_synopsis)
 namespace std {
 
   // 20.7.2, class template variant
@@ -193,8 +189,7 @@ namespace std {
   template <> struct hash<monostate>;
 
 } // namespace std
-
-*/
+#endif // variant_synopsis
 
 #include <__config>
 #include <__tuple>
@@ -209,27 +204,18 @@ namespace std {
 #include <limits>
 #include <version>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 namespace std { // explicitly not using versioning namespace
 
 class _LIBCPP_EXCEPTION_ABI _LIBCPP_AVAILABILITY_BAD_VARIANT_ACCESS bad_variant_access : public exception {
 public:
-  virtual const char* what() const _NOEXCEPT;
+  virtual const char* what() const noexcept;
 };
 
 } // namespace std
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#if _LIBCPP_STD_VER > 14
-
-_LIBCPP_NORETURN
+[[noreturn]]
 inline _LIBCPP_INLINE_VISIBILITY
 _LIBCPP_AVAILABILITY_THROW_BAD_VARIANT_ACCESS
 void __throw_bad_variant_access() {
@@ -630,7 +616,7 @@ union _LIBCPP_TEMPLATE_VIS __union<_DestructibleTrait, _Index> {};
 
 #define _LIBCPP_VARIANT_UNION(destructible_trait, destructor)                  \
   template <size_t _Index, class _Tp, class... _Types>                         \
-  union _LIBCPP_TEMPLATE_VIS __union<destructible_trait,                      \
+  union _LIBCPP_TEMPLATE_VIS __union<destructible_trait,                       \
                                       _Index,                                  \
                                       _Tp,                                     \
                                       _Types...> {                             \
@@ -1629,15 +1615,9 @@ struct _LIBCPP_TEMPLATE_VIS hash<monostate> {
   using result_type = size_t;
 
   inline _LIBCPP_INLINE_VISIBILITY
-  result_type operator()(const argument_type&) const _NOEXCEPT {
+  result_type operator()(const argument_type&) const noexcept {
     return 66740831; // return a fundamentally attractive random value.
   }
 };
 
-#endif  // _LIBCPP_STD_VER > 14
-
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_VARIANT

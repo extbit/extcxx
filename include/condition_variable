@@ -6,115 +6,11 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CONDITION_VARIABLE
-#define _LIBCPP_CONDITION_VARIABLE
-
-/*
-    condition_variable synopsis
-
-namespace std
-{
-
-enum class cv_status { no_timeout, timeout };
-
-class condition_variable
-{
-public:
-    condition_variable();
-    ~condition_variable();
-
-    condition_variable(const condition_variable&) = delete;
-    condition_variable& operator=(const condition_variable&) = delete;
-
-    void notify_one() noexcept;
-    void notify_all() noexcept;
-
-    void wait(unique_lock<mutex>& lock);
-    template <class Predicate>
-        void wait(unique_lock<mutex>& lock, Predicate pred);
-
-    template <class Clock, class Duration>
-        cv_status
-        wait_until(unique_lock<mutex>& lock,
-                   const chrono::time_point<Clock, Duration>& abs_time);
-
-    template <class Clock, class Duration, class Predicate>
-        bool
-        wait_until(unique_lock<mutex>& lock,
-                   const chrono::time_point<Clock, Duration>& abs_time,
-                   Predicate pred);
-
-    template <class Rep, class Period>
-        cv_status
-        wait_for(unique_lock<mutex>& lock,
-                 const chrono::duration<Rep, Period>& rel_time);
-
-    template <class Rep, class Period, class Predicate>
-        bool
-        wait_for(unique_lock<mutex>& lock,
-                 const chrono::duration<Rep, Period>& rel_time,
-                 Predicate pred);
-
-    typedef pthread_cond_t* native_handle_type;
-    native_handle_type native_handle();
-};
-
-void notify_all_at_thread_exit(condition_variable& cond, unique_lock<mutex> lk);
-
-class condition_variable_any
-{
-public:
-    condition_variable_any();
-    ~condition_variable_any();
-
-    condition_variable_any(const condition_variable_any&) = delete;
-    condition_variable_any& operator=(const condition_variable_any&) = delete;
-
-    void notify_one() noexcept;
-    void notify_all() noexcept;
-
-    template <class Lock>
-        void wait(Lock& lock);
-    template <class Lock, class Predicate>
-        void wait(Lock& lock, Predicate pred);
-
-    template <class Lock, class Clock, class Duration>
-        cv_status
-        wait_until(Lock& lock,
-                   const chrono::time_point<Clock, Duration>& abs_time);
-
-    template <class Lock, class Clock, class Duration, class Predicate>
-        bool
-        wait_until(Lock& lock,
-                   const chrono::time_point<Clock, Duration>& abs_time,
-                   Predicate pred);
-
-    template <class Lock, class Rep, class Period>
-        cv_status
-        wait_for(Lock& lock,
-                 const chrono::duration<Rep, Period>& rel_time);
-
-    template <class Lock, class Rep, class Period, class Predicate>
-        bool
-        wait_for(Lock& lock,
-                 const chrono::duration<Rep, Period>& rel_time,
-                 Predicate pred);
-};
-
-}  // std
-
-*/
-
+#pragma once
+#pragma GCC system_header
 #include <__config>
 #include <__mutex_base>
 #include <memory>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-#ifndef _LIBCPP_HAS_NO_THREADS
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -127,9 +23,9 @@ public:
     condition_variable_any();
 
     _LIBCPP_INLINE_VISIBILITY
-    void notify_one() _NOEXCEPT;
+    void notify_one() noexcept;
     _LIBCPP_INLINE_VISIBILITY
-    void notify_all() _NOEXCEPT;
+    void notify_all() noexcept;
 
     template <class _Lock>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
@@ -171,7 +67,7 @@ condition_variable_any::condition_variable_any()
 
 inline
 void
-condition_variable_any::notify_one() _NOEXCEPT
+condition_variable_any::notify_one() noexcept
 {
     {lock_guard<mutex> __lx(*__mut_);}
     __cv_.notify_one();
@@ -179,7 +75,7 @@ condition_variable_any::notify_one() _NOEXCEPT
 
 inline
 void
-condition_variable_any::notify_all() _NOEXCEPT
+condition_variable_any::notify_all() noexcept
 {
     {lock_guard<mutex> __lx(*__mut_);}
     __cv_.notify_all();
@@ -262,7 +158,3 @@ _LIBCPP_FUNC_VIS
 void notify_all_at_thread_exit(condition_variable& cond, unique_lock<mutex> lk);
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // !_LIBCPP_HAS_NO_THREADS
-
-#endif  // _LIBCPP_CONDITION_VARIABLE

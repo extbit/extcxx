@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CERRNO
-#define _LIBCPP_CERRNO
-
+#pragma once
+#pragma GCC system_header
 /*
     cerrno synopsis
 
@@ -19,14 +17,6 @@ Macros:
     EILSEQ  // C99
     ERANGE
     errno
-
 */
-
 #include <__config>
 #include <errno.h>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-#endif  // _LIBCPP_CERRNO

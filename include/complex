@@ -6,20 +6,16 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_COMPLEX
-#define _LIBCPP_COMPLEX
-
-/*
-    complex synopsis
-
+#pragma once
+#pragma GCC system_header
+#if defined(complex_synopsis)
 namespace std
 {
 
-template<class T>
-class complex
-{
-public:
+  template<class T>
+  class complex
+  {
+  public:
     typedef T value_type;
 
     complex(const T& re = T(), const T& im = T()); // constexpr in C++14
@@ -44,12 +40,12 @@ public:
     template<class X> complex<T>& operator-=(const complex<X>&);
     template<class X> complex<T>& operator*=(const complex<X>&);
     template<class X> complex<T>& operator/=(const complex<X>&);
-};
+  };
 
-template<>
-class complex<float>
-{
-public:
+  template<>
+  class complex<float>
+  {
+  public:
     typedef float value_type;
 
     constexpr complex(float re = 0.0f, float im = 0.0f);
@@ -73,12 +69,12 @@ public:
     template<class X> complex<float>& operator-=(const complex<X>&);
     template<class X> complex<float>& operator*=(const complex<X>&);
     template<class X> complex<float>& operator/=(const complex<X>&);
-};
+  };
 
-template<>
-class complex<double>
-{
-public:
+  template<>
+  class complex<double>
+  {
+  public:
     typedef double value_type;
 
     constexpr complex(double re = 0.0, double im = 0.0);
@@ -102,12 +98,12 @@ public:
     template<class X> complex<double>& operator-=(const complex<X>&);
     template<class X> complex<double>& operator*=(const complex<X>&);
     template<class X> complex<double>& operator/=(const complex<X>&);
-};
+  };
 
-template<>
-class complex<long double>
-{
-public:
+  template<>
+  class complex<long double>
+  {
+  public:
     typedef long double value_type;
 
     constexpr complex(long double re = 0.0L, long double im = 0.0L);
@@ -131,113 +127,112 @@ public:
     template<class X> complex<long double>& operator-=(const complex<X>&);
     template<class X> complex<long double>& operator*=(const complex<X>&);
     template<class X> complex<long double>& operator/=(const complex<X>&);
-};
+  };
 
-// 26.3.6 operators:
-template<class T> complex<T> operator+(const complex<T>&, const complex<T>&);
-template<class T> complex<T> operator+(const complex<T>&, const T&);
-template<class T> complex<T> operator+(const T&, const complex<T>&);
-template<class T> complex<T> operator-(const complex<T>&, const complex<T>&);
-template<class T> complex<T> operator-(const complex<T>&, const T&);
-template<class T> complex<T> operator-(const T&, const complex<T>&);
-template<class T> complex<T> operator*(const complex<T>&, const complex<T>&);
-template<class T> complex<T> operator*(const complex<T>&, const T&);
-template<class T> complex<T> operator*(const T&, const complex<T>&);
-template<class T> complex<T> operator/(const complex<T>&, const complex<T>&);
-template<class T> complex<T> operator/(const complex<T>&, const T&);
-template<class T> complex<T> operator/(const T&, const complex<T>&);
-template<class T> complex<T> operator+(const complex<T>&);
-template<class T> complex<T> operator-(const complex<T>&);
-template<class T> bool operator==(const complex<T>&, const complex<T>&); // constexpr in C++14
-template<class T> bool operator==(const complex<T>&, const T&); // constexpr in C++14
-template<class T> bool operator==(const T&, const complex<T>&); // constexpr in C++14
-template<class T> bool operator!=(const complex<T>&, const complex<T>&); // constexpr in C++14
-template<class T> bool operator!=(const complex<T>&, const T&); // constexpr in C++14
-template<class T> bool operator!=(const T&, const complex<T>&); // constexpr in C++14
+  // 26.3.6 operators:
+  template<class T> complex<T> operator+(const complex<T>&, const complex<T>&);
+  template<class T> complex<T> operator+(const complex<T>&, const T&);
+  template<class T> complex<T> operator+(const T&, const complex<T>&);
+  template<class T> complex<T> operator-(const complex<T>&, const complex<T>&);
+  template<class T> complex<T> operator-(const complex<T>&, const T&);
+  template<class T> complex<T> operator-(const T&, const complex<T>&);
+  template<class T> complex<T> operator*(const complex<T>&, const complex<T>&);
+  template<class T> complex<T> operator*(const complex<T>&, const T&);
+  template<class T> complex<T> operator*(const T&, const complex<T>&);
+  template<class T> complex<T> operator/(const complex<T>&, const complex<T>&);
+  template<class T> complex<T> operator/(const complex<T>&, const T&);
+  template<class T> complex<T> operator/(const T&, const complex<T>&);
+  template<class T> complex<T> operator+(const complex<T>&);
+  template<class T> complex<T> operator-(const complex<T>&);
+  template<class T> bool operator==(const complex<T>&, const complex<T>&); // constexpr in C++14
+  template<class T> bool operator==(const complex<T>&, const T&); // constexpr in C++14
+  template<class T> bool operator==(const T&, const complex<T>&); // constexpr in C++14
+  template<class T> bool operator!=(const complex<T>&, const complex<T>&); // constexpr in C++14
+  template<class T> bool operator!=(const complex<T>&, const T&); // constexpr in C++14
+  template<class T> bool operator!=(const T&, const complex<T>&); // constexpr in C++14
 
-template<class T, class charT, class traits>
+  template<class T, class charT, class traits>
   basic_istream<charT, traits>&
   operator>>(basic_istream<charT, traits>&, complex<T>&);
-template<class T, class charT, class traits>
+  template<class T, class charT, class traits>
   basic_ostream<charT, traits>&
   operator<<(basic_ostream<charT, traits>&, const complex<T>&);
 
-// 26.3.7 values:
+  // 26.3.7 values:
 
-template<class T>              T real(const complex<T>&); // constexpr in C++14
-                     long double real(long double);       // constexpr in C++14
-                          double real(double);            // constexpr in C++14
-template<Integral T>      double real(T);                 // constexpr in C++14
-                          float  real(float);             // constexpr in C++14
+  template<class T>              T real(const complex<T>&); // constexpr in C++14
+  long double real(long double);       // constexpr in C++14
+  double real(double);            // constexpr in C++14
+  template<Integral T>      double real(T);                 // constexpr in C++14
+  float  real(float);             // constexpr in C++14
 
-template<class T>              T imag(const complex<T>&); // constexpr in C++14
-                     long double imag(long double);       // constexpr in C++14
-                          double imag(double);            // constexpr in C++14
-template<Integral T>      double imag(T);                 // constexpr in C++14
-                          float  imag(float);             // constexpr in C++14
+  template<class T>              T imag(const complex<T>&); // constexpr in C++14
+  long double imag(long double);       // constexpr in C++14
+  double imag(double);            // constexpr in C++14
+  template<Integral T>      double imag(T);                 // constexpr in C++14
+  float  imag(float);             // constexpr in C++14
 
-template<class T> T abs(const complex<T>&);
+  template<class T> T abs(const complex<T>&);
 
-template<class T>              T arg(const complex<T>&);
-                     long double arg(long double);
-                          double arg(double);
-template<Integral T>      double arg(T);
-                          float  arg(float);
+  template<class T>              T arg(const complex<T>&);
+  long double arg(long double);
+  double arg(double);
+  template<Integral T>      double arg(T);
+  float  arg(float);
 
-template<class T>              T norm(const complex<T>&);
-                     long double norm(long double);
-                          double norm(double);
-template<Integral T>      double norm(T);
-                          float  norm(float);
+  template<class T>              T norm(const complex<T>&);
+  long double norm(long double);
+  double norm(double);
+  template<Integral T>      double norm(T);
+  float  norm(float);
 
-template<class T>      complex<T>           conj(const complex<T>&);
-                       complex<long double> conj(long double);
-                       complex<double>      conj(double);
-template<Integral T>   complex<double>      conj(T);
-                       complex<float>       conj(float);
+  template<class T>      complex<T>           conj(const complex<T>&);
+  complex<long double> conj(long double);
+  complex<double>      conj(double);
+  template<Integral T>   complex<double>      conj(T);
+  complex<float>       conj(float);
 
-template<class T>    complex<T>           proj(const complex<T>&);
-                     complex<long double> proj(long double);
-                     complex<double>      proj(double);
-template<Integral T> complex<double>      proj(T);
-                     complex<float>       proj(float);
+  template<class T>    complex<T>           proj(const complex<T>&);
+  complex<long double> proj(long double);
+  complex<double>      proj(double);
+  template<Integral T> complex<double>      proj(T);
+  complex<float>       proj(float);
 
-template<class T> complex<T> polar(const T&, const T& = T());
+  template<class T> complex<T> polar(const T&, const T& = T());
 
-// 26.3.8 transcendentals:
-template<class T> complex<T> acos(const complex<T>&);
-template<class T> complex<T> asin(const complex<T>&);
-template<class T> complex<T> atan(const complex<T>&);
-template<class T> complex<T> acosh(const complex<T>&);
-template<class T> complex<T> asinh(const complex<T>&);
-template<class T> complex<T> atanh(const complex<T>&);
-template<class T> complex<T> cos (const complex<T>&);
-template<class T> complex<T> cosh (const complex<T>&);
-template<class T> complex<T> exp (const complex<T>&);
-template<class T> complex<T> log (const complex<T>&);
-template<class T> complex<T> log10(const complex<T>&);
+  // 26.3.8 transcendentals:
+  template<class T> complex<T> acos(const complex<T>&);
+  template<class T> complex<T> asin(const complex<T>&);
+  template<class T> complex<T> atan(const complex<T>&);
+  template<class T> complex<T> acosh(const complex<T>&);
+  template<class T> complex<T> asinh(const complex<T>&);
+  template<class T> complex<T> atanh(const complex<T>&);
+  template<class T> complex<T> cos (const complex<T>&);
+  template<class T> complex<T> cosh (const complex<T>&);
+  template<class T> complex<T> exp (const complex<T>&);
+  template<class T> complex<T> log (const complex<T>&);
+  template<class T> complex<T> log10(const complex<T>&);
 
-template<class T> complex<T> pow(const complex<T>&, const T&);
-template<class T> complex<T> pow(const complex<T>&, const complex<T>&);
-template<class T> complex<T> pow(const T&, const complex<T>&);
+  template<class T> complex<T> pow(const complex<T>&, const T&);
+  template<class T> complex<T> pow(const complex<T>&, const complex<T>&);
+  template<class T> complex<T> pow(const T&, const complex<T>&);
 
-template<class T> complex<T> sin (const complex<T>&);
-template<class T> complex<T> sinh (const complex<T>&);
-template<class T> complex<T> sqrt (const complex<T>&);
-template<class T> complex<T> tan (const complex<T>&);
-template<class T> complex<T> tanh (const complex<T>&);
+  template<class T> complex<T> sin (const complex<T>&);
+  template<class T> complex<T> sinh (const complex<T>&);
+  template<class T> complex<T> sqrt (const complex<T>&);
+  template<class T> complex<T> tan (const complex<T>&);
+  template<class T> complex<T> tanh (const complex<T>&);
 
-template<class T, class charT, class traits>
+  template<class T, class charT, class traits>
   basic_istream<charT, traits>&
   operator>>(basic_istream<charT, traits>& is, complex<T>& x);
 
-template<class T, class charT, class traits>
+  template<class T, class charT, class traits>
   basic_ostream<charT, traits>&
   operator<<(basic_ostream<charT, traits>& o, const complex<T>& x);
 
 }  // std
-
-*/
+#endif // complex_synopsis
 
 #include <__config>
 #include <type_traits>
@@ -245,10 +240,6 @@ template<class T, class charT, class traits>
 #include <cmath>
 #include <sstream>
 #include <version>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -266,15 +257,15 @@ private:
     value_type __re_;
     value_type __im_;
 public:
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY constexpr
     complex(const value_type& __re = value_type(), const value_type& __im = value_type())
         : __re_(__re), __im_(__im) {}
-    template<class _Xp> _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+    template<class _Xp> _LIBCPP_INLINE_VISIBILITY constexpr
     complex(const complex<_Xp>& __c)
         : __re_(__c.real()), __im_(__c.imag()) {}
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11 value_type real() const {return __re_;}
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11 value_type imag() const {return __im_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr value_type real() const {return __re_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr value_type imag() const {return __im_;}
 
     _LIBCPP_INLINE_VISIBILITY void real(value_type __re) {__re_ = __re;}
     _LIBCPP_INLINE_VISIBILITY void imag(value_type __im) {__im_ = __im;}
@@ -327,15 +318,15 @@ class _LIBCPP_TEMPLATE_VIS complex<float>
 public:
     typedef float value_type;
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR complex(float __re = 0.0f, float __im = 0.0f)
+    _LIBCPP_INLINE_VISIBILITY constexpr complex(float __re = 0.0f, float __im = 0.0f)
         : __re_(__re), __im_(__im) {}
     _LIBCPP_INLINE_VISIBILITY
-    explicit _LIBCPP_CONSTEXPR complex(const complex<double>& __c);
+    explicit constexpr complex(const complex<double>& __c);
     _LIBCPP_INLINE_VISIBILITY
-    explicit _LIBCPP_CONSTEXPR complex(const complex<long double>& __c);
+    explicit constexpr complex(const complex<long double>& __c);
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR float real() const {return __re_;}
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR float imag() const {return __im_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr float real() const {return __re_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr float imag() const {return __im_;}
 
     _LIBCPP_INLINE_VISIBILITY void real(value_type __re) {__re_ = __re;}
     _LIBCPP_INLINE_VISIBILITY void imag(value_type __im) {__im_ = __im;}
@@ -385,15 +376,15 @@ class _LIBCPP_TEMPLATE_VIS complex<double>
 public:
     typedef double value_type;
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR complex(double __re = 0.0, double __im = 0.0)
+    _LIBCPP_INLINE_VISIBILITY constexpr complex(double __re = 0.0, double __im = 0.0)
         : __re_(__re), __im_(__im) {}
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR complex(const complex<float>& __c);
+    constexpr complex(const complex<float>& __c);
     _LIBCPP_INLINE_VISIBILITY
-    explicit _LIBCPP_CONSTEXPR complex(const complex<long double>& __c);
+    explicit constexpr complex(const complex<long double>& __c);
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR double real() const {return __re_;}
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR double imag() const {return __im_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr double real() const {return __re_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr double imag() const {return __im_;}
 
     _LIBCPP_INLINE_VISIBILITY void real(value_type __re) {__re_ = __re;}
     _LIBCPP_INLINE_VISIBILITY void imag(value_type __im) {__im_ = __im;}
@@ -443,15 +434,15 @@ class _LIBCPP_TEMPLATE_VIS complex<long double>
 public:
     typedef long double value_type;
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR complex(long double __re = 0.0L, long double __im = 0.0L)
+    _LIBCPP_INLINE_VISIBILITY constexpr complex(long double __re = 0.0L, long double __im = 0.0L)
         : __re_(__re), __im_(__im) {}
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR complex(const complex<float>& __c);
+    constexpr complex(const complex<float>& __c);
     _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_CONSTEXPR complex(const complex<double>& __c);
+    constexpr complex(const complex<double>& __c);
 
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR long double real() const {return __re_;}
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR long double imag() const {return __im_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr long double real() const {return __re_;}
+    _LIBCPP_INLINE_VISIBILITY constexpr long double imag() const {return __im_;}
 
     _LIBCPP_INLINE_VISIBILITY void real(value_type __re) {__re_ = __re;}
     _LIBCPP_INLINE_VISIBILITY void imag(value_type __im) {__im_ = __im;}
@@ -494,32 +485,32 @@ public:
 };
 
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 complex<float>::complex(const complex<double>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 complex<float>::complex(const complex<long double>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 complex<double>::complex(const complex<float>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 complex<double>::complex(const complex<long double>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 complex<long double>::complex(const complex<float>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
 inline
-_LIBCPP_CONSTEXPR
+constexpr
 complex<long double>::complex(const complex<double>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
@@ -743,7 +734,7 @@ operator-(const complex<_Tp>& __x)
 }
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 operator==(const complex<_Tp>& __x, const complex<_Tp>& __y)
 {
@@ -751,7 +742,7 @@ operator==(const complex<_Tp>& __x, const complex<_Tp>& __y)
 }
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 operator==(const complex<_Tp>& __x, const _Tp& __y)
 {
@@ -759,7 +750,7 @@ operator==(const complex<_Tp>& __x, const _Tp& __y)
 }
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 operator==(const _Tp& __x, const complex<_Tp>& __y)
 {
@@ -767,7 +758,7 @@ operator==(const _Tp& __x, const complex<_Tp>& __y)
 }
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 operator!=(const complex<_Tp>& __x, const complex<_Tp>& __y)
 {
@@ -775,7 +766,7 @@ operator!=(const complex<_Tp>& __x, const complex<_Tp>& __y)
 }
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 operator!=(const complex<_Tp>& __x, const _Tp& __y)
 {
@@ -783,7 +774,7 @@ operator!=(const complex<_Tp>& __x, const _Tp& __y)
 }
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 bool
 operator!=(const _Tp& __x, const complex<_Tp>& __y)
 {
@@ -816,7 +807,7 @@ struct __libcpp_complex_overload_traits<_Tp, false, true>
 // real
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _Tp
 real(const complex<_Tp>& __c)
 {
@@ -824,7 +815,7 @@ real(const complex<_Tp>& __c)
 }
 
 template <class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename __libcpp_complex_overload_traits<_Tp>::_ValueType
 real(_Tp __re)
 {
@@ -834,7 +825,7 @@ real(_Tp __re)
 // imag
 
 template<class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _Tp
 imag(const complex<_Tp>& __c)
 {
@@ -842,7 +833,7 @@ imag(const complex<_Tp>& __c)
 }
 
 template <class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 typename __libcpp_complex_overload_traits<_Tp>::_ValueType
 imag(_Tp)
 {
@@ -1449,7 +1440,6 @@ operator<<(basic_ostream<_CharT, _Traits>& __os, const complex<_Tp>& __x)
     return __os << __s.str();
 }
 
-#if _LIBCPP_STD_VER > 11
 // Literal suffix for complex number literals [complex.literals]
 inline namespace literals
 {
@@ -1488,8 +1478,3 @@ inline namespace literals
     }
   }
 }
-#endif
-
-_LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_COMPLEX

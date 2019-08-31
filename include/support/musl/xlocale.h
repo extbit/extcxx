@@ -13,9 +13,8 @@
 // about as good as we can do without implementing full xlocale support
 // in Musl.
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_MUSL_XLOCALE_H
-#define _LIBCPP_SUPPORT_MUSL_XLOCALE_H
+#pragma once
+#pragma GCC system_header
 
 #include <cstdlib>
 #include <cwchar>
@@ -53,5 +52,3 @@ static inline long double wcstold_l(const wchar_t *nptr, wchar_t **endptr,
 #ifdef __cplusplus
 }
 #endif
-
-#endif // _LIBCPP_SUPPORT_MUSL_XLOCALE_H

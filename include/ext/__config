@@ -1,0 +1,31 @@
+// -*- C++ -*-
+//===--------------------------- __config ---------------------------------===//
+//
+//    Copyright (c) 2018-2019 Duzy Chan at ExtBit Limited.
+//    This file is part of ExtC++, the ExtBit C++ standard library.
+//
+//===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
+
+#include <__config>
+
+#define _LIBCPP_BEGIN_NAMESPACE_EXT namespace std { namespace ext {
+#define _LIBCPP_END_NAMESPACE_EXT  } }
+#define _VSTD_EXT std::ext
+
+#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT _LIBCPP_BEGIN_NAMESPACE_EXT inline namespace bit_v1 {
+#define _LIBCPP_END_NAMESPACE_EXTBIT  } } }
+#define _VSTD_EXTBIT _VSTD_EXT::bit_v1
+
+#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT_V2 _LIBCPP_BEGIN_NAMESPACE_EXT inline namespace bit_v2 {
+#define _LIBCPP_END_NAMESPACE_EXTBIT_V2  } } }
+#define _VSTD_EXTBIT_V2 _VSTD_EXT::bit_v2
+
+#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT_NET _LIBCPP_BEGIN_NAMESPACE_EXTBIT namespace net {
+#define _LIBCPP_END_NAMESPACE_EXTBIT_NET  } } } }
+#define _VSTD_EXTBIT_NET _VSTD_EXTBIT::net
+
+#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT_LOG _LIBCPP_BEGIN_NAMESPACE_EXTBIT namespace log {
+#define _LIBCPP_END_NAMESPACE_EXTBIT_LOG  } } } }
+#define _VSTD_EXTBIT_LOG _VSTD_EXTBIT::log

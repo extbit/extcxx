@@ -6,50 +6,41 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_IOMANIP
-#define _LIBCPP_IOMANIP
-
-/*
-    iomanip synopsis
-
+#pragma once
+#pragma GCC system_header
+#if defined(iomanip_synopsis)
 namespace std {
 
-// types T1, T2, ... are unspecified implementation types
-T1 resetiosflags(ios_base::fmtflags mask);
-T2 setiosflags (ios_base::fmtflags mask);
-T3 setbase(int base);
-template<charT> T4 setfill(charT c);
-T5 setprecision(int n);
-T6 setw(int n);
-template <class moneyT> T7 get_money(moneyT& mon, bool intl = false);
-template <class charT, class moneyT> T8 put_money(const moneyT& mon, bool intl = false);
-template <class charT> T9 get_time(struct tm* tmb, const charT* fmt);
-template <class charT> T10 put_time(const struct tm* tmb, const charT* fmt);
+  // types T1, T2, ... are unspecified implementation types
+  T1 resetiosflags(ios_base::fmtflags mask);
+  T2 setiosflags (ios_base::fmtflags mask);
+  T3 setbase(int base);
+  template<charT> T4 setfill(charT c);
+  T5 setprecision(int n);
+  T6 setw(int n);
+  template <class moneyT> T7 get_money(moneyT& mon, bool intl = false);
+  template <class charT, class moneyT> T8 put_money(const moneyT& mon, bool intl = false);
+  template <class charT> T9 get_time(struct tm* tmb, const charT* fmt);
+  template <class charT> T10 put_time(const struct tm* tmb, const charT* fmt);
 
-template <class charT>
+  template <class charT>
   T11 quoted(const charT* s, charT delim=charT('"'), charT escape=charT('\\')); // C++14
 
-template <class charT, class traits, class Allocator>
+  template <class charT, class traits, class Allocator>
   T12 quoted(const basic_string<charT, traits, Allocator>& s,
              charT delim=charT('"'), charT escape=charT('\\')); // C++14
 
-template <class charT, class traits, class Allocator>
+  template <class charT, class traits, class Allocator>
   T13 quoted(basic_string<charT, traits, Allocator>& s,
              charT delim=charT('"'), charT escape=charT('\\')); // C++14
 
 }  // std
-
-*/
+#endif // iomanip_synopsis
 
 #include <__config>
 #include <__string>
 #include <istream>
 #include <version>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -636,9 +627,6 @@ __quoted ( basic_string <_CharT, _Traits, _Allocator> &__s, _CharT __delim = _Ch
     return __quoted_proxy<_CharT, _Traits, _Allocator>( __s, __delim, __escape );
 }
 
-
-#if _LIBCPP_STD_VER > 11
-
 template <class _CharT, class _Traits, class _Allocator>
 _LIBCPP_INLINE_VISIBILITY
 __quoted_output_proxy<_CharT, typename basic_string <_CharT, _Traits, _Allocator>::const_iterator>
@@ -663,8 +651,5 @@ quoted (basic_string_view <_CharT, _Traits> __sv,
     return __quoted_output_proxy<_CharT, const _CharT *, _Traits>
          ( __sv.data(), __sv.data() + __sv.size(), __delim, __escape );
 }
-#endif
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_IOMANIP

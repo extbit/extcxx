@@ -9,17 +9,12 @@
 // The BSDs have lots of *_l functions.  This file provides reimplementations
 // of those functions for non-BSD platforms.
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_BSD_LOCALE_FALLBACKS_DEFAULTS_H
-#define _LIBCPP_BSD_LOCALE_FALLBACKS_DEFAULTS_H
+#pragma once
+#pragma GCC system_header
 
 #include <stdlib.h>
 #include <stdarg.h>
 #include <memory>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -135,5 +130,3 @@ int __libcpp_sscanf_l(const char *__s, locale_t __l, const char *__format, ...) 
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // _LIBCPP_BSD_LOCALE_FALLBACKS_DEFAULTS_H

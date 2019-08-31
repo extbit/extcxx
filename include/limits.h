@@ -6,13 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_LIMITS_H
-#define _LIBCPP_LIMITS_H
-
+#pragma once
+#pragma GCC system_header
 /*
-    limits.h synopsis
-
 Macros:
 
     CHAR_BIT
@@ -34,14 +30,8 @@ Macros:
     LLONG_MIN   // C99
     LLONG_MAX   // C99
     ULLONG_MAX  // C99
-
 */
-
 #include <__config>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 #ifndef __GNUC__
 #include_next <limits.h>
@@ -60,5 +50,3 @@ Macros:
 #undef _GCC_LIMITS_H_
 #include_next <limits.h>
 #endif // __GNUC__
-
-#endif  // _LIBCPP_LIMITS_H

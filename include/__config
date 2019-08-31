@@ -6,18 +6,13 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CONFIG
-#define _LIBCPP_CONFIG
+#pragma once
+#pragma GCC system_header
 
 #if defined(_MSC_VER) && !defined(__clang__)
 #  if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #    define _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
 #  endif
-#endif
-
-#ifndef _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
-#pragma GCC system_header
 #endif
 
 #ifdef __cplusplus
@@ -88,7 +83,7 @@
 // instead of as a class simulating an enum. If this option is enabled
 // `pointer_safety` and `get_pointer_safety()` will no longer be available
 // in C++03.
-#  define _LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE
+//#  define _LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE
 // Define a key function for `bad_function_call` in the library, to centralize
 // its vtable and typeinfo to libc++ rather than having all other libraries
 // using that class define their own copies.
@@ -130,45 +125,45 @@
 # define _LIBCPP_ABI_NAMESPACE _LIBCPP_CONCAT(__,_LIBCPP_ABI_VERSION)
 #endif
 
-#if __cplusplus < 201103L
-#define _LIBCPP_CXX03_LANG
-#endif
+// #if __cplusplus < 201103L
+// #define _LIBCPP_CXX03_LANG
+// #endif
 
-#ifndef __has_attribute
-#define __has_attribute(__x) 0
-#endif
+// #ifndef __has_attribute
+// #define __has_attribute(__x) 0
+// #endif
 
-#ifndef __has_builtin
-#define __has_builtin(__x) 0
-#endif
+// #ifndef __has_builtin
+// #define __has_builtin(__x) 0
+// #endif
 
-#ifndef __has_extension
-#define __has_extension(__x) 0
-#endif
+// #ifndef __has_extension
+// #define __has_extension(__x) 0
+// #endif
 
-#ifndef __has_feature
-#define __has_feature(__x) 0
-#endif
+// #ifndef __has_feature
+// #define __has_feature(__x) 0
+// #endif
 
-#ifndef __has_cpp_attribute
-#define __has_cpp_attribute(__x) 0
-#endif
+// #ifndef __has_cpp_attribute
+// #define __has_cpp_attribute(__x) 0
+// #endif
 
-// '__is_identifier' returns '0' if '__x' is a reserved identifier provided by
-// the compiler and '1' otherwise.
-#ifndef __is_identifier
-#define __is_identifier(__x) 1
-#endif
+// // '__is_identifier' returns '0' if '__x' is a reserved identifier provided by
+// // the compiler and '1' otherwise.
+// #ifndef __is_identifier
+// #define __is_identifier(__x) 1
+// #endif
 
-#ifndef __has_declspec_attribute
-#define __has_declspec_attribute(__x) 0
-#endif
+// #ifndef __has_declspec_attribute
+// #define __has_declspec_attribute(__x) 0
+// #endif
 
 #define __has_keyword(__x) !(__is_identifier(__x))
 
-#ifndef __has_include
-#define __has_include(...) 0
-#endif
+// #ifndef __has_include
+// #define __has_include(...) 0
+// #endif
 
 #if defined(__clang__)
 #  define _LIBCPP_COMPILER_CLANG
@@ -176,11 +171,11 @@
 #    define _LIBCPP_CLANG_VER (__clang_major__ * 100 + __clang_minor__)
 #  endif
 #elif defined(__GNUC__)
-#  define _LIBCPP_COMPILER_GCC
+#  error "GCC may not be supported" // _LIBCPP_COMPILER_GCC
 #elif defined(_MSC_VER)
-#  define _LIBCPP_COMPILER_MSVC
+#  error "MSVC may not be supported" // _LIBCPP_COMPILER_MSVC
 #elif defined(__IBMCPP__)
-#  define _LIBCPP_COMPILER_IBM
+#  error "IBMCPP may not be supported" // _LIBCPP_COMPILER_IBM
 #endif
 
 #ifndef _LIBCPP_CLANG_VER
@@ -366,17 +361,17 @@
 #  endif // __linux__
 #endif
 
-#ifndef _LIBCPP_CXX03_LANG
-# define _LIBCPP_ALIGNOF(_Tp) alignof(_Tp)
-#elif defined(_LIBCPP_COMPILER_CLANG)
-# define _LIBCPP_ALIGNOF(_Tp) _Alignof(_Tp)
-#else
-// This definition is potentially buggy, but it's only taken with GCC in C++03,
-// which we barely support anyway. See llvm.org/PR39713
-# define _LIBCPP_ALIGNOF(_Tp) __alignof(_Tp)
-#endif
+// #ifndef _LIBCPP_CXX03_LANG
+// # define _LIBCPP_ALIGNOF(_Tp) alignof(_Tp)
+// #elif defined(_LIBCPP_COMPILER_CLANG)
+// # define _LIBCPP_ALIGNOF(_Tp) _Alignof(_Tp)
+// #else
+// // This definition is potentially buggy, but it's only taken with GCC in C++03,
+// // which we barely support anyway. See llvm.org/PR39713
+// # define _LIBCPP_ALIGNOF(_Tp) __alignof(_Tp)
+// #endif
 
-#define _LIBCPP_PREFERRED_ALIGNOF(_Tp) __alignof(_Tp)
+// #define _LIBCPP_PREFERRED_ALIGNOF(_Tp) __alignof(_Tp)
 
 #if defined(_LIBCPP_COMPILER_CLANG)
 
@@ -388,13 +383,13 @@
 #define _LIBCPP_ABI_ALTERNATE_STRING_LAYOUT
 #endif
 
-#if __has_feature(cxx_alignas)
-#  define _ALIGNAS_TYPE(x) alignas(x)
-#  define _ALIGNAS(x) alignas(x)
-#else
-#  define _ALIGNAS_TYPE(x) __attribute__((__aligned__(_LIBCPP_ALIGNOF(x))))
-#  define _ALIGNAS(x) __attribute__((__aligned__(x)))
-#endif
+// #if __has_feature(cxx_alignas)
+// #  define _ALIGNAS_TYPE(x) alignas(x)
+// #  define _ALIGNAS(x) alignas(x)
+// #else
+// #  define _ALIGNAS_TYPE(x) __attribute__((__aligned__(_LIBCPP_ALIGNOF(x))))
+// #  define _ALIGNAS(x) __attribute__((__aligned__(x)))
+// #endif
 
 #if __cplusplus < 201103L
 typedef __char16_t char16_t;
@@ -413,11 +408,11 @@ typedef __char32_t char32_t;
 #define _LIBCPP_HAS_NO_STRONG_ENUMS
 #endif
 
-#if __has_feature(cxx_attributes)
-#  define _LIBCPP_NORETURN [[noreturn]]
-#else
-#  define _LIBCPP_NORETURN __attribute__ ((noreturn))
-#endif
+// #if __has_feature(cxx_attributes)
+// #  define _LIBCPP_NORETURN [[noreturn]]
+// #else
+// #  define _LIBCPP_NORETURN __attribute__ ((noreturn))
+// #endif
 
 #if !(__has_feature(cxx_lambdas))
 #define _LIBCPP_HAS_NO_LAMBDAS
@@ -431,17 +426,17 @@ typedef __char32_t char32_t;
 #  endif
 #endif
 
-#if !(__has_feature(cxx_rvalue_references))
-#define _LIBCPP_HAS_NO_RVALUE_REFERENCES
-#endif
+// #if !(__has_feature(cxx_rvalue_references))
+// #define _LIBCPP_HAS_NO_RVALUE_REFERENCES
+// #endif
 
 #if !(__has_feature(cxx_auto_type))
 #define _LIBCPP_HAS_NO_AUTO_TYPE
 #endif
 
-#if !(__has_feature(cxx_variadic_templates))
-#define _LIBCPP_HAS_NO_VARIADICS
-#endif
+// #if !(__has_feature(cxx_variadic_templates))
+// #define _LIBCPP_HAS_NO_VARIADICS
+// #endif
 
 // Objective-C++ features (opt-in)
 #if __has_feature(objc_arc)
@@ -460,9 +455,9 @@ typedef __char32_t char32_t;
 #define _LIBCPP_HAS_NO_VARIABLE_TEMPLATES
 #endif
 
-#if !(__has_feature(cxx_noexcept))
-#define _LIBCPP_HAS_NO_NOEXCEPT
-#endif
+// #if !(__has_feature(cxx_noexcept))
+// #define _LIBCPP_HAS_NO_NOEXCEPT
+// #endif
 
 #if !defined(_LIBCPP_HAS_NO_ASAN) && !__has_feature(address_sanitizer)
 #define _LIBCPP_HAS_NO_ASAN
@@ -754,8 +749,12 @@ typedef __char32_t char32_t;
 
 // Inline namespaces are available in Clang/GCC/MSVC regardless of C++ dialect.
 #define _LIBCPP_BEGIN_NAMESPACE_STD namespace std { inline namespace _LIBCPP_ABI_NAMESPACE {
+#define _LIBCPP_BEGIN_NAMESPACE_STDIMP namespace std { inline namespace _LIBCPP_ABI_NAMESPACE { namespace imp {
 #define _LIBCPP_END_NAMESPACE_STD  } }
+#define _LIBCPP_END_NAMESPACE_STDIMP  } } }
 #define _VSTD std::_LIBCPP_ABI_NAMESPACE
+#define _VSTD_IMP _VSTD::imp
+
 _LIBCPP_BEGIN_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
 
 #if _LIBCPP_STD_VER >= 17
@@ -777,13 +776,13 @@ _LIBCPP_BEGIN_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
 #  endif
 #endif
 
-#ifndef _LIBCPP_HAS_NO_NOEXCEPT
-#  define _NOEXCEPT noexcept
-#  define _NOEXCEPT_(x) noexcept(x)
-#else
-#  define _NOEXCEPT throw()
-#  define _NOEXCEPT_(x)
-#endif
+// #ifndef _LIBCPP_HAS_NO_NOEXCEPT
+// #  define _NOEXCEPT noexcept
+// #  define _NOEXCEPT_(x) noexcept(x)
+// #else
+// #  define _NOEXCEPT throw()
+// #  define _NOEXCEPT_(x)
+// #endif
 
 #ifdef _LIBCPP_HAS_NO_UNICODE_CHARS
 typedef unsigned short char16_t;
@@ -794,28 +793,28 @@ typedef unsigned int   char32_t;
 #define _LIBCPP_HAS_NO_INT128
 #endif
 
-#ifdef _LIBCPP_CXX03_LANG
-# define static_assert(...) _Static_assert(__VA_ARGS__)
-# define decltype(...) __decltype(__VA_ARGS__)
-#endif  // _LIBCPP_CXX03_LANG
+// #ifdef _LIBCPP_CXX03_LANG
+// # define static_assert(...) _Static_assert(__VA_ARGS__)
+// # define decltype(...) __decltype(__VA_ARGS__)
+// #endif  // _LIBCPP_CXX03_LANG
 
-#ifdef _LIBCPP_CXX03_LANG
-#  define _LIBCPP_CONSTEXPR
-#else
-#  define _LIBCPP_CONSTEXPR constexpr
-#endif
+// #ifdef _LIBCPP_CXX03_LANG
+// #  define _LIBCPP_CONSTEXPR
+// #else
+// #  define _LIBCPP_CONSTEXPR constexpr
+// #endif
 
-#ifdef _LIBCPP_CXX03_LANG
-#  define _LIBCPP_DEFAULT {}
-#else
-#  define _LIBCPP_DEFAULT = default;
-#endif
+// #ifdef _LIBCPP_CXX03_LANG
+// #  define _LIBCPP_DEFAULT {}
+// #else
+// #  define _LIBCPP_DEFAULT = default;
+// #endif
 
-#ifdef _LIBCPP_CXX03_LANG
-#  define _LIBCPP_EQUAL_DELETE
-#else
-#  define _LIBCPP_EQUAL_DELETE = delete
-#endif
+// #ifdef _LIBCPP_CXX03_LANG
+// #  define _LIBCPP_EQUAL_DELETE
+// #else
+// #  define _LIBCPP_EQUAL_DELETE = delete
+// #endif
 
 #ifdef __GNUC__
 #  define _LIBCPP_NOALIAS __attribute__((__malloc__))
@@ -823,29 +822,29 @@ typedef unsigned int   char32_t;
 #  define _LIBCPP_NOALIAS
 #endif
 
-#if __has_feature(cxx_explicit_conversions) || defined(__IBMCPP__) || \
-    (!defined(_LIBCPP_CXX03_LANG) && defined(__GNUC__)) // All supported GCC versions
-#  define _LIBCPP_EXPLICIT explicit
-#else
-#  define _LIBCPP_EXPLICIT
-#endif
+// #if __has_feature(cxx_explicit_conversions) || defined(__IBMCPP__) || \
+//     (!defined(_LIBCPP_CXX03_LANG) && defined(__GNUC__)) // All supported GCC versions
+// #  define _LIBCPP_EXPLICIT explicit
+// #else
+// #  define _LIBCPP_EXPLICIT
+// #endif
 
 #if !__has_builtin(__builtin_operator_new) || !__has_builtin(__builtin_operator_delete)
 #define _LIBCPP_HAS_NO_BUILTIN_OPERATOR_NEW_DELETE
 #endif
 
-#ifdef _LIBCPP_HAS_NO_STRONG_ENUMS
-#  define _LIBCPP_DECLARE_STRONG_ENUM(x) struct _LIBCPP_TYPE_VIS x { enum __lx
-#  define _LIBCPP_DECLARE_STRONG_ENUM_EPILOG(x) \
-     __lx __v_; \
-     _LIBCPP_INLINE_VISIBILITY x(__lx __v) : __v_(__v) {} \
-     _LIBCPP_INLINE_VISIBILITY explicit x(int __v) : __v_(static_cast<__lx>(__v)) {} \
-     _LIBCPP_INLINE_VISIBILITY operator int() const {return __v_;} \
-     };
-#else  // _LIBCPP_HAS_NO_STRONG_ENUMS
-#  define _LIBCPP_DECLARE_STRONG_ENUM(x) enum class _LIBCPP_ENUM_VIS x
-#  define _LIBCPP_DECLARE_STRONG_ENUM_EPILOG(x)
-#endif  // _LIBCPP_HAS_NO_STRONG_ENUMS
+// #ifdef _LIBCPP_HAS_NO_STRONG_ENUMS
+// #  define _LIBCPP_DECLARE_STRONG_ENUM(x) struct _LIBCPP_TYPE_VIS x { enum __lx
+// #  define _LIBCPP_DECLARE_STRONG_ENUM_EPILOG(x) \
+//      __lx __v_; \
+//      _LIBCPP_INLINE_VISIBILITY x(__lx __v) : __v_(__v) {} \
+//      _LIBCPP_INLINE_VISIBILITY explicit x(int __v) : __v_(static_cast<__lx>(__v)) {} \
+//      _LIBCPP_INLINE_VISIBILITY operator int() const {return __v_;} \
+//      };
+// #else  // _LIBCPP_HAS_NO_STRONG_ENUMS
+// #  define _LIBCPP_DECLARE_STRONG_ENUM(x) enum class _LIBCPP_ENUM_VIS x
+// #  define _LIBCPP_DECLARE_STRONG_ENUM_EPILOG(x)
+// #endif  // _LIBCPP_HAS_NO_STRONG_ENUMS
 
 #ifdef _LIBCPP_DEBUG
 #  if _LIBCPP_DEBUG == 0
@@ -958,29 +957,29 @@ typedef unsigned int   char32_t;
 #  define _LIBCPP_DEPRECATED_IN_CXX17
 #endif
 
-#if _LIBCPP_STD_VER <= 11
-#  define _LIBCPP_EXPLICIT_AFTER_CXX11
-#else
-#  define _LIBCPP_EXPLICIT_AFTER_CXX11 explicit
-#endif
+// #if _LIBCPP_STD_VER <= 11
+// #  define _LIBCPP_EXPLICIT_AFTER_CXX11
+// #else
+// #  define _LIBCPP_EXPLICIT_AFTER_CXX11 explicit
+// #endif
 
-#if _LIBCPP_STD_VER > 11 && !defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
-#  define _LIBCPP_CONSTEXPR_AFTER_CXX11 constexpr
-#else
-#  define _LIBCPP_CONSTEXPR_AFTER_CXX11
-#endif
+// #if _LIBCPP_STD_VER > 11 && !defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
+// #  define _LIBCPP_CONSTEXPR_AFTER_CXX11 constexpr
+// #else
+// #  define _LIBCPP_CONSTEXPR_AFTER_CXX11
+// #endif
 
-#if _LIBCPP_STD_VER > 14 && !defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
-#  define _LIBCPP_CONSTEXPR_AFTER_CXX14 constexpr
-#else
-#  define _LIBCPP_CONSTEXPR_AFTER_CXX14
-#endif
+// #if _LIBCPP_STD_VER > 14 && !defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
+// #  define _LIBCPP_CONSTEXPR_AFTER_CXX14 constexpr
+// #else
+// #  define _LIBCPP_CONSTEXPR_AFTER_CXX14
+// #endif
 
-#if _LIBCPP_STD_VER > 17 && !defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
-#  define _LIBCPP_CONSTEXPR_AFTER_CXX17 constexpr
-#else
-#  define _LIBCPP_CONSTEXPR_AFTER_CXX17
-#endif
+// #if _LIBCPP_STD_VER > 17 && !defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
+// #  define _LIBCPP_CONSTEXPR_AFTER_CXX17 constexpr
+// #else
+// #  define _LIBCPP_CONSTEXPR_AFTER_CXX17
+// #endif
 
 // The _LIBCPP_NODISCARD_ATTRIBUTE should only be used to define other
 // NODISCARD macros to the correct attribute.
@@ -1016,11 +1015,11 @@ typedef unsigned int   char32_t;
 #  define _LIBCPP_INLINE_VAR
 #endif
 
-#ifdef _LIBCPP_HAS_NO_RVALUE_REFERENCES
-#  define _LIBCPP_EXPLICIT_MOVE(x) _VSTD::move(x)
-#else
-#  define _LIBCPP_EXPLICIT_MOVE(x) (x)
-#endif
+// #ifdef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+// #  define _LIBCPP_EXPLICIT_MOVE(x) _VSTD::move(x)
+// #else
+// #  define _LIBCPP_EXPLICIT_MOVE(x) (x)
+// #endif
 
 #ifndef _LIBCPP_CONSTEXPR_IF_NODEBUG
 #if defined(_LIBCPP_DEBUG) || defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
@@ -1133,7 +1132,7 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
      !defined(_LIBCPP_HAS_GCC_ATOMIC_IMP) && \
      !defined(_LIBCPP_HAS_EXTERNAL_ATOMIC_IMP)) \
      || defined(_LIBCPP_HAS_NO_THREADS)
-#  define _LIBCPP_HAS_NO_ATOMIC_HEADER
+#  error "<atomic> header is required" // _LIBCPP_HAS_NO_ATOMIC_HEADER
 #else
 #  ifndef _LIBCPP_ATOMIC_FLAG_TYPE
 #    define _LIBCPP_ATOMIC_FLAG_TYPE bool
@@ -1356,44 +1355,14 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 #define _LIBCPP_HAS_NO_PRAGMA_PUSH_POP_MACRO
 #endif
 
-#if defined(_LIBCPP_HAS_NO_PRAGMA_PUSH_POP_MACRO)
-#  define _LIBCPP_PUSH_MACROS
-#  define _LIBCPP_POP_MACROS
-#else
-  // Don't warn about macro conflicts when we can restore them at the
-  // end of the header.
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_PUSH_POP_MACRO)
+// Don't warn about macro conflicts when we can restore them at the
+// end of the header.
 #  ifndef _LIBCPP_DISABLE_MACRO_CONFLICT_WARNINGS
 #    define _LIBCPP_DISABLE_MACRO_CONFLICT_WARNINGS
 #  endif
-#  if defined(_LIBCPP_COMPILER_MSVC)
-#    define _LIBCPP_PUSH_MACROS    \
-       __pragma(push_macro("min")) \
-       __pragma(push_macro("max"))
-#    define _LIBCPP_POP_MACROS     \
-       __pragma(pop_macro("min"))  \
-       __pragma(pop_macro("max"))
-#  else
-#    define _LIBCPP_PUSH_MACROS        \
-       _Pragma("push_macro(\"min\")")  \
-       _Pragma("push_macro(\"max\")")
-#    define _LIBCPP_POP_MACROS         \
-       _Pragma("pop_macro(\"min\")")   \
-       _Pragma("pop_macro(\"max\")")
-#  endif
 #endif // defined(_LIBCPP_HAS_NO_PRAGMA_PUSH_POP_MACRO)
-
-#ifndef _LIBCPP_NO_AUTO_LINK
-#  if defined(_LIBCPP_ABI_MICROSOFT) && !defined(_LIBCPP_BUILDING_LIBRARY)
-#    if defined(_DLL)
-#      pragma comment(lib, "c++.lib")
-#    else
-#      pragma comment(lib, "libc++.lib")
-#    endif
-#  endif // defined(_LIBCPP_ABI_MICROSOFT) && !defined(_LIBCPP_BUILDING_LIBRARY)
-#endif // _LIBCPP_NO_AUTO_LINK
 
 #define _LIBCPP_UNUSED_VAR(x) ((void)(x))
 
 #endif // __cplusplus
-
-#endif // _LIBCPP_CONFIG

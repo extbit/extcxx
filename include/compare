@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_COMPARE
-#define _LIBCPP_COMPARE
+#pragma once
+#pragma GCC system_header
 
 /*
     compare synopsis
@@ -50,13 +49,7 @@ namespace std {
 #include <type_traits>
 #include <array>
 
-#ifndef _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
-
-#if _LIBCPP_STD_VER > 17
 
 // exposition only
 enum class _LIBCPP_ENUM_VIS _EqResult : unsigned char {
@@ -671,8 +664,4 @@ template<class _Tp> constexpr partial_ordering partial_order(const _Tp& __lhs, c
 template<class _Tp> constexpr strong_equality strong_equal(const _Tp& __lhs, const _Tp& __rhs);
 template<class _Tp> constexpr weak_equality weak_equal(const _Tp& __lhs, const _Tp& __rhs);
 
-#endif // _LIBCPP_STD_VER > 17
-
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // _LIBCPP_COMPARE

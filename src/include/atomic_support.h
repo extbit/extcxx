@@ -5,9 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===////
-
-#ifndef ATOMIC_SUPPORT_H
-#define ATOMIC_SUPPORT_H
+#pragma once
 
 #include "__config"
 #include "memory" // for __libcpp_relaxed_load
@@ -28,7 +26,7 @@
 #   define _LIBCPP_HAS_ATOMIC_BUILTINS
 #endif
 
-#if !defined(_LIBCPP_HAS_ATOMIC_BUILTINS) && !defined(_LIBCPP_HAS_NO_THREADS)
+#if !defined(_LIBCPP_HAS_ATOMIC_BUILTINS)
 # if defined(_LIBCPP_WARNING)
     _LIBCPP_WARNING("Building libc++ without __atomic builtins is unsupported")
 # else
@@ -40,7 +38,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 namespace {
 
-#if defined(_LIBCPP_HAS_ATOMIC_BUILTINS) && !defined(_LIBCPP_HAS_NO_THREADS)
+#if defined(_LIBCPP_HAS_ATOMIC_BUILTINS)
 
 enum __libcpp_atomic_order {
     _AO_Relaxed = __ATOMIC_RELAXED,
@@ -101,7 +99,7 @@ bool __libcpp_atomic_compare_exchange(_ValueType* __val,
                                        __success_order, __fail_order);
 }
 
-#else // _LIBCPP_HAS_NO_THREADS
+#else // !defined(_LIBCPP_HAS_ATOMIC_BUILTINS)
 
 enum __libcpp_atomic_order {
     _AO_Relaxed,
@@ -167,10 +165,38 @@ bool __libcpp_atomic_compare_exchange(_ValueType* __val,
     return false;
 }
 
-#endif // _LIBCPP_HAS_NO_THREADS
+#endif // !defined(_LIBCPP_HAS_ATOMIC_BUILTINS)
 
 } // end namespace
 
 _LIBCPP_END_NAMESPACE_STD
 
-#endif // ATOMIC_SUPPORT_H
+namespace {
+
+template <class IntType>
+class AtomicInt {
+public:
+  using MemoryOrder = std::__libcpp_atomic_order;
+
+  explicit AtomicInt(IntType *b) : b(b) {}
+  AtomicInt(AtomicInt const&) = delete;
+  AtomicInt& operator=(AtomicInt const&) = delete;
+
+  IntType load(MemoryOrder ord) {
+    return std::__libcpp_atomic_load(b, ord);
+  }
+  void store(IntType val, MemoryOrder ord) {
+    std::__libcpp_atomic_store(b, val, ord);
+  }
+  IntType exchange(IntType new_val, MemoryOrder ord) {
+    return std::__libcpp_atomic_exchange(b, new_val, ord);
+  }
+  bool compare_exchange(IntType *expected, IntType desired, MemoryOrder ord_success, MemoryOrder ord_failure) {
+    return std::__libcpp_atomic_compare_exchange(b, expected, desired, ord_success, ord_failure);
+  }
+
+private:
+  IntType *b;
+};
+
+} // end namespace

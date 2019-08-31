@@ -6,18 +6,17 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_OSTREAM
-#define _LIBCPP_OSTREAM
-
-/*
-    ostream synopsis
-
-template <class charT, class traits = char_traits<charT> >
-class basic_ostream
-    : virtual public basic_ios<charT,traits>
+#if defined(ostream_synopsis)
+namespace std
 {
-public:
+  template <class charT, class traits = char_traits<charT> >
+  class basic_ostream
+    : virtual public basic_ios<charT,traits>
+  {
+  public:
     // types (inherited from basic_ios (27.5.4)):
     typedef charT                          char_type;
     typedef traits                         traits_type;
@@ -67,72 +66,71 @@ public:
     pos_type tellp();
     basic_ostream& seekp(pos_type);
     basic_ostream& seekp(off_type, ios_base::seekdir);
-protected:
+  protected:
     basic_ostream(const basic_ostream& rhs) = delete;
     basic_ostream(basic_ostream&& rhs);
     // 27.7.3.3 Assign/swap
     basic_ostream& operator=(basic_ostream& rhs) = delete;
     basic_ostream& operator=(const basic_ostream&& rhs);
     void swap(basic_ostream& rhs);
-};
+  };
 
-// 27.7.2.6.4 character inserters
+  // 27.7.2.6.4 character inserters
 
-template<class charT, class traits>
+  template<class charT, class traits>
   basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>&, charT);
 
-template<class charT, class traits>
+  template<class charT, class traits>
   basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>&, char);
 
-template<class traits>
+  template<class traits>
   basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&, char);
 
-// signed and unsigned
+  // signed and unsigned
 
-template<class traits>
+  template<class traits>
   basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&, signed char);
 
-template<class traits>
+  template<class traits>
   basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&, unsigned char);
 
-// NTBS
-template<class charT, class traits>
+  // NTBS
+  template<class charT, class traits>
   basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>&, const charT*);
 
-template<class charT, class traits>
+  template<class charT, class traits>
   basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>&, const char*);
 
-template<class traits>
+  template<class traits>
   basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&, const char*);
 
-// signed and unsigned
-template<class traits>
-basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&, const signed char*);
+  // signed and unsigned
+  template<class traits>
+  basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&, const signed char*);
 
-template<class traits>
+  template<class traits>
   basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&, const unsigned char*);
 
-// swap:
-template <class charT, class traits>
+  // swap:
+  template <class charT, class traits>
   void swap(basic_ostream<charT, traits>& x, basic_ostream<charT, traits>& y);
 
-template <class charT, class traits>
+  template <class charT, class traits>
   basic_ostream<charT,traits>& endl(basic_ostream<charT,traits>& os);
 
-template <class charT, class traits>
+  template <class charT, class traits>
   basic_ostream<charT,traits>& ends(basic_ostream<charT,traits>& os);
 
-template <class charT, class traits>
+  template <class charT, class traits>
   basic_ostream<charT,traits>& flush(basic_ostream<charT,traits>& os);
 
-// rvalue stream insertion
-template <class charT, class traits, class T>
+  // rvalue stream insertion
+  template <class charT, class traits, class T>
   basic_ostream<charT, traits>&
   operator<<(basic_ostream<charT, traits>&& os, const T& x);
 
 }  // std
-
-*/
+#endif // ostream_synopsis
 
 #include <__config>
 #include <ios>
@@ -141,10 +139,6 @@ template <class charT, class traits, class T>
 #include <iterator>
 #include <bitset>
 #include <version>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -166,25 +160,21 @@ public:
     { this->init(__sb); }
     virtual ~basic_ostream();
 protected:
-#ifndef _LIBCPP_CXX03_LANG
     inline _LIBCPP_INLINE_VISIBILITY
     basic_ostream(basic_ostream&& __rhs);
 
     // 27.7.2.3 Assign/swap
     inline _LIBCPP_INLINE_VISIBILITY
     basic_ostream& operator=(basic_ostream&& __rhs);
-#endif
+
     inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
     void swap(basic_ostream& __rhs)
     { basic_ios<char_type, traits_type>::swap(__rhs); }
 
-#ifndef _LIBCPP_CXX03_LANG
+
     basic_ostream           (const basic_ostream& __rhs) = delete;
     basic_ostream& operator=(const basic_ostream& __rhs) = delete;
-#else
-    basic_ostream           (const basic_ostream& __rhs); // not defined
-    basic_ostream& operator=(const basic_ostream& __rhs); // not defined
-#endif
+
 public:
 
     // 27.7.2.4 Prefix/suffix:
@@ -255,8 +245,7 @@ public:
     ~sentry();
 
     _LIBCPP_INLINE_VISIBILITY
-        _LIBCPP_EXPLICIT
-        operator bool() const {return __ok_;}
+      explicit operator bool() const {return __ok_;}
 };
 
 template <class _CharT, class _Traits>
@@ -293,8 +282,6 @@ basic_ostream<_CharT, _Traits>::sentry::~sentry()
     }
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _CharT, class _Traits>
 basic_ostream<_CharT, _Traits>::basic_ostream(basic_ostream&& __rhs)
 {
@@ -308,8 +295,6 @@ basic_ostream<_CharT, _Traits>::operator=(basic_ostream&& __rhs)
     swap(__rhs);
     return *this;
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 template <class _CharT, class _Traits>
 basic_ostream<_CharT, _Traits>::~basic_ostream()
@@ -1026,8 +1011,6 @@ flush(basic_ostream<_CharT, _Traits>& __os)
     return __os;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
-
 template <class _Stream, class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
@@ -1041,8 +1024,6 @@ operator<<(_Stream&& __os, const _Tp& __x)
     __os << __x;
     return _VSTD::move(__os);
 }
-
-#endif  // _LIBCPP_CXX03_LANG
 
 template<class _CharT, class _Traits, class _Allocator>
 basic_ostream<_CharT, _Traits>&
@@ -1103,5 +1084,3 @@ _LIBCPP_EXTERN_TEMPLATE(class _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS basic_ostream<wch
 #endif
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_OSTREAM

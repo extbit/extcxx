@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_ANDROID_LOCALE_BIONIC_H
-#define _LIBCPP_SUPPORT_ANDROID_LOCALE_BIONIC_H
+#pragma once
+#pragma GCC system_header
 
 #if defined(__BIONIC__)
 
@@ -64,4 +63,3 @@ inline _LIBCPP_INLINE_VISIBILITY long strtol_l(const char* __nptr, char** __endp
 #endif // defined(__ANDROID__)
 
 #endif // defined(__BIONIC__)
-#endif // _LIBCPP_SUPPORT_ANDROID_LOCALE_BIONIC_H

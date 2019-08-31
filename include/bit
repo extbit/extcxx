@@ -6,13 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===---------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 
-#ifndef _LIBCPP_BIT
-#define _LIBCPP_BIT
-
-/*
-    bit synopsis
-
+#if defined(bit_synopsis)
 namespace std {
 
   template <class T>
@@ -43,8 +40,7 @@ namespace std {
     constexpr int popcount(T x) noexcept;     // C++20
 
 } // namespace std
-
-*/
+#endif // bit_synopsis
 
 #include <__config>
 #include <limits>
@@ -59,45 +55,38 @@ namespace std {
 #include <intrin.h>
 #endif
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 #ifndef _LIBCPP_COMPILER_MSVC
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __ctz(unsigned __x)           _NOEXCEPT { return __builtin_ctz(__x); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __ctz(unsigned __x)           noexcept { return __builtin_ctz(__x); }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __ctz(unsigned long __x)      _NOEXCEPT { return __builtin_ctzl(__x); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __ctz(unsigned long __x)      noexcept { return __builtin_ctzl(__x); }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __ctz(unsigned long long __x) _NOEXCEPT { return __builtin_ctzll(__x); }
-
-
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __clz(unsigned __x)           _NOEXCEPT { return __builtin_clz(__x); }
-
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __clz(unsigned long __x)      _NOEXCEPT { return __builtin_clzl(__x); }
-
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __clz(unsigned long long __x) _NOEXCEPT { return __builtin_clzll(__x); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __ctz(unsigned long long __x) noexcept { return __builtin_ctzll(__x); }
 
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __popcount(unsigned __x)           _NOEXCEPT { return __builtin_popcount(__x); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __clz(unsigned __x)           noexcept { return __builtin_clz(__x); }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __popcount(unsigned long __x)      _NOEXCEPT { return __builtin_popcountl(__x); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __clz(unsigned long __x)      noexcept { return __builtin_clzl(__x); }
 
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
-int __popcount(unsigned long long __x) _NOEXCEPT { return __builtin_popcountll(__x); }
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __clz(unsigned long long __x) noexcept { return __builtin_clzll(__x); }
+
+
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __popcount(unsigned __x)           noexcept { return __builtin_popcount(__x); }
+
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __popcount(unsigned long __x)      noexcept { return __builtin_popcountl(__x); }
+
+inline _LIBCPP_INLINE_VISIBILITY constexpr
+int __popcount(unsigned long long __x) noexcept { return __builtin_popcountll(__x); }
 
 #else  // _LIBCPP_COMPILER_MSVC
 
@@ -184,8 +173,6 @@ inline _LIBCPP_INLINE_VISIBILITY int __popcount(unsigned long long __x) {
 }
 
 #endif // _LIBCPP_COMPILER_MSVC
-
-#if _LIBCPP_STD_VER > 17
 
 template <class _Tp>
 using __bitop_unsigned_integer _LIBCPP_NODEBUG_TYPE = integral_constant<bool,
@@ -380,10 +367,4 @@ enable_if_t<__bitop_unsigned_integer<_Tp>::value, _Tp>
 log2p1(_Tp __t) noexcept
 { return __t == 0 ? 0 : __bit_log2(__t) + 1; }
 
-#endif // _LIBCPP_STD_VER > 17
-
 _LIBCPP_END_NAMESPACE_STD
-
-_LIBCPP_POP_MACROS
-
-#endif // _LIBCPP_BIT

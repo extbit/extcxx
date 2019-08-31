@@ -6,24 +6,14 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP___NODE_HANDLE
-#define _LIBCPP___NODE_HANDLE
+#pragma once
+#pragma GCC system_header
 
 #include <__config>
 #include <memory>
 #include <optional>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 _LIBCPP_BEGIN_NAMESPACE_STD
-
-#if _LIBCPP_STD_VER > 14
 
 // Specialized in __tree & __hash_table for their _NodeType.
 template <class _NodeType, class _Alloc>
@@ -200,9 +190,4 @@ struct _LIBCPP_TEMPLATE_VIS __insert_return_type
     _NodeType node;
 };
 
-#endif // _LIBCPP_STD_VER > 14
-
 _LIBCPP_END_NAMESPACE_STD
-_LIBCPP_POP_MACROS
-
-#endif

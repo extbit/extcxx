@@ -11,9 +11,8 @@
 // others).  The unifying aspect in this case is that all of these functions
 // convert strings to some numeric type.
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_XLOCALE_STRTONUM_FALLBACK_H
-#define _LIBCPP_SUPPORT_XLOCALE_STRTONUM_FALLBACK_H
+#pragma once
+#pragma GCC system_header
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,5 +61,3 @@ inline _LIBCPP_INLINE_VISIBILITY long double wcstold_l(const wchar_t *nptr,
 #ifdef __cplusplus
 }
 #endif
-
-#endif // _LIBCPP_SUPPORT_XLOCALE_STRTONUM_FALLBACK_H

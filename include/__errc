@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP___ERRC
-#define _LIBCPP___ERRC
-
+#pragma once
+#pragma GCC system_header
 /*
     system_error synopsis
 
@@ -103,17 +101,13 @@ enum class errc
 #include <__config>
 #include <cerrno>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 // Some error codes are not present on all platforms, so we provide equivalents
 // for them:
 
 //enum class errc
-_LIBCPP_DECLARE_STRONG_ENUM(errc)
+enum class _LIBCPP_ENUM_VIS errc
 {
     address_family_not_supported        = EAFNOSUPPORT,
     address_in_use                      = EADDRINUSE,
@@ -210,8 +204,5 @@ _LIBCPP_DECLARE_STRONG_ENUM(errc)
     value_too_large                     = EOVERFLOW,
     wrong_protocol_type                 = EPROTOTYPE
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(errc)
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP___ERRC

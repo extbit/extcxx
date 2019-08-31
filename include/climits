@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_CLIMITS
-#define _LIBCPP_CLIMITS
+#pragma once
+#pragma GCC system_header
 
 /*
     climits synopsis
@@ -39,9 +38,3 @@ Macros:
 
 #include <__config>
 #include <limits.h>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-#endif  // _LIBCPP_CLIMITS

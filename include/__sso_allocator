@@ -6,17 +6,12 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP___SSO_ALLOCATOR
-#define _LIBCPP___SSO_ALLOCATOR
+#pragma once
+#pragma GCC system_header
 
 #include <__config>
 #include <type_traits>
 #include <new>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -54,14 +49,14 @@ public:
             __allocated_ = true;
             return (pointer)&buf_;
         }
-        return static_cast<pointer>(_VSTD::__libcpp_allocate(__n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp)));
+        return static_cast<pointer>(_VSTD::__libcpp_allocate(__n * sizeof(_Tp), alignof(_Tp)));
     }
     _LIBCPP_INLINE_VISIBILITY void deallocate(pointer __p, size_type __n)
     {
         if (__p == (pointer)&buf_)
             __allocated_ = false;
         else
-            _VSTD::__libcpp_deallocate(__p, __n * sizeof(_Tp), _LIBCPP_ALIGNOF(_Tp));
+            _VSTD::__libcpp_deallocate(__p, __n * sizeof(_Tp), alignof(_Tp));
     }
     _LIBCPP_INLINE_VISIBILITY size_type max_size() const throw() {return size_type(~0) / sizeof(_Tp);}
 
@@ -72,5 +67,3 @@ public:
 };
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP___SSO_ALLOCATOR

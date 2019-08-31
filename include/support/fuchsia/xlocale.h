@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_FUCHSIA_XLOCALE_H
-#define _LIBCPP_SUPPORT_FUCHSIA_XLOCALE_H
+#pragma once
+#pragma GCC system_header
 
 #if defined(__Fuchsia__)
 
@@ -18,5 +17,3 @@
 #include <support/xlocale/__strtonum_fallback.h>
 
 #endif // defined(__Fuchsia__)
-
-#endif // _LIBCPP_SUPPORT_FUCHSIA_XLOCALE_H

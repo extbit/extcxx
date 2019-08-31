@@ -1,0 +1,78 @@
+// -*- C++ -*-
+//===-------------------------- source_location ---------------------------===//
+//
+//    Copyright (c) 2018-2019 Duzy Chan at ExtBit Limited.
+//
+//    This file is part of ExtC++, the ExtBit C++ standard library.
+//
+//===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
+#if defined(experimental_source_location_synopsis)
+namespace std {
+namespace experimental {
+inline namespace fundamentals_v2 {
+
+  struct source_location {
+    // source_location creation
+    static constexpr source_location current() noexcept;
+
+    constexpr source_location() noexcept;
+
+    // source_location field access
+    constexpr uint_least32_t line() const noexcept;
+    constexpr uint_least32_t column() const noexcept;
+    constexpr const char* file_name() const noexcept;
+    constexpr const char* function_name() const noexcept;
+  };
+
+} // namespace fundamentals_v2
+} // namespace experimental
+} // namespace std
+#endif
+
+#include <experimental/__config>
+#include <stdint.h>
+#include <ostream>
+
+_LIBCPP_BEGIN_NAMESPACE_LFTS_V2
+
+struct source_location {
+  static constexpr source_location current(
+      const char *f1 = __builtin_FILE(),
+      const char *f2 = __builtin_FUNCTION(),
+      unsigned l = __builtin_LINE(),
+      unsigned c = __builtin_COLUMN()) noexcept {
+    source_location loc(nullptr);
+    loc.__file = f1;
+    loc.__function = f2;
+    loc.__line = l;
+    loc.__column = c;
+    return loc;
+  }
+  constexpr source_location() noexcept {}
+  constexpr uint_least32_t line() const noexcept { return __line; }
+  constexpr uint_least32_t column() const noexcept { return __column; }
+  constexpr const char* file_name() const noexcept { return __file; }
+  constexpr const char* function_name() const noexcept { return __function; }
+private:
+  constexpr source_location(const decltype(nullptr)) noexcept
+    : __file(nullptr), __function(nullptr), __line(0), __column(0)
+  {}
+  const char *__file = __builtin_FILE();
+  const char *__function = __builtin_FUNCTION();
+  unsigned __line = __builtin_LINE();
+  unsigned __column = __builtin_COLUMN();
+};
+
+_LIBCPP_END_NAMESPACE_LFTS_V2
+
+namespace std {
+  template<class _CharT, class _Traits>
+  inline basic_ostream<_CharT, _Traits>&
+  operator<<(basic_ostream<_CharT, _Traits>& __os, _VSTD_LFTS_V2::source_location __loc)
+  {
+    __os<<__loc.file_name()<<":"<<__loc.line()<<":"<<__loc.column()<<":";
+    return __os;
+  }
+}

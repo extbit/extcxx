@@ -6,16 +6,11 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_DEBUG_H
-#define _LIBCPP_DEBUG_H
+#pragma once
+#pragma GCC system_header
 
 #include <__config>
 #include <iosfwd>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 #if defined(_LIBCPP_HAS_NO_NULLPTR)
 # include <cstddef>
@@ -52,10 +47,10 @@
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 struct _LIBCPP_TEMPLATE_VIS __libcpp_debug_info {
-  _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+  _LIBCPP_INLINE_VISIBILITY constexpr
   __libcpp_debug_info()
       : __file_(nullptr), __line_(-1), __pred_(nullptr), __msg_(nullptr) {}
-  _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+  _LIBCPP_INLINE_VISIBILITY constexpr
   __libcpp_debug_info(const char* __f, int __l, const char* __p, const char* __m)
     : __file_(__f), __line_(__l), __pred_(__p), __msg_(__m) {}
 
@@ -75,7 +70,7 @@ typedef void(*__libcpp_debug_function_type)(__libcpp_debug_info const&);
 extern _LIBCPP_EXPORTED_FROM_ABI __libcpp_debug_function_type __libcpp_debug_function;
 
 /// __libcpp_abort_debug_function - A debug handler that aborts when called.
-_LIBCPP_NORETURN _LIBCPP_FUNC_VIS
+[[noreturn]] _LIBCPP_FUNC_VIS
 void __libcpp_abort_debug_function(__libcpp_debug_info const&);
 
 /// __libcpp_set_debug_function - Set the debug handler to the specified
@@ -93,15 +88,9 @@ struct _LIBCPP_TYPE_VIS __i_node
     __i_node* __next_;
     __c_node* __c_;
 
-#ifndef _LIBCPP_CXX03_LANG
     __i_node(const __i_node&) = delete;
     __i_node& operator=(const __i_node&) = delete;
-#else
-private:
-    __i_node(const __i_node&);
-    __i_node& operator=(const __i_node&);
-public:
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     __i_node(void* __i, __i_node* __next, __c_node* __c)
         : __i_(__i), __next_(__next), __c_(__c) {}
@@ -116,15 +105,9 @@ struct _LIBCPP_TYPE_VIS __c_node
     __i_node** end_;
     __i_node** cap_;
 
-#ifndef _LIBCPP_CXX03_LANG
     __c_node(const __c_node&) = delete;
     __c_node& operator=(const __c_node&) = delete;
-#else
-private:
-    __c_node(const __c_node&);
-    __c_node& operator=(const __c_node&);
-public:
-#endif
+
     _LIBCPP_INLINE_VISIBILITY
     __c_node(void* __c, __c_node* __next)
         : __c_(__c), __next_(__next), beg_(nullptr), end_(nullptr), cap_(nullptr) {}
@@ -203,15 +186,8 @@ class _LIBCPP_TYPE_VIS __libcpp_db
 
     __libcpp_db();
 public:
-#ifndef _LIBCPP_CXX03_LANG
     __libcpp_db(const __libcpp_db&) = delete;
     __libcpp_db& operator=(const __libcpp_db&) = delete;
-#else
-private:
-    __libcpp_db(const __libcpp_db&);
-    __libcpp_db& operator=(const __libcpp_db&);
-public:
-#endif
     ~__libcpp_db();
 
     class __db_c_iterator;
@@ -274,6 +250,3 @@ _LIBCPP_FUNC_VIS const __libcpp_db* __get_const_db();
 #endif // _LIBCPP_DEBUG_LEVEL >= 2 || defined(_LIBCPP_BUILDING_LIBRARY)
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_DEBUG_H
-

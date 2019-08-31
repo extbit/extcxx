@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H
-#define _LIBCPP_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H
+#pragma once
+#pragma GCC system_header
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,5 +46,3 @@ static inline locale_t uselocale(locale_t) {
 #ifdef __cplusplus
 } // extern "C"
 #endif
-
-#endif // _LIBCPP_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H

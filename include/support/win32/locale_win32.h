@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_SUPPORT_WIN32_LOCALE_WIN32_H
-#define _LIBCPP_SUPPORT_WIN32_LOCALE_WIN32_H
+#pragma once
+#pragma GCC system_header
 
 #include <__config>
 #include <stdio.h>
@@ -194,5 +193,3 @@ inline int iswblank_l( wint_t c, locale_t /*loc*/ )
 {
     return ( c == L' ' || c == L'\t' );
 }
-
-#endif // _LIBCPP_SUPPORT_WIN32_LOCALE_WIN32_H

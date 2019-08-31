@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_STRING_H
-#define _LIBCPP_STRING_H
+#pragma once
+#pragma GCC system_header
 
 /*
     string.h synopsis
@@ -52,10 +51,6 @@ size_t strlen(const char* s);
 */
 
 #include <__config>
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
 
 #include_next <string.h>
 
@@ -105,5 +100,3 @@ inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_PREFERRED_OVERLOAD
       char* strstr(      char* __s1, const char* __s2) {return __libcpp_strstr(__s1, __s2);}
 }
 #endif
-
-#endif  // _LIBCPP_STRING_H

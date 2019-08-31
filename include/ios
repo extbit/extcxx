@@ -6,10 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_IOS
-#define _LIBCPP_IOS
-
+#pragma once
+#pragma GCC system_header
 /*
     ios synopsis
 
@@ -219,10 +217,6 @@ storage-class-specifier const error_category& iostream_category() noexcept;
 #include <atomic>     // for __xindex_
 #endif
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 typedef ptrdiff_t streamsize;
@@ -267,15 +261,6 @@ public:
     static const openmode trunc  = 0x20;
 
     enum seekdir {beg, cur, end};
-
-#if _LIBCPP_STD_VER <= 14
-    typedef iostate      io_state;
-    typedef openmode     open_mode;
-    typedef seekdir      seek_dir;
-
-    typedef _VSTD::streamoff streamoff;
-    typedef _VSTD::streampos streampos;
-#endif
 
     class _LIBCPP_TYPE_VIS Init;
 
@@ -357,7 +342,7 @@ protected:
     void __call_callbacks(event);
     void copyfmt(const ios_base&);
     void move(ios_base&);
-    void swap(ios_base&) _NOEXCEPT;
+    void swap(ios_base&) noexcept;
 
     _LIBCPP_INLINE_VISIBILITY
     void set_rdbuf(void* __sb)
@@ -378,13 +363,9 @@ private:
     int*            __index_;
     size_t          __event_size_;
     size_t          __event_cap_;
-// TODO(EricWF): Enable this for both Clang and GCC. Currently it is only
-// enabled with clang.
-#if defined(_LIBCPP_HAS_C_ATOMIC_IMP) && !defined(_LIBCPP_HAS_NO_THREADS)
+
     static atomic<int> __xindex_;
-#else
-    static int      __xindex_;
-#endif
+
     long*           __iarray_;
     size_t          __iarray_size_;
     size_t          __iarray_cap_;
@@ -394,33 +375,27 @@ private:
 };
 
 //enum class io_errc
-_LIBCPP_DECLARE_STRONG_ENUM(io_errc)
+enum class _LIBCPP_ENUM_VIS io_errc
 {
     stream = 1
 };
-_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(io_errc)
 
 template <>
 struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<io_errc> : public true_type { };
 
-#ifdef _LIBCPP_HAS_NO_STRONG_ENUMS
-template <>
-struct _LIBCPP_TEMPLATE_VIS is_error_code_enum<io_errc::__lx> : public true_type { };
-#endif
-
 _LIBCPP_FUNC_VIS
-const error_category& iostream_category() _NOEXCEPT;
+const error_category& iostream_category() noexcept;
 
 inline _LIBCPP_INLINE_VISIBILITY
 error_code
-make_error_code(io_errc __e) _NOEXCEPT
+make_error_code(io_errc __e) noexcept
 {
     return error_code(static_cast<int>(__e), iostream_category());
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
 error_condition
-make_error_condition(io_errc __e) _NOEXCEPT
+make_error_condition(io_errc __e) noexcept
 {
     return error_condition(static_cast<int>(__e), iostream_category());
 }
@@ -434,7 +409,7 @@ public:
     virtual ~failure() throw();
 };
 
-_LIBCPP_NORETURN inline _LIBCPP_INLINE_VISIBILITY
+[[noreturn]] inline _LIBCPP_INLINE_VISIBILITY
 void __throw_failure(char const* __msg) {
 #ifndef _LIBCPP_NO_EXCEPTIONS
     throw ios_base::failure(__msg);
@@ -590,13 +565,6 @@ ios_base::exceptions(iostate __iostate)
     clear(__rdstate_);
 }
 
-#if defined(_LIBCPP_CXX03_LANG)
-struct _LIBCPP_TYPE_VIS __cxx03_bool {
-  typedef void (__cxx03_bool::*__bool_type)();
-  void __true_value() {}
-};
-#endif
-
 template <class _CharT, class _Traits>
 class _LIBCPP_TEMPLATE_VIS basic_ios
     : public ios_base
@@ -616,15 +584,8 @@ public:
   // __true_value will generate undefined references when linking unless
   // we give it internal linkage.
 
-#if defined(_LIBCPP_CXX03_LANG)
     _LIBCPP_INLINE_VISIBILITY
-    operator __cxx03_bool::__bool_type() const {
-        return !fail() ? &__cxx03_bool::__true_value : nullptr;
-    }
-#else
-    _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_EXPLICIT operator bool() const {return !fail();}
-#endif
+    explicit operator bool() const {return !fail();}
 
     _LIBCPP_INLINE_VISIBILITY bool operator!() const    {return  fail();}
     _LIBCPP_INLINE_VISIBILITY iostate rdstate() const   {return ios_base::rdstate();}
@@ -678,12 +639,10 @@ protected:
 
     _LIBCPP_INLINE_VISIBILITY
     void move(basic_ios& __rhs);
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
     void move(basic_ios&& __rhs) {move(__rhs);}
-#endif
     _LIBCPP_INLINE_VISIBILITY
-    void swap(basic_ios& __rhs) _NOEXCEPT;
+    void swap(basic_ios& __rhs) noexcept;
     _LIBCPP_INLINE_VISIBILITY
     void set_rdbuf(basic_streambuf<char_type, traits_type>* __sb);
 private:
@@ -827,7 +786,7 @@ basic_ios<_CharT, _Traits>::move(basic_ios& __rhs)
 template <class _CharT, class _Traits>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-basic_ios<_CharT, _Traits>::swap(basic_ios& __rhs) _NOEXCEPT
+basic_ios<_CharT, _Traits>::swap(basic_ios& __rhs) noexcept
 {
     ios_base::swap(__rhs);
     _VSTD::swap(__tie_, __rhs.__tie_);
@@ -1062,5 +1021,3 @@ public:
 };
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // _LIBCPP_IOS

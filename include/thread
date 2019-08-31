@@ -6,22 +6,16 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef _LIBCPP_THREAD
-#define _LIBCPP_THREAD
-
-/*
-
-    thread synopsis
-
+#pragma once
+#pragma GCC system_header
+#if defined(thread_synopsis)
 #define __STDCPP_THREADS__ __cplusplus
-
 namespace std
 {
 
-class thread
-{
-public:
+  class thread
+  {
+  public:
     class id;
     typedef pthread_t native_handle_type;
 
@@ -44,45 +38,44 @@ public:
     native_handle_type native_handle();
 
     static unsigned hardware_concurrency() noexcept;
-};
+  };
 
-void swap(thread& x, thread& y) noexcept;
+  void swap(thread& x, thread& y) noexcept;
 
-class thread::id
-{
-public:
+  class thread::id
+  {
+  public:
     id() noexcept;
-};
+  };
 
-bool operator==(thread::id x, thread::id y) noexcept;
-bool operator!=(thread::id x, thread::id y) noexcept;
-bool operator< (thread::id x, thread::id y) noexcept;
-bool operator<=(thread::id x, thread::id y) noexcept;
-bool operator> (thread::id x, thread::id y) noexcept;
-bool operator>=(thread::id x, thread::id y) noexcept;
+  bool operator==(thread::id x, thread::id y) noexcept;
+  bool operator!=(thread::id x, thread::id y) noexcept;
+  bool operator< (thread::id x, thread::id y) noexcept;
+  bool operator<=(thread::id x, thread::id y) noexcept;
+  bool operator> (thread::id x, thread::id y) noexcept;
+  bool operator>=(thread::id x, thread::id y) noexcept;
 
-template<class charT, class traits>
-basic_ostream<charT, traits>&
-operator<<(basic_ostream<charT, traits>& out, thread::id id);
+  template<class charT, class traits>
+  basic_ostream<charT, traits>&
+  operator<<(basic_ostream<charT, traits>& out, thread::id id);
 
-namespace this_thread
-{
+  namespace this_thread
+  {
 
-thread::id get_id() noexcept;
+    thread::id get_id() noexcept;
 
-void yield() noexcept;
+    void yield() noexcept;
 
-template <class Clock, class Duration>
-void sleep_until(const chrono::time_point<Clock, Duration>& abs_time);
+    template <class Clock, class Duration>
+    void sleep_until(const chrono::time_point<Clock, Duration>& abs_time);
 
-template <class Rep, class Period>
-void sleep_for(const chrono::duration<Rep, Period>& rel_time);
+    template <class Rep, class Period>
+    void sleep_for(const chrono::duration<Rep, Period>& rel_time);
 
-}  // this_thread
+  }  // this_thread
 
-}  // std
-
-*/
+} // std
+#endif // thread_synopsis
 
 #include <__config>
 #include <iosfwd>
@@ -94,24 +87,11 @@ void sleep_for(const chrono::duration<Rep, Period>& rel_time);
 #include <system_error>
 #include <chrono>
 #include <__mutex_base>
-#ifndef _LIBCPP_CXX03_LANG
 #include <tuple>
-#endif
 #include <__threading_support>
 #include <__debug>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
-_LIBCPP_PUSH_MACROS
-#include <__undef_macros>
-
 #define __STDCPP_THREADS__ __cplusplus
-
-#ifdef _LIBCPP_HAS_NO_THREADS
-#error <thread> is not supported on this single threaded system
-#else // !_LIBCPP_HAS_NO_THREADS
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
@@ -206,7 +186,7 @@ class _LIBCPP_TYPE_VIS __thread_id;
 namespace this_thread
 {
 
-_LIBCPP_INLINE_VISIBILITY __thread_id get_id() _NOEXCEPT;
+_LIBCPP_INLINE_VISIBILITY __thread_id get_id() noexcept;
 
 }  // this_thread
 
@@ -221,25 +201,25 @@ class _LIBCPP_TEMPLATE_VIS __thread_id
 
 public:
     _LIBCPP_INLINE_VISIBILITY
-    __thread_id() _NOEXCEPT : __id_(0) {}
+    __thread_id() noexcept : __id_(0) {}
 
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator==(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator==(__thread_id __x, __thread_id __y) noexcept
         {return __libcpp_thread_id_equal(__x.__id_, __y.__id_);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator!=(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator!=(__thread_id __x, __thread_id __y) noexcept
         {return !(__x == __y);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator< (__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator< (__thread_id __x, __thread_id __y) noexcept
         {return  __libcpp_thread_id_less(__x.__id_, __y.__id_);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator<=(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator<=(__thread_id __x, __thread_id __y) noexcept
         {return !(__y < __x);}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator> (__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator> (__thread_id __x, __thread_id __y) noexcept
         {return   __y < __x ;}
     friend _LIBCPP_INLINE_VISIBILITY
-        bool operator>=(__thread_id __x, __thread_id __y) _NOEXCEPT
+        bool operator>=(__thread_id __x, __thread_id __y) noexcept
         {return !(__x < __y);}
 
     template<class _CharT, class _Traits>
@@ -253,7 +233,7 @@ private:
     _LIBCPP_INLINE_VISIBILITY
     __thread_id(__libcpp_thread_id __id) : __id_(__id) {}
 
-    friend __thread_id this_thread::get_id() _NOEXCEPT;
+    friend __thread_id this_thread::get_id() noexcept;
     friend class _LIBCPP_TYPE_VIS thread;
     friend struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>;
 };
@@ -263,7 +243,7 @@ struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>
     : public unary_function<__thread_id, size_t>
 {
     _LIBCPP_INLINE_VISIBILITY
-    size_t operator()(__thread_id __v) const _NOEXCEPT
+    size_t operator()(__thread_id __v) const noexcept
     {
         return hash<__libcpp_thread_id>()(__v.__id_);
     }
@@ -274,7 +254,7 @@ namespace this_thread
 
 inline _LIBCPP_INLINE_VISIBILITY
 __thread_id
-get_id() _NOEXCEPT
+get_id() noexcept
 {
     return __libcpp_thread_get_current_id();
 }
@@ -292,8 +272,7 @@ public:
     typedef __libcpp_thread_t native_handle_type;
 
     _LIBCPP_INLINE_VISIBILITY
-    thread() _NOEXCEPT : __t_(_LIBCPP_NULL_THREAD) {}
-#ifndef _LIBCPP_CXX03_LANG
+    thread() noexcept : __t_(_LIBCPP_NULL_THREAD) {}
     template <class _Fp, class ..._Args,
               class = typename enable_if
               <
@@ -302,36 +281,28 @@ public:
              >
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         explicit thread(_Fp&& __f, _Args&&... __args);
-#else  // _LIBCPP_CXX03_LANG
-    template <class _Fp>
-    _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
-    explicit thread(_Fp __f);
-#endif
+
     ~thread();
 
-#ifndef _LIBCPP_CXX03_LANG
     _LIBCPP_INLINE_VISIBILITY
-    thread(thread&& __t) _NOEXCEPT : __t_(__t.__t_) {__t.__t_ = _LIBCPP_NULL_THREAD;}
+    thread(thread&& __t) noexcept : __t_(__t.__t_) {__t.__t_ = _LIBCPP_NULL_THREAD;}
     _LIBCPP_INLINE_VISIBILITY
-    thread& operator=(thread&& __t) _NOEXCEPT;
-#endif  // _LIBCPP_CXX03_LANG
+    thread& operator=(thread&& __t) noexcept;
 
     _LIBCPP_INLINE_VISIBILITY
-    void swap(thread& __t) _NOEXCEPT {_VSTD::swap(__t_, __t.__t_);}
+    void swap(thread& __t) noexcept {_VSTD::swap(__t_, __t.__t_);}
 
     _LIBCPP_INLINE_VISIBILITY
-    bool joinable() const _NOEXCEPT {return !__libcpp_thread_isnull(&__t_);}
+    bool joinable() const noexcept {return !__libcpp_thread_isnull(&__t_);}
     void join();
     void detach();
     _LIBCPP_INLINE_VISIBILITY
-    id get_id() const _NOEXCEPT {return __libcpp_thread_get_id(&__t_);}
+    id get_id() const noexcept {return __libcpp_thread_get_id(&__t_);}
     _LIBCPP_INLINE_VISIBILITY
-    native_handle_type native_handle() _NOEXCEPT {return __t_;}
+    native_handle_type native_handle() noexcept {return __t_;}
 
-    static unsigned hardware_concurrency() _NOEXCEPT;
+    static unsigned hardware_concurrency() noexcept;
 };
-
-#ifndef _LIBCPP_CXX03_LANG
 
 template <class _TSp, class _Fp, class ..._Args, size_t ..._Indices>
 inline _LIBCPP_INLINE_VISIBILITY
@@ -373,7 +344,7 @@ thread::thread(_Fp&& __f, _Args&&... __args)
 
 inline
 thread&
-thread::operator=(thread&& __t) _NOEXCEPT
+thread::operator=(thread&& __t) noexcept
 {
     if (!__libcpp_thread_isnull(&__t_))
         terminate();
@@ -382,45 +353,8 @@ thread::operator=(thread&& __t) _NOEXCEPT
     return *this;
 }
 
-#else  // _LIBCPP_CXX03_LANG
-
-template <class _Fp>
-struct __thread_invoke_pair {
-    // This type is used to pass memory for thread local storage and a functor
-    // to a newly created thread because std::pair doesn't work with
-    // std::unique_ptr in C++03.
-    __thread_invoke_pair(_Fp& __f) : __tsp_(new __thread_struct), __fn_(__f) {}
-    unique_ptr<__thread_struct> __tsp_;
-    _Fp __fn_;
-};
-
-template <class _Fp>
-void* __thread_proxy_cxx03(void* __vp)
-{
-    std::unique_ptr<_Fp> __p(static_cast<_Fp*>(__vp));
-    __thread_local_data().set_pointer(__p->__tsp_.release());
-    (__p->__fn_)();
-    return nullptr;
-}
-
-template <class _Fp>
-thread::thread(_Fp __f)
-{
-
-    typedef __thread_invoke_pair<_Fp> _InvokePair;
-    typedef std::unique_ptr<_InvokePair> _PairPtr;
-    _PairPtr __pp(new _InvokePair(__f));
-    int __ec = __libcpp_thread_create(&__t_, &__thread_proxy_cxx03<_InvokePair>, __pp.get());
-    if (__ec == 0)
-        __pp.release();
-    else
-        __throw_system_error(__ec, "thread constructor failed");
-}
-
-#endif  // _LIBCPP_CXX03_LANG
-
 inline _LIBCPP_INLINE_VISIBILITY
-void swap(thread& __x, thread& __y) _NOEXCEPT {__x.swap(__y);}
+void swap(thread& __x, thread& __y) noexcept {__x.swap(__y);}
 
 namespace this_thread
 {
@@ -436,9 +370,9 @@ sleep_for(const chrono::duration<_Rep, _Period>& __d)
     {
 #if defined(_LIBCPP_COMPILER_GCC) && (__powerpc__ || __POWERPC__)
     //  GCC's long double const folding is incomplete for IBM128 long doubles.
-        _LIBCPP_CONSTEXPR duration<long double> _Max = nanoseconds::max();
+        constexpr duration<long double> _Max = nanoseconds::max();
 #else
-        _LIBCPP_CONSTEXPR duration<long double> _Max = duration<long double>(ULLONG_MAX/1000000000ULL) ;
+        constexpr duration<long double> _Max = duration<long double>(ULLONG_MAX/1000000000ULL) ;
 #endif
         nanoseconds __ns;
         if (__d < _Max)
@@ -475,14 +409,8 @@ sleep_until(const chrono::time_point<chrono::steady_clock, _Duration>& __t)
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
-void yield() _NOEXCEPT {__libcpp_thread_yield();}
+void yield() noexcept {__libcpp_thread_yield();}
 
 }  // this_thread
 
 _LIBCPP_END_NAMESPACE_STD
-
-#endif // !_LIBCPP_HAS_NO_THREADS
-
-_LIBCPP_POP_MACROS
-
-#endif  // _LIBCPP_THREAD

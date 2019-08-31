@@ -13,6 +13,7 @@
 #include "cerrno"
 #include "limits"
 #include "stdexcept"
+#include "format"
 #include <stdio.h>
 #include "__debug"
 
@@ -350,9 +351,7 @@ namespace
 
 // as_string
 
-template<typename S, typename P, typename V >
-inline
-S
+template<typename S, typename P, typename V > inline S
 as_string(P sprintf_like, S s, const typename S::value_type* fmt, V a)
 {
     typedef typename S::size_type size_type;
@@ -360,6 +359,31 @@ as_string(P sprintf_like, S s, const typename S::value_type* fmt, V a)
     while (true)
     {
         int status = sprintf_like(&s[0], available + 1, fmt, a);
+        if ( status >= 0 )
+        {
+            size_type used = static_cast<size_type>(status);
+            if ( used <= available )
+            {
+                s.resize( used );
+                break;
+            }
+            available = used; // Assume this is advice of how much space we need.
+        }
+        else
+            available = available * 2 + 1;
+        s.resize(available);
+    }
+    return s;
+}
+
+template<typename S, typename P, typename V > inline S
+as_string(P sprintf_like, S s, const typename S::value_type* fmt, V a, int precision)
+{
+    typedef typename S::size_type size_type;
+    size_type available = s.size();
+    while (true)
+    {
+        int status = sprintf_like(&s[0], available + 1, fmt, precision, a);
         if ( status >= 0 )
         {
             size_type used = static_cast<size_type>(status);
@@ -454,5 +478,60 @@ string  to_string (long double val) { return as_string(snprintf,       initial_s
 wstring to_wstring(float val)       { return as_string(get_swprintf(), initial_string<wstring>()(),  L"%f", val); }
 wstring to_wstring(double val)      { return as_string(get_swprintf(), initial_string<wstring>()(),  L"%f", val); }
 wstring to_wstring(long double val) { return as_string(get_swprintf(), initial_string<wstring>()(), L"%Lf", val); }
+
+namespace __format
+{
+  template <typename Spf, typename Char, typename Float> basic_string<Char>
+  __as_string(Spf __spf, Float __v, Char __t, int __precision, bool __alt) {
+    if (__precision > 100000)
+      __throw_format_error("floating of too large precision");
+
+    Char __fmt[10]; // max format: %#-*.*Lg
+    Char* __f = __fmt;
+    *__f++ = '%';
+    if (__alt || !__t) *__f++ = '#';
+    if (__precision >= 0) {
+      *__f++ = '.';
+      *__f++ = '*';
+    }
+    if (is_same_v<Float,long double>)
+      *__f++ = 'L';
+
+    if (__t == '%') // percentage: 100%
+      __t = 'f';
+    else if (__t == 0 || __t == 'n')
+      __t = 'g';
+    *__f++ = __t;
+    *__f++ = '\0';
+
+    auto size = numeric_limits<Float>::digits10 + 1;
+    if (__precision > 0)
+      size += __precision;
+
+    basic_string<Char> __s(size, Char());
+    __s.resize(__s.capacity());
+    if (__precision < 0)
+      __s = as_string(__spf, __s, __fmt, __v);
+    else
+      __s = as_string(__spf, __s, __fmt, __v, __precision);
+    return __s;
+  }
+
+  string __spf(double __v, char __t, int __precision, bool __alt) {
+    return __as_string(snprintf, __v, __t, __precision, __alt);
+  }
+
+  string __spf(long double __v, char __t, int __precision, bool __alt) {
+    return __as_string(snprintf, __v, __t, __precision, __alt);
+  }
+
+  wstring __spf(double __v, wchar_t __t, int __precision, bool __alt) {
+    return __as_string(get_swprintf(), __v, __t, __precision, __alt);
+  }
+
+  wstring __spf(long double __v, wchar_t __t, int __precision, bool __alt) {
+    return __as_string(get_swprintf(), __v, __t, __precision, __alt);
+  }
+} // __format
 
 _LIBCPP_END_NAMESPACE_STD
