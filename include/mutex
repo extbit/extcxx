@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(mutex_synopsis)
+#if false&&0 // mutex synopsis
 namespace std
 {
 
@@ -179,8 +178,8 @@ namespace std
   template<class Callable, class ...Args>
   void call_once(once_flag& flag, Callable&& func, Args&&... args);
 
-}  // std
-#endif // mutex_synopsis
+} // std
+#endif // mutex synopsis
 
 #include <__config>
 #include <__mutex_base>

@@ -207,10 +207,10 @@ namespace std
   template <class ForwardIterator, class Size>
   ForwardIterator uninitialized_default_construct_n(ForwardIterator first, Size n);
 
-  template <class Y> struct auto_ptr_ref {};      // deprecated in C++11, removed in C++17
+  template <class Y> struct auto_ptr_ref {}; // deprecated in C++11, removed in C++17
 
   template<class X>
-  class auto_ptr                                  // deprecated in C++11, removed in C++17
+  class auto_ptr // deprecated in C++11, removed in C++17
   {
   public:
     typedef X element_type;
@@ -1953,16 +1953,6 @@ public:
   unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
       : __ptr_(__u.release(), _VSTD::forward<_Ep>(__u.get_deleter())) {}
 
-#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
-  template <class _Up>
-  _LIBCPP_INLINE_VISIBILITY
-  unique_ptr(auto_ptr<_Up>&& __p,
-             typename enable_if<is_convertible<_Up*, _Tp*>::value &&
-                                    is_same<_Dp, default_delete<_Tp> >::value,
-                                __nat>::type = __nat()) noexcept
-      : __ptr_(__p.release()) {}
-#endif
-
   _LIBCPP_INLINE_VISIBILITY
   unique_ptr& operator=(unique_ptr&& __u) noexcept {
     reset(__u.release());
@@ -1980,18 +1970,6 @@ public:
     __ptr_.second() = _VSTD::forward<_Ep>(__u.get_deleter());
     return *this;
   }
-
-#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
-  template <class _Up>
-  _LIBCPP_INLINE_VISIBILITY
-      typename enable_if<is_convertible<_Up*, _Tp*>::value &&
-                             is_same<_Dp, default_delete<_Tp> >::value,
-                         unique_ptr&>::type
-      operator=(auto_ptr<_Up> __p) {
-    reset(__p.release());
-    return *this;
-  }
-#endif
 
   unique_ptr(unique_ptr const&) = delete;
   unique_ptr& operator=(unique_ptr const&) = delete;
@@ -3065,11 +3043,6 @@ public:
 
     template<class _Yp> explicit shared_ptr(const weak_ptr<_Yp>& __r,
                    typename enable_if<is_convertible<_Yp*, element_type*>::value, __nat>::type= __nat());
-#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
-    template<class _Yp>
-        shared_ptr(auto_ptr<_Yp>&& __r,
-                   typename enable_if<is_convertible<_Yp*, element_type*>::value, __nat>::type = __nat());
-#endif
 
     template <class _Yp, class _Dp>
         shared_ptr(unique_ptr<_Yp, _Dp>&&,
@@ -3112,17 +3085,6 @@ public:
         >::type
         _LIBCPP_INLINE_VISIBILITY
         operator=(shared_ptr<_Yp>&& __r);
-#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
-    template<class _Yp>
-        _LIBCPP_INLINE_VISIBILITY
-        typename enable_if
-        <
-            !is_array<_Yp>::value &&
-            is_convertible<_Yp*, element_type*>::value,
-            shared_ptr
-        >::type&
-        operator=(auto_ptr<_Yp>&& __r);
-#endif
     template <class _Yp, class _Dp>
         typename enable_if
         <
@@ -3436,20 +3398,6 @@ shared_ptr<_Tp>::shared_ptr(shared_ptr<_Yp>&& __r,
     __r.__cntrl_ = 0;
 }
 
-#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
-template<class _Tp>
-template<class _Yp>
-shared_ptr<_Tp>::shared_ptr(auto_ptr<_Yp>&& __r,
-                            typename enable_if<is_convertible<_Yp*, element_type*>::value, __nat>::type)
-    : __ptr_(__r.get())
-{
-    typedef __shared_ptr_pointer<_Yp*, default_delete<_Yp>, allocator<_Yp> > _CntrlBlk;
-    __cntrl_ = new _CntrlBlk(__r.get(), default_delete<_Yp>(), allocator<_Yp>());
-    __enable_weak_this(__r.get(), __r.get());
-    __r.release();
-}
-#endif
-
 template<class _Tp>
 template <class _Yp, class _Dp>
 shared_ptr<_Tp>::shared_ptr(unique_ptr<_Yp, _Dp>&& __r,
@@ -3589,23 +3537,6 @@ shared_ptr<_Tp>::operator=(shared_ptr<_Yp>&& __r)
     shared_ptr(_VSTD::move(__r)).swap(*this);
     return *this;
 }
-
-#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
-template<class _Tp>
-template<class _Yp>
-inline
-typename enable_if
-<
-    !is_array<_Yp>::value &&
-    is_convertible<_Yp*, typename shared_ptr<_Tp>::element_type*>::value,
-    shared_ptr<_Tp>
->::type&
-shared_ptr<_Tp>::operator=(auto_ptr<_Yp>&& __r)
-{
-    shared_ptr(_VSTD::move(__r)).swap(*this);
-    return *this;
-}
-#endif
 
 template<class _Tp>
 template <class _Yp, class _Dp>

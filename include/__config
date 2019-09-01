@@ -1109,7 +1109,7 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 // pthread_mutex_destroy can allow the kernel to release resources.
 // See https://llvm.org/D64298 for details.
 //
-// TODO(EricWF): Enable this optimization on Bionic after speaking to their
+// TODO:(EricWF): Enable this optimization on Bionic after speaking to their
 //               respective stakeholders.
 #if (defined(_LIBCPP_HAS_THREAD_API_PTHREAD) && defined(__GLIBC__)) \
   || defined(_LIBCPP_HAS_THREAD_API_WIN32)
@@ -1122,7 +1122,7 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 // pthread_cond_destroy can allow the kernel to release resources.
 // See https://llvm.org/D64298 for details.
 //
-// TODO(EricWF): This is potentially true for some pthread implementations
+// TODO:(EricWF): This is potentially true for some pthread implementations
 // as well.
 #if defined(_LIBCPP_HAS_THREAD_API_WIN32)
 # define _LIBCPP_HAS_TRIVIAL_CONDVAR_DESTRUCTION
@@ -1253,7 +1253,7 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 #endif
 
 #if defined(_LIBCPP_ENABLE_CXX17_REMOVED_FEATURES)
-#define _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR
+//#define _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR
 #define _LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
 #define _LIBCPP_ENABLE_CXX17_REMOVED_RANDOM_SHUFFLE
 #define _LIBCPP_ENABLE_CXX17_REMOVED_BINDERS

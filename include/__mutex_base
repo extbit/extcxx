@@ -74,7 +74,7 @@ extern _LIBCPP_EXPORTED_FROM_ABI const adopt_lock_t  adopt_lock;
 
 template <class _Mutex>
 class _LIBCPP_TEMPLATE_VIS _LIBCPP_THREAD_SAFETY_ANNOTATION(scoped_lockable)
-lock_guard
+[[deprecated]] lock_guard
 {
 public:
     typedef _Mutex mutex_type;

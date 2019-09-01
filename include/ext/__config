@@ -14,13 +14,13 @@
 #define _LIBCPP_END_NAMESPACE_EXT  } }
 #define _VSTD_EXT std::ext
 
-#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT _LIBCPP_BEGIN_NAMESPACE_EXT inline namespace bit_v1 {
+#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT namespace std { namespace extbit { inline namespace __1 {
 #define _LIBCPP_END_NAMESPACE_EXTBIT  } } }
-#define _VSTD_EXTBIT _VSTD_EXT::bit_v1
+#define _VSTD_EXTBIT std::extbit::__1
 
-#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT_V2 _LIBCPP_BEGIN_NAMESPACE_EXT inline namespace bit_v2 {
+#define _LIBCPP_BEGIN_NAMESPACE_EXTBIT_V2 namespace std { namespace extbit { inline namespace __2 {
 #define _LIBCPP_END_NAMESPACE_EXTBIT_V2  } } }
-#define _VSTD_EXTBIT_V2 _VSTD_EXT::bit_v2
+#define _VSTD_EXTBIT_V2 std::extbit::__2
 
 #define _LIBCPP_BEGIN_NAMESPACE_EXTBIT_NET _LIBCPP_BEGIN_NAMESPACE_EXTBIT namespace net {
 #define _LIBCPP_END_NAMESPACE_EXTBIT_NET  } } } }

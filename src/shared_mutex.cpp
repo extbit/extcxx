@@ -109,7 +109,3 @@ bool shared_timed_mutex::try_lock_shared() { return __base.try_lock_shared(); }
 void shared_timed_mutex::unlock_shared() { return __base.unlock_shared(); }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
