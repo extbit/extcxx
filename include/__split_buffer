@@ -151,7 +151,7 @@ private:
         {}
 
     struct _ConstructTransaction {
-      explicit _ConstructTransaction(pointer* __p, size_type __n) _NOEXCEPT
+      explicit _ConstructTransaction(pointer* __p, size_type __n) noexcept
       : __pos_(*__p), __end_(*__p + __n), __dest_(__p) {
       }
       ~_ConstructTransaction() {

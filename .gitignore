@@ -61,3 +61,5 @@ keep.lst
 
 # Editor by-products
 .vscode/
+
+/include/__config_site

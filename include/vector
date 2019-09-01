@@ -805,29 +805,29 @@ private:
 #else
     _LIBCPP_INLINE_VISIBILITY
     void __annotate_contiguous_container(const void*, const void*, const void*,
-                                         const void*) const _NOEXCEPT {}
+                                         const void*) const noexcept {}
 #endif
     _LIBCPP_INLINE_VISIBILITY
-    void __annotate_new(size_type __current_size) const _NOEXCEPT {
+    void __annotate_new(size_type __current_size) const noexcept {
       __annotate_contiguous_container(data(), data() + capacity(),
                                       data() + capacity(), data() + __current_size);
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    void __annotate_delete() const _NOEXCEPT {
+    void __annotate_delete() const noexcept {
       __annotate_contiguous_container(data(), data() + capacity(),
                                       data() + size(), data() + capacity());
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    void __annotate_increase(size_type __n) const _NOEXCEPT
+    void __annotate_increase(size_type __n) const noexcept
     {
       __annotate_contiguous_container(data(), data() + capacity(),
                                       data() + size(), data() + size() + __n);
     }
 
     _LIBCPP_INLINE_VISIBILITY
-    void __annotate_shrink(size_type __old_size) const _NOEXCEPT
+    void __annotate_shrink(size_type __old_size) const noexcept
     {
       __annotate_contiguous_container(data(), data() + capacity(),
                                       data() + __old_size, data() + size());

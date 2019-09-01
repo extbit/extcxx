@@ -6,17 +6,19 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+#pragma once
+#pragma GCC system_header
 #if defined(_string_h_synopsis_)
 
-    string.h synopsis
-
-Macros:
-
-    NULL
-
-Types:
-
-    size_t
+//     string.h synopsis
+//
+// Macros:
+//
+//     NULL
+//
+// Types:
+//
+//     size_t
 
 void* memcpy(void* restrict s1, const void* restrict s2, size_t n);
 void* memmove(void* s1, const void* s2, size_t n);
@@ -47,8 +49,6 @@ char* strerror(int errnum);
 size_t strlen(const char* s);
 
 #endif // _string_h_synopsis_
-
-#pragma GCC system_header
 
 #include <__config>
 

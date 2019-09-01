@@ -5627,6 +5627,4 @@ prev_permutation(_BidirectionalIterator __first, _BidirectionalIterator __last)
 
 _LIBCPP_END_NAMESPACE_STD
 
-_LIBCPP_POP_MACROS
-
 #include <__pstl_algorithm>

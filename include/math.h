@@ -6,37 +6,34 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCPP_MATH_H
-#define _LIBCPP_MATH_H
+#pragma GCC system_header
 #if defined(_math_h_synopsis_)
 
-    math.h synopsis
-
-Macros:
-
-    HUGE_VAL
-    HUGE_VALF               // C99
-    HUGE_VALL               // C99
-    INFINITY                // C99
-    NAN                     // C99
-    FP_INFINITE             // C99
-    FP_NAN                  // C99
-    FP_NORMAL               // C99
-    FP_SUBNORMAL            // C99
-    FP_ZERO                 // C99
-    FP_FAST_FMA             // C99
-    FP_FAST_FMAF            // C99
-    FP_FAST_FMAL            // C99
-    FP_ILOGB0               // C99
-    FP_ILOGBNAN             // C99
-    MATH_ERRNO              // C99
-    MATH_ERREXCEPT          // C99
-    math_errhandling        // C99
-
-Types:
-
-    float_t                 // C99
-    double_t                // C99
+// Macros:
+//
+//     HUGE_VAL
+//     HUGE_VALF               // C99
+//     HUGE_VALL               // C99
+//     INFINITY                // C99
+//     NAN                     // C99
+//     FP_INFINITE             // C99
+//     FP_NAN                  // C99
+//     FP_NORMAL               // C99
+//     FP_SUBNORMAL            // C99
+//     FP_ZERO                 // C99
+//     FP_FAST_FMA             // C99
+//     FP_FAST_FMAF            // C99
+//     FP_FAST_FMAL            // C99
+//     FP_ILOGB0               // C99
+//     FP_ILOGBNAN             // C99
+//     MATH_ERRNO              // C99
+//     MATH_ERREXCEPT          // C99
+//     math_errhandling        // C99
+//
+// Types:
+//
+//     float_t                 // C99
+//     double_t                // C99
 
 // C90
 
@@ -290,8 +287,8 @@ long double    truncl(long double x);
 
 #endif // _math_h_synopsis_
 
-#pragma GCC system_header
-
+#ifndef _LIBCPP_MATH_H
+#define _LIBCPP_MATH_H
 #include <__config>
 
 #define _LIBCPP_STDLIB_INCLUDE_NEXT

@@ -943,7 +943,7 @@ public:
                              difference_type>    const_iterator;
 
     struct __deque_block_range {
-      explicit __deque_block_range(pointer __b, pointer __e) _NOEXCEPT : __begin_(__b), __end_(__e) {}
+      explicit __deque_block_range(pointer __b, pointer __e) noexcept : __begin_(__b), __end_(__e) {}
       const pointer __begin_;
       const pointer __end_;
     };
@@ -952,10 +952,10 @@ public:
       iterator __pos_;
       const iterator __end_;
 
-      __deque_range(iterator __pos, iterator __e) _NOEXCEPT
+      __deque_range(iterator __pos, iterator __e) noexcept
         : __pos_(__pos), __end_(__e) {}
 
-      explicit operator bool() const _NOEXCEPT {
+      explicit operator bool() const noexcept {
         return __pos_ != __end_;
       }
 
@@ -966,14 +966,14 @@ public:
       __deque_range end() const {
         return __deque_range(__end_, __end_);
       }
-      __deque_block_range operator*() const _NOEXCEPT {
+      __deque_block_range operator*() const noexcept {
          if (__pos_.__m_iter_ == __end_.__m_iter_) {
           return __deque_block_range(__pos_.__ptr_, __end_.__ptr_);
         }
         return __deque_block_range(__pos_.__ptr_, *__pos_.__m_iter_ + __block_size);
       }
 
-      __deque_range& operator++() _NOEXCEPT {
+      __deque_range& operator++() noexcept {
         if (__pos_.__m_iter_ == __end_.__m_iter_) {
           __pos_ = __end_;
         } else {
