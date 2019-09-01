@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
 #if defined(numeric_synopsis)
 namespace std
 {
@@ -560,3 +559,7 @@ midpoint(_Fp __a, _Fp __b) noexcept
 }
 
 _LIBCPP_END_NAMESPACE_STD
+
+_LIBCPP_POP_MACROS
+
+#include <__pstl_numeric>

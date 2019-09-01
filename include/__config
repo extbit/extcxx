@@ -27,7 +27,7 @@
 #  define _GNUC_VER_NEW 0
 #endif
 
-#define _LIBCPP_VERSION 9000
+#define _LIBCPP_VERSION 10000
 
 #ifndef _LIBCPP_ABI_VERSION
 #  define _LIBCPP_ABI_VERSION 1
@@ -176,10 +176,6 @@
 #  error "MSVC may not be supported" // _LIBCPP_COMPILER_MSVC
 #elif defined(__IBMCPP__)
 #  error "IBMCPP may not be supported" // _LIBCPP_COMPILER_IBM
-#endif
-
-#ifndef _LIBCPP_CLANG_VER
-#define _LIBCPP_CLANG_VER 0
 #endif
 
 #if defined(_LIBCPP_COMPILER_GCC) && __cplusplus < 201103L
@@ -478,9 +474,10 @@ typedef __char32_t char32_t;
 
 #define _LIBCPP_ALWAYS_INLINE __attribute__ ((__always_inline__))
 
-// No apple compilers support ""d and ""y at this time.
-#if _LIBCPP_CLANG_VER < 800 || defined(__apple_build_version__)
-#define	_LIBCPP_HAS_NO_CXX20_CHRONO_LITERALS
+// Literal operators ""d and ""y are supported starting with LLVM Clang 8 and AppleClang 10.0.1
+#if (defined(_LIBCPP_CLANG_VER) && _LIBCPP_CLANG_VER < 800) || \
+    (defined(__apple_build_version__) && __apple_build_version__ < 10010000)
+#define _LIBCPP_HAS_NO_CXX20_CHRONO_LITERALS
 #endif
 
 #elif defined(_LIBCPP_COMPILER_GCC)
@@ -1021,13 +1018,13 @@ typedef unsigned int   char32_t;
 // #  define _LIBCPP_EXPLICIT_MOVE(x) (x)
 // #endif
 
-#ifndef _LIBCPP_CONSTEXPR_IF_NODEBUG
-#if defined(_LIBCPP_DEBUG) || defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
-#define _LIBCPP_CONSTEXPR_IF_NODEBUG
-#else
-#define _LIBCPP_CONSTEXPR_IF_NODEBUG constexpr
-#endif
-#endif
+// #ifndef _LIBCPP_CONSTEXPR_IF_NODEBUG
+// #if defined(_LIBCPP_DEBUG) || defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
+// #define _LIBCPP_CONSTEXPR_IF_NODEBUG
+// #else
+// #define _LIBCPP_CONSTEXPR_IF_NODEBUG constexpr
+// #endif
+// #endif
 
 #if __has_attribute(no_destroy)
 #  define _LIBCPP_NO_DESTROY __attribute__((__no_destroy__))
@@ -1094,6 +1091,41 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 #if defined(_LIBCPP_HAS_NO_MONOTONIC_CLOCK) && !defined(_LIBCPP_HAS_NO_THREADS)
 #error _LIBCPP_HAS_NO_MONOTONIC_CLOCK may only be defined when \
        _LIBCPP_HAS_NO_THREADS is defined.
+#endif
+
+#if defined(__STDCPP_THREADS__) && defined(_LIBCPP_HAS_NO_THREADS)
+#error _LIBCPP_HAS_NO_THREADS cannot be set when __STDCPP_THREADS__ is set.
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_THREADS) && !defined(__STDCPP_THREADS__)
+#define __STDCPP_THREADS__ 1
+#endif
+
+// The glibc and Bionic implementation of pthreads implements
+// pthread_mutex_destroy as nop for regular mutexes. Additionally, Win32
+// mutexes have no destroy mechanism.
+//
+// This optimization can't be performed on Apple platforms, where
+// pthread_mutex_destroy can allow the kernel to release resources.
+// See https://llvm.org/D64298 for details.
+//
+// TODO(EricWF): Enable this optimization on Bionic after speaking to their
+//               respective stakeholders.
+#if (defined(_LIBCPP_HAS_THREAD_API_PTHREAD) && defined(__GLIBC__)) \
+  || defined(_LIBCPP_HAS_THREAD_API_WIN32)
+# define _LIBCPP_HAS_TRIVIAL_MUTEX_DESTRUCTION
+#endif
+
+// Destroying a condvar is a nop on Windows.
+//
+// This optimization can't be performed on Apple platforms, where
+// pthread_cond_destroy can allow the kernel to release resources.
+// See https://llvm.org/D64298 for details.
+//
+// TODO(EricWF): This is potentially true for some pthread implementations
+// as well.
+#if defined(_LIBCPP_HAS_THREAD_API_WIN32)
+# define _LIBCPP_HAS_TRIVIAL_CONDVAR_DESTRUCTION
 #endif
 
 // Systems that use capability-based security (FreeBSD with Capsicum,
@@ -1206,7 +1238,7 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 
 #ifndef _LIBCPP_NODEBUG_TYPE
 #if __has_attribute(__nodebug__) && \
-    (defined(_LIBCPP_COMPILER_CLANG) && _LIBCPP_CLANG_VER >= 900)
+    (defined(_LIBCPP_CLANG_VER) && _LIBCPP_CLANG_VER >= 900)
 #define _LIBCPP_NODEBUG_TYPE __attribute__((nodebug))
 #else
 #define _LIBCPP_NODEBUG_TYPE
@@ -1293,15 +1325,15 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
      __attribute__((availability(macosx,strict,introduced=10.9)))              \
      __attribute__((availability(ios,strict,introduced=7.0)))
 #  define _LIBCPP_AVAILABILITY_FILESYSTEM                                      \
-     __attribute__((availability(macosx,strict,unavailable)))                  \
-     __attribute__((availability(ios,strict,unavailable)))                     \
-     __attribute__((availability(tvos,strict,unavailable)))                    \
-     __attribute__((availability(watchos,strict,unavailable)))
+     __attribute__((availability(macosx,strict,introduced=10.15)))             \
+     __attribute__((availability(ios,strict,introduced=13.0)))                 \
+     __attribute__((availability(tvos,strict,introduced=13.0)))                \
+     __attribute__((availability(watchos,strict,introduced=6.0)))
 #  define _LIBCPP_AVAILABILITY_FILESYSTEM_PUSH                                 \
-     _Pragma("clang attribute push(__attribute__((availability(macosx,strict,unavailable))), apply_to=any(function,record))") \
-     _Pragma("clang attribute push(__attribute__((availability(ios,strict,unavailable))), apply_to=any(function,record))")    \
-     _Pragma("clang attribute push(__attribute__((availability(tvos,strict,unavailable))), apply_to=any(function,record))")   \
-     _Pragma("clang attribute push(__attribute__((availability(watchos,strict,unavailable))), apply_to=any(function,record))")
+     _Pragma("clang attribute push(__attribute__((availability(macosx,strict,introduced=10.15))), apply_to=any(function,record))") \
+     _Pragma("clang attribute push(__attribute__((availability(ios,strict,introduced=13.0))), apply_to=any(function,record))")     \
+     _Pragma("clang attribute push(__attribute__((availability(tvos,strict,introduced=13.0))), apply_to=any(function,record))")    \
+     _Pragma("clang attribute push(__attribute__((availability(watchos,strict,introduced=6.0))), apply_to=any(function,record))")
 #  define _LIBCPP_AVAILABILITY_FILESYSTEM_POP                                  \
      _Pragma("clang attribute pop")                                            \
      _Pragma("clang attribute pop")                                            \

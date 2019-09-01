@@ -143,7 +143,3 @@ memory_resource * set_default_resource(memory_resource * __new_res) noexcept
 }
 
 _LIBCPP_END_NAMESPACE_LFTS_PMR
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif

@@ -14,10 +14,7 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-condition_variable::~condition_variable()
-{
-    __libcpp_condvar_destroy(&__cv_);
-}
+// ~condition_variable is defined elsewhere.
 
 void
 condition_variable::notify_one() noexcept
@@ -85,7 +82,3 @@ notify_all_at_thread_exit(condition_variable& cond, unique_lock<mutex> lk)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif

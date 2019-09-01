@@ -18,11 +18,6 @@ const defer_lock_t  defer_lock = {};
 const try_to_lock_t try_to_lock = {};
 const adopt_lock_t  adopt_lock = {};
 
-mutex::~mutex() noexcept
-{
-    __libcpp_mutex_destroy(&__m_);
-}
-
 void
 mutex::lock()
 {
@@ -128,7 +123,7 @@ timed_mutex::unlock() noexcept
 
 recursive_timed_mutex::recursive_timed_mutex()
     : __count_(0),
-      __id_(0)
+      __id_{}
 {
 }
 
@@ -140,9 +135,9 @@ recursive_timed_mutex::~recursive_timed_mutex()
 void
 recursive_timed_mutex::lock()
 {
-    __libcpp_thread_id id = __libcpp_thread_get_current_id();
+    __thread_id id = this_thread::get_id();
     unique_lock<mutex> lk(__m_);
-    if (__libcpp_thread_id_equal(id, __id_))
+    if (id ==__id_)
     {
         if (__count_ == numeric_limits<size_t>::max())
             __throw_system_error(EAGAIN, "recursive_timed_mutex lock limit reached");
@@ -158,9 +153,9 @@ recursive_timed_mutex::lock()
 bool
 recursive_timed_mutex::try_lock() noexcept
 {
-    __libcpp_thread_id id = __libcpp_thread_get_current_id();
+    __thread_id id = this_thread::get_id();
     unique_lock<mutex> lk(__m_, try_to_lock);
-    if (lk.owns_lock() && (__count_ == 0 || __libcpp_thread_id_equal(id, __id_)))
+    if (lk.owns_lock() && (__count_ == 0 || id == __id_))
     {
         if (__count_ == numeric_limits<size_t>::max())
             return false;
@@ -177,7 +172,7 @@ recursive_timed_mutex::unlock() noexcept
     unique_lock<mutex> lk(__m_);
     if (--__count_ == 0)
     {
-        __id_ = 0;
+        __id_.__reset();
         lk.unlock();
         __cv_.notify_one();
     }
@@ -229,7 +224,3 @@ void __call_once(volatile once_flag::_State_type& flag, void* arg,
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif

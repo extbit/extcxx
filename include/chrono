@@ -141,10 +141,8 @@ namespace std { namespace chrono {
 
   namespace chrono {
 
-
     template<class T> struct is_clock;  // C++20
     template<class T> inline constexpr bool is_clock_v = is_clock<T>::value;   // C++20
-
 
     // duration arithmetic
     template <class Rep1, class Period1, class Rep2, class Period2>
@@ -303,409 +301,286 @@ namespace std { namespace chrono {
       static time_point now() noexcept;
     };
 
-    typedef steady_clock high_resolution_clock;
+constexpr bool operator==(const year_month_day_last& x,
+                          const year_month_day_last& y) noexcept;
+constexpr bool operator!=(const year_month_day_last& x,
+                          const year_month_day_last& y) noexcept;
+constexpr bool operator< (const year_month_day_last& x,
+                          const year_month_day_last& y) noexcept;
+constexpr bool operator> (const year_month_day_last& x,
+                          const year_month_day_last& y) noexcept;
+constexpr bool operator<=(const year_month_day_last& x,
+                          const year_month_day_last& y) noexcept;
+constexpr bool operator>=(const year_month_day_last& x,
+                          const year_month_day_last& y) noexcept;
 
-    // 25.7.8, local time           // C++20
-    struct local_t {};
-    template<class Duration>
-    using local_time  = time_point<local_t, Duration>;
-    using local_seconds = local_time<seconds>;
-    using local_days    = local_time<days>;
+constexpr year_month_day_last
+  operator+(const year_month_day_last& ymdl, const months& dm) noexcept;
+constexpr year_month_day_last
+  operator+(const months& dm, const year_month_day_last& ymdl) noexcept;
+constexpr year_month_day_last
+  operator+(const year_month_day_last& ymdl, const years& dy) noexcept;
+constexpr year_month_day_last
+  operator+(const years& dy, const year_month_day_last& ymdl) noexcept;
+constexpr year_month_day_last
+  operator-(const year_month_day_last& ymdl, const months& dm) noexcept;
+constexpr year_month_day_last
+  operator-(const year_month_day_last& ymdl, const years& dy) noexcept;
 
-    // 25.7.9, time_point conversions template<class DestClock, class SourceClock>    // C++20
-    struct clock_time_conversion;
+// 25.8.16, class year_month_weekday    // C++20
+class year_month_weekday;
 
-    template<class DestClock, class SourceClock, class Duration>
-    auto clock_cast(const time_point<SourceClock, Duration>& t);
+constexpr bool operator==(const year_month_weekday& x,
+                          const year_month_weekday& y) noexcept;
+constexpr bool operator!=(const year_month_weekday& x,
+                          const year_month_weekday& y) noexcept;
 
-    // 25.8.2, class last_spec    // C++20
-    struct last_spec;
+constexpr year_month_weekday
+  operator+(const year_month_weekday& ymwd, const months& dm) noexcept;
+constexpr year_month_weekday
+  operator+(const months& dm, const year_month_weekday& ymwd) noexcept;
+constexpr year_month_weekday
+  operator+(const year_month_weekday& ymwd, const years& dy) noexcept;
+constexpr year_month_weekday
+  operator+(const years& dy, const year_month_weekday& ymwd) noexcept;
+constexpr year_month_weekday
+  operator-(const year_month_weekday& ymwd, const months& dm) noexcept;
+constexpr year_month_weekday
+  operator-(const year_month_weekday& ymwd, const years& dy) noexcept;
 
-    // 25.8.3, class day          // C++20
+// 25.8.17, class year_month_weekday_last    // C++20
+class year_month_weekday_last;
 
-    class day;
-    constexpr bool operator==(const day& x, const day& y) noexcept;
-    constexpr bool operator!=(const day& x, const day& y) noexcept;
-    constexpr bool operator< (const day& x, const day& y) noexcept;
-    constexpr bool operator> (const day& x, const day& y) noexcept;
-    constexpr bool operator<=(const day& x, const day& y) noexcept;
-    constexpr bool operator>=(const day& x, const day& y) noexcept;
-    constexpr day  operator+(const day&  x, const days& y) noexcept;
-    constexpr day  operator+(const days& x, const day&  y) noexcept;
-    constexpr day  operator-(const day&  x, const days& y) noexcept;
-    constexpr days operator-(const day&  x, const day&  y) noexcept;
+constexpr bool operator==(const year_month_weekday_last& x,
+                          const year_month_weekday_last& y) noexcept;
+constexpr bool operator!=(const year_month_weekday_last& x,
+                          const year_month_weekday_last& y) noexcept;
+constexpr year_month_weekday_last
+  operator+(const year_month_weekday_last& ymwdl, const months& dm) noexcept;
+constexpr year_month_weekday_last
+  operator+(const months& dm, const year_month_weekday_last& ymwdl) noexcept;
+constexpr year_month_weekday_last
+  operator+(const year_month_weekday_last& ymwdl, const years& dy) noexcept;
+constexpr year_month_weekday_last
+  operator+(const years& dy, const year_month_weekday_last& ymwdl) noexcept;
+constexpr year_month_weekday_last
+  operator-(const year_month_weekday_last& ymwdl, const months& dm) noexcept;
+constexpr year_month_weekday_last
+  operator-(const year_month_weekday_last& ymwdl, const years& dy) noexcept;
 
-    // 25.8.4, class month    // C++20
-    class month;
-    constexpr bool operator==(const month& x, const month& y) noexcept;
-    constexpr bool operator!=(const month& x, const month& y) noexcept;
-    constexpr bool operator< (const month& x, const month& y) noexcept;
-    constexpr bool operator> (const month& x, const month& y) noexcept;
-    constexpr bool operator<=(const month& x, const month& y) noexcept;
-    constexpr bool operator>=(const month& x, const month& y) noexcept;
-    constexpr month  operator+(const month&  x, const months& y) noexcept;
-    constexpr month  operator+(const months& x,  const month& y) noexcept;
-    constexpr month  operator-(const month&  x, const months& y) noexcept;
-    constexpr months operator-(const month&  x,  const month& y) noexcept;
+// 25.8.18, civil calendar conventional syntax operators    // C++20
+constexpr year_month
+  operator/(const year& y, const month& m) noexcept;
+constexpr year_month
+  operator/(const year& y, int m) noexcept;
+constexpr month_day
+  operator/(const month& m, const day& d) noexcept;
+constexpr month_day
+  operator/(const month& m, int d) noexcept;
+constexpr month_day
+  operator/(int m, const day& d) noexcept;
+constexpr month_day
+  operator/(const day& d, const month& m) noexcept;
+constexpr month_day
+  operator/(const day& d, int m) noexcept;
+constexpr month_day_last
+  operator/(const month& m, last_spec) noexcept;
+constexpr month_day_last
+  operator/(int m, last_spec) noexcept;
+constexpr month_day_last
+  operator/(last_spec, const month& m) noexcept;
+constexpr month_day_last
+  operator/(last_spec, int m) noexcept;
+constexpr month_weekday
+  operator/(const month& m, const weekday_indexed& wdi) noexcept;
+constexpr month_weekday
+  operator/(int m, const weekday_indexed& wdi) noexcept;
+constexpr month_weekday
+  operator/(const weekday_indexed& wdi, const month& m) noexcept;
+constexpr month_weekday
+  operator/(const weekday_indexed& wdi, int m) noexcept;
+constexpr month_weekday_last
+  operator/(const month& m, const weekday_last& wdl) noexcept;
+constexpr month_weekday_last
+  operator/(int m, const weekday_last& wdl) noexcept;
+constexpr month_weekday_last
+  operator/(const weekday_last& wdl, const month& m) noexcept;
+constexpr month_weekday_last
+  operator/(const weekday_last& wdl, int m) noexcept;
+constexpr year_month_day
+  operator/(const year_month& ym, const day& d) noexcept;
+constexpr year_month_day
+  operator/(const year_month& ym, int d) noexcept;
+constexpr year_month_day
+  operator/(const year& y, const month_day& md) noexcept;
+constexpr year_month_day
+  operator/(int y, const month_day& md) noexcept;
+constexpr year_month_day
+  operator/(const month_day& md, const year& y) noexcept;
+constexpr year_month_day
+  operator/(const month_day& md, int y) noexcept;
+constexpr year_month_day_last
+  operator/(const year_month& ym, last_spec) noexcept;
+constexpr year_month_day_last
+  operator/(const year& y, const month_day_last& mdl) noexcept;
+constexpr year_month_day_last
+  operator/(int y, const month_day_last& mdl) noexcept;
+constexpr year_month_day_last
+  operator/(const month_day_last& mdl, const year& y) noexcept;
+constexpr year_month_day_last
+  operator/(const month_day_last& mdl, int y) noexcept;
+constexpr year_month_weekday
+  operator/(const year_month& ym, const weekday_indexed& wdi) noexcept;
+constexpr year_month_weekday
+  operator/(const year& y, const month_weekday& mwd) noexcept;
+constexpr year_month_weekday
+  operator/(int y, const month_weekday& mwd) noexcept;
+constexpr year_month_weekday
+  operator/(const month_weekday& mwd, const year& y) noexcept;
+constexpr year_month_weekday
+  operator/(const month_weekday& mwd, int y) noexcept;
+constexpr year_month_weekday_last
+  operator/(const year_month& ym, const weekday_last& wdl) noexcept;
+constexpr year_month_weekday_last
+  operator/(const year& y, const month_weekday_last& mwdl) noexcept;
+constexpr year_month_weekday_last
+  operator/(int y, const month_weekday_last& mwdl) noexcept;
+constexpr year_month_weekday_last
+  operator/(const month_weekday_last& mwdl, const year& y) noexcept;
+constexpr year_month_weekday_last
+  operator/(const month_weekday_last& mwdl, int y) noexcept;
 
-    // 25.8.5, class year    // C++20
-    class year;
-    constexpr bool operator==(const year& x, const year& y) noexcept;
-    constexpr bool operator!=(const year& x, const year& y) noexcept;
-    constexpr bool operator< (const year& x, const year& y) noexcept;
-    constexpr bool operator> (const year& x, const year& y) noexcept;
-    constexpr bool operator<=(const year& x, const year& y) noexcept;
-    constexpr bool operator>=(const year& x, const year& y) noexcept;
-    constexpr year  operator+(const year&  x, const years& y) noexcept;
-    constexpr year  operator+(const years& x, const year&  y) noexcept;
-    constexpr year  operator-(const year&  x, const years& y) noexcept;
-    constexpr years operator-(const year&  x, const year&  y) noexcept;
+// 26.9, class template hh_mm_ss
+template <class Duration>
+class hh_mm_ss
+{
+    bool            is_neg; // exposition only
+    chrono::hours   h;      // exposition only
+    chrono::minutes m;      // exposition only
+    chrono::seconds s;      // exposition only
+    precision       ss;     // exposition only
 
-    // 25.8.6, class weekday    // C++20
-    class weekday;
+public:
+    static unsigned constexpr fractional_width = see below;
+    using precision                            = see below;
 
-    constexpr bool operator==(const weekday& x, const weekday& y) noexcept;
-    constexpr bool operator!=(const weekday& x, const weekday& y) noexcept;
-    constexpr weekday operator+(const weekday& x, const days&    y) noexcept;
-    constexpr weekday operator+(const days&    x, const weekday& y) noexcept;
-    constexpr weekday operator-(const weekday& x, const days&    y) noexcept;
-    constexpr days    operator-(const weekday& x, const weekday& y) noexcept;
+    constexpr hh_mm_ss() noexcept : hh_mm_ss{Duration::zero()} {}
+    constexpr explicit hh_mm_ss(Duration d) noexcept;
 
-    // 25.8.7, class weekday_indexed    // C++20
+    constexpr bool is_negative() const noexcept;
+    constexpr chrono::hours hours() const noexcept;
+    constexpr chrono::minutes minutes() const noexcept;
+    constexpr chrono::seconds seconds() const noexcept;
+    constexpr precision subseconds() const noexcept;
 
-    class weekday_indexed;
-    constexpr bool operator==(const weekday_indexed& x, const weekday_indexed& y) noexcept;
-    constexpr bool operator!=(const weekday_indexed& x, const weekday_indexed& y) noexcept;
+    constexpr explicit operator  precision()   const noexcept;
+    constexpr          precision to_duration() const noexcept;
+};
 
-    // 25.8.8, class weekday_last    // C++20
-    class weekday_last;
+template <class charT, class traits, class Duration>
+  basic_ostream<charT, traits>&
+    operator<<(basic_ostream<charT, traits>& os, hh_mm_ss<Duration> const& hms);
 
-    constexpr bool operator==(const weekday_last& x, const weekday_last& y) noexcept;
-    constexpr bool operator!=(const weekday_last& x, const weekday_last& y) noexcept;
-
-    // 25.8.9, class month_day    // C++20
-    class month_day;
-
-    constexpr bool operator==(const month_day& x, const month_day& y) noexcept;
-    constexpr bool operator!=(const month_day& x, const month_day& y) noexcept;
-    constexpr bool operator< (const month_day& x, const month_day& y) noexcept;
-    constexpr bool operator> (const month_day& x, const month_day& y) noexcept;
-    constexpr bool operator<=(const month_day& x, const month_day& y) noexcept;
-    constexpr bool operator>=(const month_day& x, const month_day& y) noexcept;
+// 26.10, 12/24 hour functions
+constexpr bool is_am(hours const& h) noexcept;
+constexpr bool is_pm(hours const& h) noexcept;
+constexpr hours make12(const hours& h) noexcept;
+constexpr hours make24(const hours& h, bool is_pm) noexcept;
 
 
-    // 25.8.10, class month_day_last    // C++20
-    class month_day_last;
+// 25.10.2, time zone database     // C++20
+struct tzdb;
+class tzdb_list;
 
-    constexpr bool operator==(const month_day_last& x, const month_day_last& y) noexcept;
-    constexpr bool operator!=(const month_day_last& x, const month_day_last& y) noexcept;
-    constexpr bool operator< (const month_day_last& x, const month_day_last& y) noexcept;
-    constexpr bool operator> (const month_day_last& x, const month_day_last& y) noexcept;
-    constexpr bool operator<=(const month_day_last& x, const month_day_last& y) noexcept;
-    constexpr bool operator>=(const month_day_last& x, const month_day_last& y) noexcept;
+// 25.10.2.3, time zone database access    // C++20
+const tzdb& get_tzdb();
+tzdb_list& get_tzdb_list();
+const time_zone* locate_zone(string_view tz_name);
+const time_zone* current_zone();
 
-    // 25.8.11, class month_weekday    // C++20
-    class month_weekday;
+// 25.10.2.4, remote time zone database support    // C++20
+const tzdb& reload_tzdb();
+string remote_version();
 
-    constexpr bool operator==(const month_weekday& x, const month_weekday& y) noexcept;
-    constexpr bool operator!=(const month_weekday& x, const month_weekday& y) noexcept;
+// 25.10.3, exception classes    // C++20
+class nonexistent_local_time;
+class ambiguous_local_time;
 
-    // 25.8.12, class month_weekday_last    // C++20
-    class month_weekday_last;
+// 25.10.4, information classes    // C++20
+struct sys_info;
+struct local_info;
 
-    constexpr bool operator==(const month_weekday_last& x, const month_weekday_last& y) noexcept;
-    constexpr bool operator!=(const month_weekday_last& x, const month_weekday_last& y) noexcept;
+// 25.10.5, class time_zone    // C++20
+enum class choose {earliest, latest};
+class time_zone;
+bool operator==(const time_zone& x, const time_zone& y) noexcept;
+bool operator!=(const time_zone& x, const time_zone& y) noexcept;
+bool operator<(const time_zone& x, const time_zone& y) noexcept;
+bool operator>(const time_zone& x, const time_zone& y) noexcept;
+bool operator<=(const time_zone& x, const time_zone& y) noexcept;
+bool operator>=(const time_zone& x, const time_zone& y) noexcept;
 
+// 25.10.6, class template zoned_traits    // C++20
+template<class T> struct zoned_traits;
 
-    // 25.8.13, class year_month    // C++20
-    class year_month;
+// 25.10.7, class template zoned_time    // C++20
+template<class Duration, class TimeZonePtr = const time_zone*> class zoned_time;
+using zoned_seconds = zoned_time<seconds>;
 
-    constexpr bool operator==(const year_month& x, const year_month& y) noexcept;
-    constexpr bool operator!=(const year_month& x, const year_month& y) noexcept;
-    constexpr bool operator< (const year_month& x, const year_month& y) noexcept;
-    constexpr bool operator> (const year_month& x, const year_month& y) noexcept;
-    constexpr bool operator<=(const year_month& x, const year_month& y) noexcept;
-    constexpr bool operator>=(const year_month& x, const year_month& y) noexcept;
+template<class Duration1, class Duration2, class TimeZonePtr>
+  bool operator==(const zoned_time<Duration1, TimeZonePtr>& x,
+                  const zoned_time<Duration2, TimeZonePtr>& y);
+template<class Duration1, class Duration2, class TimeZonePtr>
+  bool operator!=(const zoned_time<Duration1, TimeZonePtr>& x,
+                  const zoned_time<Duration2, TimeZonePtr>& y);
 
-    constexpr year_month operator+(const year_month& ym, const months& dm) noexcept;
-    constexpr year_month operator+(const months& dm, const year_month& ym) noexcept;
-    constexpr year_month operator-(const year_month& ym, const months& dm) noexcept;
-    constexpr months operator-(const year_month& x, const year_month& y) noexcept;
-    constexpr year_month operator+(const year_month& ym, const years& dy) noexcept;
-    constexpr year_month operator+(const years& dy, const year_month& ym) noexcept;
-    constexpr year_month operator-(const year_month& ym, const years& dy) noexcept;
+// 25.10.8, leap second support    // C++20
+class leap;
 
-    // 25.8.14, class year_month_day class    // C++20
-    year_month_day;
+bool operator==(const leap& x, const leap& y);
+bool operator!=(const leap& x, const leap& y);
+bool operator< (const leap& x, const leap& y);
+bool operator> (const leap& x, const leap& y);
+bool operator<=(const leap& x, const leap& y);
+bool operator>=(const leap& x, const leap& y);
+template<class Duration>
+  bool operator==(const leap& x, const sys_time<Duration>& y);
+template<class Duration>
+  bool operator==(const sys_time<Duration>& x, const leap& y);
+template<class Duration>
+  bool operator!=(const leap& x, const sys_time<Duration>& y);
+template<class Duration>
+  bool operator!=(const sys_time<Duration>& x, const leap& y);
+template<class Duration>
+  bool operator< (const leap& x, const sys_time<Duration>& y);
+template<class Duration>
+  bool operator< (const sys_time<Duration>& x, const leap& y);
+template<class Duration>
+  bool operator> (const leap& x, const sys_time<Duration>& y);
+template<class Duration>
+  bool operator> (const sys_time<Duration>& x, const leap& y);
+template<class Duration>
+  bool operator<=(const leap& x, const sys_time<Duration>& y);
+template<class Duration>
+  bool operator<=(const sys_time<Duration>& x, const leap& y);
+template<class Duration>
+  bool operator>=(const leap& x, const sys_time<Duration>& y);
+template<class Duration>
+  bool operator>=(const sys_time<Duration>& x, const leap& y);
 
-    constexpr bool operator==(const year_month_day& x, const year_month_day& y) noexcept;
-    constexpr bool operator!=(const year_month_day& x, const year_month_day& y) noexcept;
-    constexpr bool operator< (const year_month_day& x, const year_month_day& y) noexcept;
-    constexpr bool operator> (const year_month_day& x, const year_month_day& y) noexcept;
-    constexpr bool operator<=(const year_month_day& x, const year_month_day& y) noexcept;
-    constexpr bool operator>=(const year_month_day& x, const year_month_day& y) noexcept;
+// 25.10.9, class link    // C++20
+class link;
+bool operator==(const link& x, const link& y);
+bool operator!=(const link& x, const link& y);
+bool operator< (const link& x, const link& y);
+bool operator> (const link& x, const link& y);
+bool operator<=(const link& x, const link& y);
+bool operator>=(const link& x, const link& y);
 
-    constexpr year_month_day operator+(const year_month_day& ymd, const months& dm) noexcept;
-    constexpr year_month_day operator+(const months& dm, const year_month_day& ymd) noexcept;
-    constexpr year_month_day operator+(const year_month_day& ymd, const years& dy) noexcept;
-    constexpr year_month_day operator+(const years& dy, const year_month_day& ymd) noexcept;
-    constexpr year_month_day operator-(const year_month_day& ymd, const months& dm) noexcept;
-    constexpr year_month_day operator-(const year_month_day& ymd, const years& dy) noexcept;
-
-
-    // 25.8.15, class year_month_day_last    // C++20
-    class year_month_day_last;
-
-    constexpr bool operator==(const year_month_day_last& x,
-                              const year_month_day_last& y) noexcept;
-    constexpr bool operator!=(const year_month_day_last& x,
-                              const year_month_day_last& y) noexcept;
-    constexpr bool operator< (const year_month_day_last& x,
-                              const year_month_day_last& y) noexcept;
-    constexpr bool operator> (const year_month_day_last& x,
-                              const year_month_day_last& y) noexcept;
-    constexpr bool operator<=(const year_month_day_last& x,
-                              const year_month_day_last& y) noexcept;
-    constexpr bool operator>=(const year_month_day_last& x,
-                              const year_month_day_last& y) noexcept;
-
-    constexpr year_month_day_last
-    operator+(const year_month_day_last& ymdl, const months& dm) noexcept;
-    constexpr year_month_day_last
-    operator+(const months& dm, const year_month_day_last& ymdl) noexcept;
-    constexpr year_month_day_last
-    operator+(const year_month_day_last& ymdl, const years& dy) noexcept;
-    constexpr year_month_day_last
-    operator+(const years& dy, const year_month_day_last& ymdl) noexcept;
-    constexpr year_month_day_last
-    operator-(const year_month_day_last& ymdl, const months& dm) noexcept;
-    constexpr year_month_day_last
-    operator-(const year_month_day_last& ymdl, const years& dy) noexcept;
-
-    // 25.8.16, class year_month_weekday    // C++20
-    class year_month_weekday;
-
-    constexpr bool operator==(const year_month_weekday& x,
-                              const year_month_weekday& y) noexcept;
-    constexpr bool operator!=(const year_month_weekday& x,
-                              const year_month_weekday& y) noexcept;
-
-    constexpr year_month_weekday
-    operator+(const year_month_weekday& ymwd, const months& dm) noexcept;
-    constexpr year_month_weekday
-    operator+(const months& dm, const year_month_weekday& ymwd) noexcept;
-    constexpr year_month_weekday
-    operator+(const year_month_weekday& ymwd, const years& dy) noexcept;
-    constexpr year_month_weekday
-    operator+(const years& dy, const year_month_weekday& ymwd) noexcept;
-    constexpr year_month_weekday
-    operator-(const year_month_weekday& ymwd, const months& dm) noexcept;
-    constexpr year_month_weekday
-    operator-(const year_month_weekday& ymwd, const years& dy) noexcept;
-
-    // 25.8.17, class year_month_weekday_last    // C++20
-    class year_month_weekday_last;
-
-    constexpr bool operator==(const year_month_weekday_last& x,
-                              const year_month_weekday_last& y) noexcept;
-    constexpr bool operator!=(const year_month_weekday_last& x,
-                              const year_month_weekday_last& y) noexcept;
-    constexpr year_month_weekday_last
-    operator+(const year_month_weekday_last& ymwdl, const months& dm) noexcept;
-    constexpr year_month_weekday_last
-    operator+(const months& dm, const year_month_weekday_last& ymwdl) noexcept;
-    constexpr year_month_weekday_last
-    operator+(const year_month_weekday_last& ymwdl, const years& dy) noexcept;
-    constexpr year_month_weekday_last
-    operator+(const years& dy, const year_month_weekday_last& ymwdl) noexcept;
-    constexpr year_month_weekday_last
-    operator-(const year_month_weekday_last& ymwdl, const months& dm) noexcept;
-    constexpr year_month_weekday_last
-    operator-(const year_month_weekday_last& ymwdl, const years& dy) noexcept;
-
-    // 25.8.18, civil calendar conventional syntax operators    // C++20
-    constexpr year_month
-    operator/(const year& y, const month& m) noexcept;
-    constexpr year_month
-    operator/(const year& y, int m) noexcept;
-    constexpr month_day
-    operator/(const month& m, const day& d) noexcept;
-    constexpr month_day
-    operator/(const month& m, int d) noexcept;
-    constexpr month_day
-    operator/(int m, const day& d) noexcept;
-    constexpr month_day
-    operator/(const day& d, const month& m) noexcept;
-    constexpr month_day
-    operator/(const day& d, int m) noexcept;
-    constexpr month_day_last
-    operator/(const month& m, last_spec) noexcept;
-    constexpr month_day_last
-    operator/(int m, last_spec) noexcept;
-    constexpr month_day_last
-    operator/(last_spec, const month& m) noexcept;
-    constexpr month_day_last
-    operator/(last_spec, int m) noexcept;
-    constexpr month_weekday
-    operator/(const month& m, const weekday_indexed& wdi) noexcept;
-    constexpr month_weekday
-    operator/(int m, const weekday_indexed& wdi) noexcept;
-    constexpr month_weekday
-    operator/(const weekday_indexed& wdi, const month& m) noexcept;
-    constexpr month_weekday
-    operator/(const weekday_indexed& wdi, int m) noexcept;
-    constexpr month_weekday_last
-    operator/(const month& m, const weekday_last& wdl) noexcept;
-    constexpr month_weekday_last
-    operator/(int m, const weekday_last& wdl) noexcept;
-    constexpr month_weekday_last
-    operator/(const weekday_last& wdl, const month& m) noexcept;
-    constexpr month_weekday_last
-    operator/(const weekday_last& wdl, int m) noexcept;
-    constexpr year_month_day
-    operator/(const year_month& ym, const day& d) noexcept;
-    constexpr year_month_day
-    operator/(const year_month& ym, int d) noexcept;
-    constexpr year_month_day
-    operator/(const year& y, const month_day& md) noexcept;
-    constexpr year_month_day
-    operator/(int y, const month_day& md) noexcept;
-    constexpr year_month_day
-    operator/(const month_day& md, const year& y) noexcept;
-    constexpr year_month_day
-    operator/(const month_day& md, int y) noexcept;
-    constexpr year_month_day_last
-    operator/(const year_month& ym, last_spec) noexcept;
-    constexpr year_month_day_last
-    operator/(const year& y, const month_day_last& mdl) noexcept;
-    constexpr year_month_day_last
-    operator/(int y, const month_day_last& mdl) noexcept;
-    constexpr year_month_day_last
-    operator/(const month_day_last& mdl, const year& y) noexcept;
-    constexpr year_month_day_last
-    operator/(const month_day_last& mdl, int y) noexcept;
-    constexpr year_month_weekday
-    operator/(const year_month& ym, const weekday_indexed& wdi) noexcept;
-    constexpr year_month_weekday
-    operator/(const year& y, const month_weekday& mwd) noexcept;
-    constexpr year_month_weekday
-    operator/(int y, const month_weekday& mwd) noexcept;
-    constexpr year_month_weekday
-    operator/(const month_weekday& mwd, const year& y) noexcept;
-    constexpr year_month_weekday
-    operator/(const month_weekday& mwd, int y) noexcept;
-    constexpr year_month_weekday_last
-    operator/(const year_month& ym, const weekday_last& wdl) noexcept;
-    constexpr year_month_weekday_last
-    operator/(const year& y, const month_weekday_last& mwdl) noexcept;
-    constexpr year_month_weekday_last
-    operator/(int y, const month_weekday_last& mwdl) noexcept;
-    constexpr year_month_weekday_last
-    operator/(const month_weekday_last& mwdl, const year& y) noexcept;
-    constexpr year_month_weekday_last
-    operator/(const month_weekday_last& mwdl, int y) noexcept;
-
-    // 25.9, class template time_of_day    // C++20
-    template<class Duration> class time_of_day;
-
-    template<> class time_of_day<hours>;
-    template<> class time_of_day<minutes>;
-    template<> class time_of_day<seconds>;
-    template<class Rep, class Period> class time_of_day<duration<Rep, Period>>;
-
-    // 25.10.2, time zone database     // C++20
-    struct tzdb;
-    class tzdb_list;
-
-    // 25.10.2.3, time zone database access    // C++20
-    const tzdb& get_tzdb();
-    tzdb_list& get_tzdb_list();
-    const time_zone* locate_zone(string_view tz_name);
-    const time_zone* current_zone();
-
-    // 25.10.2.4, remote time zone database support    // C++20
-    const tzdb& reload_tzdb();
-    string remote_version();
-
-    // 25.10.3, exception classes    // C++20
-    class nonexistent_local_time;
-    class ambiguous_local_time;
-
-    // 25.10.4, information classes    // C++20
-    struct sys_info;
-    struct local_info;
-
-    // 25.10.5, class time_zone    // C++20
-    enum class choose {earliest, latest};
-    class time_zone;
-    bool operator==(const time_zone& x, const time_zone& y) noexcept;
-    bool operator!=(const time_zone& x, const time_zone& y) noexcept;
-    bool operator<(const time_zone& x, const time_zone& y) noexcept;
-    bool operator>(const time_zone& x, const time_zone& y) noexcept;
-    bool operator<=(const time_zone& x, const time_zone& y) noexcept;
-    bool operator>=(const time_zone& x, const time_zone& y) noexcept;
-
-    // 25.10.6, class template zoned_traits    // C++20
-    template<class T> struct zoned_traits;
-
-    // 25.10.7, class template zoned_time    // C++20
-    template<class Duration, class TimeZonePtr = const time_zone*> class zoned_time;
-    using zoned_seconds = zoned_time<seconds>;
-
-    template<class Duration1, class Duration2, class TimeZonePtr>
-    bool operator==(const zoned_time<Duration1, TimeZonePtr>& x,
-                    const zoned_time<Duration2, TimeZonePtr>& y);
-    template<class Duration1, class Duration2, class TimeZonePtr>
-    bool operator!=(const zoned_time<Duration1, TimeZonePtr>& x,
-                    const zoned_time<Duration2, TimeZonePtr>& y);
-
-    // 25.10.8, leap second support    // C++20
-    class leap;
-
-    bool operator==(const leap& x, const leap& y);
-    bool operator!=(const leap& x, const leap& y);
-    bool operator< (const leap& x, const leap& y);
-    bool operator> (const leap& x, const leap& y);
-    bool operator<=(const leap& x, const leap& y);
-    bool operator>=(const leap& x, const leap& y);
-    template<class Duration>
-    bool operator==(const leap& x, const sys_time<Duration>& y);
-    template<class Duration>
-    bool operator==(const sys_time<Duration>& x, const leap& y);
-    template<class Duration>
-    bool operator!=(const leap& x, const sys_time<Duration>& y);
-    template<class Duration>
-    bool operator!=(const sys_time<Duration>& x, const leap& y);
-    template<class Duration>
-    bool operator< (const leap& x, const sys_time<Duration>& y);
-    template<class Duration>
-    bool operator< (const sys_time<Duration>& x, const leap& y);
-    template<class Duration>
-    bool operator> (const leap& x, const sys_time<Duration>& y);
-    template<class Duration>
-    bool operator> (const sys_time<Duration>& x, const leap& y);
-    template<class Duration>
-    bool operator<=(const leap& x, const sys_time<Duration>& y);
-    template<class Duration>
-    bool operator<=(const sys_time<Duration>& x, const leap& y);
-    template<class Duration>
-    bool operator>=(const leap& x, const sys_time<Duration>& y);
-    template<class Duration>
-    bool operator>=(const sys_time<Duration>& x, const leap& y);
-
-    // 25.10.9, class link    // C++20
-    class link;
-    bool operator==(const link& x, const link& y);
-    bool operator!=(const link& x, const link& y);
-    bool operator< (const link& x, const link& y);
-    bool operator> (const link& x, const link& y);
-    bool operator<=(const link& x, const link& y);
-    bool operator>=(const link& x, const link& y);
-
-    // 25.11, formatting    // C++20
-    template<class charT, class Streamable>
-    basic_string<charT>
-    format(const charT* fmt, const Streamable& s);
+// 25.11, formatting    // C++20
+template<class charT, class Streamable>
+  basic_string<charT>
+format(const charT* fmt, const Streamable& s);
 
     template<class charT, class Streamable>
     basic_string<charT>
@@ -765,24 +640,24 @@ namespace std { namespace chrono {
   }  // chrono
 
   inline namespace literals {
-           inline namespace chrono_literals {
-                    constexpr chrono::hours                                 operator ""h(unsigned long long); // C++14
-                    constexpr chrono::duration<unspecified , ratio<3600,1>> operator ""h(long double); // C++14
-                    constexpr chrono::minutes                               operator ""min(unsigned long long); // C++14
-                    constexpr chrono::duration<unspecified , ratio<60,1>>   operator ""min(long double); // C++14
-                    constexpr chrono::seconds                               operator ""s(unsigned long long); // C++14
-                    constexpr chrono::duration<unspecified >                operator ""s(long double); // C++14
-                    constexpr chrono::milliseconds                          operator ""ms(unsigned long long); // C++14
-                    constexpr chrono::duration<unspecified , milli>         operator ""ms(long double); // C++14
-                    constexpr chrono::microseconds                          operator ""us(unsigned long long); // C++14
-                    constexpr chrono::duration<unspecified , micro>         operator ""us(long double); // C++14
-                    constexpr chrono::nanoseconds                           operator ""ns(unsigned long long); // C++14
-                    constexpr chrono::duration<unspecified , nano>          operator ""ns(long double); // C++14
-                    constexpr chrono::day                                   operator ""d(unsigned long long d) noexcept; // C++20
-                    constexpr chrono::year                                  operator ""y(unsigned long long y) noexcept; // C++20
-           }  // chrono_literals
-  }  // literals
-}  // std
+    inline namespace chrono_literals {
+      constexpr chrono::hours                                 operator ""h(unsigned long long); // C++14
+      constexpr chrono::duration<unspecified , ratio<3600,1>> operator ""h(long double); // C++14
+      constexpr chrono::minutes                               operator ""min(unsigned long long); // C++14
+      constexpr chrono::duration<unspecified , ratio<60,1>>   operator ""min(long double); // C++14
+      constexpr chrono::seconds                               operator ""s(unsigned long long); // C++14
+      constexpr chrono::duration<unspecified >                operator ""s(long double); // C++14
+      constexpr chrono::milliseconds                          operator ""ms(unsigned long long); // C++14
+      constexpr chrono::duration<unspecified , milli>         operator ""ms(long double); // C++14
+      constexpr chrono::microseconds                          operator ""us(unsigned long long); // C++14
+      constexpr chrono::duration<unspecified , micro>         operator ""us(long double); // C++14
+      constexpr chrono::nanoseconds                           operator ""ns(unsigned long long); // C++14
+      constexpr chrono::duration<unspecified , nano>          operator ""ns(long double); // C++14
+      constexpr chrono::day                                   operator ""d(unsigned long long d) noexcept; // C++20
+      constexpr chrono::year                                  operator ""y(unsigned long long y) noexcept; // C++20
+    }  // chrono_literals
+  } // literals
+} // std
 #endif // chrono_synopsis
 
 #include <__config>
@@ -1401,7 +1276,7 @@ typename enable_if
 >::type
 abs(duration<_Rep, _Period> __d)
 {
-    return __d >= __d.zero() ? __d : -__d;
+    return __d >= __d.zero() ? +__d : -__d;
 }
 
 // time_point ==
@@ -1781,7 +1656,7 @@ private:
     unsigned char __wd;
 public:
   weekday() = default;
-  inline explicit constexpr weekday(unsigned __val) noexcept : __wd(static_cast<unsigned char>(__val)) {}
+  inline explicit constexpr weekday(unsigned __val) noexcept : __wd(static_cast<unsigned char>(__val == 7 ? 0 : __val)) {}
   inline constexpr          weekday(const sys_days& __sysd) noexcept
           : __wd(__weekday_from_days(__sysd.time_since_epoch().count())) {}
   inline explicit constexpr weekday(const local_days& __locd) noexcept
@@ -1793,7 +1668,8 @@ public:
   inline constexpr weekday  operator--(int) noexcept { weekday __tmp = *this; --(*this); return __tmp; }
          constexpr weekday& operator+=(const days& __dd) noexcept;
          constexpr weekday& operator-=(const days& __dd) noexcept;
-  inline explicit constexpr operator unsigned() const noexcept { return __wd; }
+  inline constexpr unsigned c_encoding()   const noexcept { return __wd; }
+  inline constexpr unsigned iso_encoding() const noexcept { return __wd == 0u ? 7 : __wd; }
   inline constexpr bool ok() const noexcept { return __wd <= 6; }
          constexpr weekday_indexed operator[](unsigned __index) const noexcept;
          constexpr weekday_last    operator[](last_spec) const noexcept;
@@ -1813,7 +1689,7 @@ unsigned char weekday::__weekday_from_days(int __days) noexcept
 
 inline constexpr
 bool operator==(const weekday& __lhs, const weekday& __rhs) noexcept
-{ return static_cast<unsigned>(__lhs) == static_cast<unsigned>(__rhs); }
+{ return __lhs.c_encoding() == __rhs.c_encoding(); }
 
 inline constexpr
 bool operator!=(const weekday& __lhs, const weekday& __rhs) noexcept
@@ -1821,7 +1697,7 @@ bool operator!=(const weekday& __lhs, const weekday& __rhs) noexcept
 
 inline constexpr
 bool operator< (const weekday& __lhs, const weekday& __rhs) noexcept
-{ return static_cast<unsigned>(__lhs) <  static_cast<unsigned>(__rhs); }
+{ return __lhs.c_encoding() < __rhs.c_encoding(); }
 
 inline constexpr
 bool operator> (const weekday& __lhs, const weekday& __rhs) noexcept
@@ -1837,7 +1713,7 @@ bool operator>=(const weekday& __lhs, const weekday& __rhs) noexcept
 
 constexpr weekday operator+(const weekday& __lhs, const days& __rhs) noexcept
 {
-    auto const __mu = static_cast<long long>(static_cast<unsigned>(__lhs)) + __rhs.count();
+    auto const __mu = static_cast<long long>(__lhs.c_encoding()) + __rhs.count();
     auto const __yr = (__mu >= 0 ? __mu : __mu - 6) / 7;
     return weekday{static_cast<unsigned>(__mu - __yr * 7)};
 }
@@ -1850,7 +1726,7 @@ constexpr weekday operator-(const weekday& __lhs, const days& __rhs) noexcept
 
 constexpr days operator-(const weekday& __lhs, const weekday& __rhs) noexcept
 {
-    const int __wdu = static_cast<unsigned>(__lhs) - static_cast<unsigned>(__rhs);
+    const int __wdu = __lhs.c_encoding() - __rhs.c_encoding();
     const int __wk = (__wdu >= 0 ? __wdu : __wdu-6) / 7;
     return days{__wdu - __wk * 7};
 }
@@ -2685,6 +2561,83 @@ inline constexpr year_month_weekday_last& year_month_weekday_last::operator+=(co
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator-=(const months& __dm) noexcept { *this = *this - __dm; return *this; }
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator+=(const years& __dy)  noexcept { *this = *this + __dy; return *this; }
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator-=(const years& __dy)  noexcept { *this = *this - __dy; return *this; }
+
+template <class _Duration>
+class hh_mm_ss
+{
+private:
+    static_assert(__is_duration<_Duration>::value, "template parameter of hh_mm_ss must be a std::chrono::duration");
+    using __CommonType = common_type_t<_Duration, chrono::seconds>;
+
+    static constexpr uint64_t __pow10(unsigned __exp)
+    {
+        uint64_t __ret = 1;
+        for (unsigned __i = 0; __i < __exp; ++__i)
+            __ret *= 10U;
+        return __ret;
+    }
+
+    static constexpr unsigned __width(uint64_t __n, uint64_t __d = 10, unsigned __w = 0)
+    {
+        if (__n >= 2 && __d != 0 && __w < 19)
+            return 1 + __width(__n, __d % __n * 10, __w+1);
+        return 0;
+    }
+
+public:
+    static unsigned constexpr fractional_width = __width(__CommonType::period::den) < 19 ?
+                                                 __width(__CommonType::period::den) : 6u;
+    using precision = duration<typename __CommonType::rep, ratio<1, __pow10(fractional_width)>>;
+
+    constexpr hh_mm_ss() noexcept : hh_mm_ss{_Duration::zero()} {}
+
+    constexpr explicit hh_mm_ss(_Duration __d) noexcept :
+        __is_neg(__d < _Duration(0)),
+        __h(duration_cast<chrono::hours>  (abs(__d))),
+        __m(duration_cast<chrono::minutes>(abs(__d) - hours())),
+        __s(duration_cast<chrono::seconds>(abs(__d) - hours() - minutes())),
+        __f(duration_cast<precision>      (abs(__d) - hours() - minutes() - seconds()))
+        {}
+
+    constexpr bool is_negative()        const noexcept { return __is_neg; }
+    constexpr chrono::hours hours()     const noexcept { return __h; }
+    constexpr chrono::minutes minutes() const noexcept { return __m; }
+    constexpr chrono::seconds seconds() const noexcept { return __s; }
+    constexpr precision subseconds()    const noexcept { return __f; }
+
+    constexpr precision to_duration() const noexcept
+    {
+        auto __dur = __h + __m + __s + __f;
+        return __is_neg ? -__dur : __dur;
+    }
+
+    constexpr explicit operator precision() const noexcept { return to_duration(); }
+
+private:
+    bool            __is_neg;
+    chrono::hours   __h;
+    chrono::minutes __m;
+    chrono::seconds __s;
+    precision       __f;
+};
+
+constexpr bool is_am(const hours& __h) noexcept { return __h >= hours( 0) && __h < hours(12); }
+constexpr bool is_pm(const hours& __h) noexcept { return __h >= hours(12) && __h < hours(24); }
+
+constexpr hours make12(const hours& __h) noexcept
+{
+    if      (__h == hours( 0)) return hours(12);
+    else if (__h <= hours(12)) return __h;
+    else                       return __h - hours(12);
+}
+
+constexpr hours make24(const hours& __h, bool __is_pm) noexcept
+{
+    if (__is_pm)
+        return __h == hours(12) ? __h : __h + hours(12);
+    else
+        return __h == hours(12) ? hours(0) : __h;
+}
 
 } // chrono
 

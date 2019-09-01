@@ -533,7 +533,3 @@ __c_node::__remove(__i_node* p)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif

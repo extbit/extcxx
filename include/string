@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(string_synopsis)
+#if defined(_string_synopsis_)
 namespace std
 {
 
@@ -494,7 +493,7 @@ namespace std
   basic_string<char32_t> operator "" s( const char32_t *str, size_t len ); // C++14
 
 }  // std
-#endif // string_synopsis
+#endif // _string_synopsis_
 
 #include <__config>
 #include <string_view>
@@ -789,9 +788,7 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     basic_string(basic_string&& __str, const allocator_type& __a);
 
-#ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
-    template <class = typename enable_if<is_allocator_v<_Allocator>, nullptr_t>::type>
-#endif
+    template <class = typename enable_if_t<is_allocator_v<_Allocator>, nullptr_t>>
     _LIBCPP_INLINE_VISIBILITY
     basic_string(const _CharT* __s) {
       _LIBCPP_ASSERT(__s != nullptr, "basic_string(const char*) detected nullptr");
@@ -801,9 +798,7 @@ public:
 #   endif
     }
 
-#ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
-    template <class = typename enable_if<is_allocator_v<_Allocator>, nullptr_t>::type>
-#endif
+    template <class = typename enable_if_t<is_allocator_v<_Allocator>, nullptr_t>>
         _LIBCPP_INLINE_VISIBILITY
         basic_string(const _CharT* __s, const _Allocator& __a);
 
@@ -814,9 +809,7 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     basic_string(size_type __n, _CharT __c);
 
-#ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
-    template <class = typename enable_if<is_allocator_v<_Allocator>, nullptr_t>::type>
-#endif
+    template <class = typename enable_if_t<is_allocator_v<_Allocator>, nullptr_t>>
         _LIBCPP_INLINE_VISIBILITY
         basic_string(size_type __n, _CharT __c, const _Allocator& __a);
 
@@ -826,23 +819,23 @@ public:
     basic_string(const basic_string& __str, size_type __pos,
                  const _Allocator& __a = _Allocator());
 
-    template<class _Tp, class = typename enable_if<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>::type>
+    template<class _Tp, class = typename enable_if_t<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         basic_string(const _Tp& __t, size_type __pos, size_type __n,
                               const allocator_type& __a = allocator_type());
 
-    template<class _Tp, class = typename enable_if<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>::type>
+    template<class _Tp, class = typename enable_if_t<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         explicit basic_string(const _Tp& __t);
 
-    template<class _Tp, class = typename enable_if<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>::type>
+    template<class _Tp, class = typename enable_if_t<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>>
         _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         explicit basic_string(const _Tp& __t, const allocator_type& __a);
 
-    template<class _InputIterator, class = typename enable_if<__is_input_iterator<_InputIterator>::value>::type>
+    template<class _InputIterator, class = typename enable_if_t<__is_input_iterator<_InputIterator>::value>>
         _LIBCPP_INLINE_VISIBILITY
         basic_string(_InputIterator __first, _InputIterator __last);
-    template<class _InputIterator, class = typename enable_if<__is_input_iterator<_InputIterator>::value>::type>
+    template<class _InputIterator, class = typename enable_if_t<__is_input_iterator<_InputIterator>::value>>
         _LIBCPP_INLINE_VISIBILITY
         basic_string(_InputIterator __first, _InputIterator __last, const allocator_type& __a);
     _LIBCPP_INLINE_VISIBILITY
@@ -857,7 +850,7 @@ public:
 
     basic_string& operator=(const basic_string& __str);
 
-    template <class _Tp, class = typename enable_if<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>::type>
+    template <class _Tp, class = typename enable_if_t<__can_be_converted_to_string_view<_CharT, _Traits, _Tp>::value, void>>
     basic_string& operator=(const _Tp& __t)
         {__self_view __sv = __t; return assign(__sv);}
 
@@ -1604,8 +1597,8 @@ private:
 template<class _InputIterator,
          class _CharT = typename iterator_traits<_InputIterator>::value_type,
          class _Allocator = allocator<_CharT>,
-         class = typename enable_if<__is_input_iterator<_InputIterator>::value, void>::type,
-         class = typename enable_if<is_allocator_v<_Allocator>, void>::type
+         class = typename enable_if_t<__is_input_iterator<_InputIterator>::value, void>,
+         class = typename enable_if_t<is_allocator_v<_Allocator>, void>
          >
 basic_string(_InputIterator, _InputIterator, _Allocator = _Allocator())
   -> basic_string<_CharT, char_traits<_CharT>, _Allocator>;
@@ -1613,7 +1606,7 @@ basic_string(_InputIterator, _InputIterator, _Allocator = _Allocator())
 template<class _CharT,
          class _Traits,
          class _Allocator = allocator<_CharT>,
-         class = typename enable_if<is_allocator_v<_Allocator>, void>::type
+         class = typename enable_if_t<is_allocator_v<_Allocator>, void>
          >
 explicit basic_string(basic_string_view<_CharT, _Traits>, const _Allocator& = _Allocator())
   -> basic_string<_CharT, _Traits, _Allocator>;
@@ -1621,7 +1614,7 @@ explicit basic_string(basic_string_view<_CharT, _Traits>, const _Allocator& = _A
 template<class _CharT,
          class _Traits,
          class _Allocator = allocator<_CharT>,
-         class = typename enable_if<is_allocator_v<_Allocator>, void>::type,
+         class = typename enable_if_t<is_allocator_v<_Allocator>, void>,
          class _Sz = typename allocator_traits<_Allocator>::size_type
          >
 basic_string(basic_string_view<_CharT, _Traits>, _Sz, _Sz, const _Allocator& = _Allocator())
@@ -1742,9 +1735,7 @@ basic_string<_CharT, _Traits, _Allocator>::__init(const value_type* __s, size_ty
 }
 
 template <class _CharT, class _Traits, class _Allocator>
-#ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 template <class>
-#endif
 basic_string<_CharT, _Traits, _Allocator>::basic_string(const _CharT* __s, const _Allocator& __a)
     : __r_(__second_tag(), __a)
 {
@@ -1873,9 +1864,7 @@ basic_string<_CharT, _Traits, _Allocator>::basic_string(size_type __n, _CharT __
 }
 
 template <class _CharT, class _Traits, class _Allocator>
-#ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 template <class>
-#endif
 basic_string<_CharT, _Traits, _Allocator>::basic_string(size_type __n, _CharT __c, const _Allocator& __a)
     : __r_(__second_tag(), __a)
 {

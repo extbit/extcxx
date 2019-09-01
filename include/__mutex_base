@@ -24,6 +24,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 #  endif
 #endif  // _LIBCPP_THREAD_SAFETY_ANNOTATION
 
+
 class _LIBCPP_TYPE_VIS _LIBCPP_THREAD_SAFETY_ANNOTATION(capability("mutex")) mutex
 {
     __libcpp_mutex_t __m_ = _LIBCPP_MUTEX_INITIALIZER;
@@ -31,13 +32,17 @@ class _LIBCPP_TYPE_VIS _LIBCPP_THREAD_SAFETY_ANNOTATION(capability("mutex")) mut
 public:
     _LIBCPP_INLINE_VISIBILITY
     constexpr mutex() = default;
+
+    mutex(const mutex&) = delete;
+    mutex& operator=(const mutex&) = delete;
+
+#if defined(_LIBCPP_HAS_TRIVIAL_MUTEX_DESTRUCTION)
+    ~mutex() = default;
+#else
     ~mutex() noexcept;
+#endif
 
-private:
-    mutex(const mutex&);// = delete;
-    mutex& operator=(const mutex&);// = delete;
 
-public:
     void lock() _LIBCPP_THREAD_SAFETY_ANNOTATION(acquire_capability());
     bool try_lock() noexcept _LIBCPP_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true));
     void unlock() noexcept _LIBCPP_THREAD_SAFETY_ANNOTATION(release_capability());
@@ -78,10 +83,11 @@ private:
     mutex_type& __m_;
 public:
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCPP_NODISCARD_EXT _LIBCPP_INLINE_VISIBILITY
     explicit lock_guard(mutex_type& __m) _LIBCPP_THREAD_SAFETY_ANNOTATION(acquire_capability(__m))
         : __m_(__m) {__m_.lock();}
-    _LIBCPP_INLINE_VISIBILITY
+
+    _LIBCPP_NODISCARD_EXT _LIBCPP_INLINE_VISIBILITY
     lock_guard(mutex_type& __m, adopt_lock_t) _LIBCPP_THREAD_SAFETY_ANNOTATION(requires_capability(__m))
         : __m_(__m) {}
     _LIBCPP_INLINE_VISIBILITY
@@ -266,11 +272,15 @@ class _LIBCPP_TYPE_VIS condition_variable
 public:
     _LIBCPP_INLINE_VISIBILITY
     constexpr condition_variable() noexcept = default;
-    ~condition_variable();
 
-private:
-    condition_variable(const condition_variable&); // = delete;
-    condition_variable& operator=(const condition_variable&); // = delete;
+#ifdef _LIBCPP_HAS_TRIVIAL_CONDVAR_DESTRUCTION
+    ~condition_variable() = default;
+#else
+    ~condition_variable();
+#endif
+
+    condition_variable(const condition_variable&) = delete;
+    condition_variable& operator=(const condition_variable&) = delete;
 
 public:
     void notify_one() noexcept;

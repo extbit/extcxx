@@ -6,11 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#pragma GCC system_header
 #ifndef _LIBCPP_MATH_H
 #define _LIBCPP_MATH_H
+#if defined(_math_h_synopsis_)
 
-/*
     math.h synopsis
 
 Macros:
@@ -289,7 +288,9 @@ floating_point trunc (arithmetic x);
 float          truncf(float x);
 long double    truncl(long double x);
 
-*/
+#endif // _math_h_synopsis_
+
+#pragma GCC system_header
 
 #include <__config>
 

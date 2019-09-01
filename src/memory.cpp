@@ -229,7 +229,3 @@ align(size_t alignment, size_t size, void*& ptr, size_t& space)
 }
 
 _LIBCPP_END_NAMESPACE_STD
-
-#if defined(__unix__) &&  defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
-#pragma comment(lib, "pthread")
-#endif
