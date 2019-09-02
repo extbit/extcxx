@@ -963,7 +963,7 @@ typename enable_if
     void
 >::type
 swap(tuple<_Tp...>& __t, tuple<_Tp...>& __u)
-                 noexcept(__all<__is_nothrow_swappable<_Tp>::value...>::value)
+    noexcept(__all<__is_nothrow_swappable<_Tp>::value...>::value)
     {__t.swap(__u);}
 
 // get

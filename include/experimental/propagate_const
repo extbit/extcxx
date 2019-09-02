@@ -280,7 +280,8 @@ public:
     return *get();
   }
 
-  constexpr void swap(propagate_const& __pt) noexcept(__is_nothrow_swappable<_Tp>::value)
+  constexpr void swap(propagate_const& __pt)
+      noexcept(__is_nothrow_swappable<_Tp>::value)
   {
     using _VSTD::swap;
     swap(__t_, __pt.__t_);

@@ -520,8 +520,8 @@ struct _LIBCPP_TEMPLATE_VIS plus<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -540,8 +540,8 @@ struct _LIBCPP_TEMPLATE_VIS minus<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -560,8 +560,8 @@ struct _LIBCPP_TEMPLATE_VIS multiplies<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -580,8 +580,8 @@ struct _LIBCPP_TEMPLATE_VIS divides<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -600,8 +600,8 @@ struct _LIBCPP_TEMPLATE_VIS modulus<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -620,8 +620,8 @@ struct _LIBCPP_TEMPLATE_VIS negate<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_Tp&& __x) const
     noexcept(noexcept(- _VSTD::forward<_Tp>(__x)))
-    -> decltype        (- _VSTD::forward<_Tp>(__x))
-        { return        - _VSTD::forward<_Tp>(__x); }
+    -> decltype      (- _VSTD::forward<_Tp>(__x))
+        { return      - _VSTD::forward<_Tp>(__x); }
     typedef void is_transparent;
 };
 
@@ -640,8 +640,8 @@ struct _LIBCPP_TEMPLATE_VIS equal_to<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -660,8 +660,8 @@ struct _LIBCPP_TEMPLATE_VIS not_equal_to<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -680,8 +680,8 @@ struct _LIBCPP_TEMPLATE_VIS greater<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -702,8 +702,8 @@ struct _LIBCPP_TEMPLATE_VIS greater_equal<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -722,8 +722,8 @@ struct _LIBCPP_TEMPLATE_VIS less_equal<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -742,8 +742,8 @@ struct _LIBCPP_TEMPLATE_VIS logical_and<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -762,8 +762,8 @@ struct _LIBCPP_TEMPLATE_VIS logical_or<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -782,8 +782,8 @@ struct _LIBCPP_TEMPLATE_VIS logical_not<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_Tp&& __x) const
     noexcept(noexcept(!_VSTD::forward<_Tp>(__x)))
-    -> decltype        (!_VSTD::forward<_Tp>(__x))
-        { return        !_VSTD::forward<_Tp>(__x); }
+    -> decltype      (!_VSTD::forward<_Tp>(__x))
+        { return      !_VSTD::forward<_Tp>(__x); }
     typedef void is_transparent;
 };
 
@@ -802,8 +802,8 @@ struct _LIBCPP_TEMPLATE_VIS bit_and<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -822,8 +822,8 @@ struct _LIBCPP_TEMPLATE_VIS bit_or<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -842,8 +842,8 @@ struct _LIBCPP_TEMPLATE_VIS bit_xor<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 
@@ -862,8 +862,8 @@ struct _LIBCPP_TEMPLATE_VIS bit_not<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_Tp&& __x) const
     noexcept(noexcept(~_VSTD::forward<_Tp>(__x)))
-    -> decltype        (~_VSTD::forward<_Tp>(__x))
-        { return        ~_VSTD::forward<_Tp>(__x); }
+    -> decltype      (~_VSTD::forward<_Tp>(__x))
+        { return      ~_VSTD::forward<_Tp>(__x); }
     typedef void is_transparent;
 };
 

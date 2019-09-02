@@ -242,10 +242,9 @@ namespace std
     typedef unspecified node_type;    // C++17
 
     unordered_multimap()
-    noexcept(
-             is_nothrow_default_constructible<hasher>::value &&
-             is_nothrow_default_constructible<key_equal>::value &&
-             is_nothrow_default_constructible<allocator_type>::value);
+      noexcept(is_nothrow_default_constructible<hasher>::value &&
+               is_nothrow_default_constructible<key_equal>::value &&
+               is_nothrow_default_constructible<allocator_type>::value);
     explicit unordered_multimap(size_type n, const hasher& hf = hasher(),
                                 const key_equal& eql = key_equal(),
                                 const allocator_type& a = allocator_type());
@@ -258,8 +257,7 @@ namespace std
     unordered_multimap(const unordered_multimap&);
     unordered_multimap(const unordered_multimap&, const Allocator&);
     unordered_multimap(unordered_multimap&&)
-      noexcept(
-               is_nothrow_move_constructible<hasher>::value &&
+      noexcept(is_nothrow_move_constructible<hasher>::value &&
                is_nothrow_move_constructible<key_equal>::value &&
                is_nothrow_move_constructible<allocator_type>::value);
     unordered_multimap(unordered_multimap&&, const Allocator&);
@@ -285,8 +283,7 @@ namespace std
     ~unordered_multimap();
     unordered_multimap& operator=(const unordered_multimap&);
     unordered_multimap& operator=(unordered_multimap&&)
-      noexcept(
-               allocator_type::propagate_on_container_move_assignment::value &&
+      noexcept(allocator_type::propagate_on_container_move_assignment::value &&
                is_nothrow_move_assignable<allocator_type>::value &&
                is_nothrow_move_assignable<hasher>::value &&
                is_nothrow_move_assignable<key_equal>::value);
@@ -341,10 +338,10 @@ namespace std
 
     void swap(unordered_multimap&)
       noexcept(
-               (!allocator_type::propagate_on_container_swap::value ||
-                __is_nothrow_swappable<allocator_type>::value) &&
-               __is_nothrow_swappable<hasher>::value &&
-               __is_nothrow_swappable<key_equal>::value);
+          (!allocator_type::propagate_on_container_swap::value ||
+           __is_nothrow_swappable<allocator_type>::value) &&
+          __is_nothrow_swappable<hasher>::value &&
+          __is_nothrow_swappable<key_equal>::value);
 
     hasher hash_function() const;
     key_equal key_eq() const;

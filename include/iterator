@@ -1747,8 +1747,8 @@ auto crend(const _Cp& __c) -> decltype(_VSTD::rend(__c))
 //     constexpr _LIBCPP_INLINE_VISIBILITY
 //     auto operator()(_T1&& __t, _T2&& __u) const
 //     noexcept(noexcept(_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u)))
-//     -> decltype        (_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u))
-//         { return        _VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u); }
+//     -> decltype      (_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u))
+//         { return      _VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u); }
 //     typedef void is_transparent;
 // };
 
@@ -1756,8 +1756,8 @@ template <class _Cont>
 _LIBCPP_INLINE_VISIBILITY
 constexpr auto size(const _Cont& __c)
 noexcept(noexcept(__c.size()))
--> decltype        (__c.size())
-{ return            __c.size(); }
+-> decltype      (__c.size())
+{ return          __c.size(); }
 
 template <class _Tp, size_t _Sz>
 _LIBCPP_INLINE_VISIBILITY
@@ -1767,8 +1767,8 @@ template <class _Cont>
 _LIBCPP_INLINE_VISIBILITY
 constexpr auto ssize(const _Cont& __c)
 noexcept(noexcept(static_cast<common_type_t<ptrdiff_t, make_signed_t<decltype(__c.size())>>>(__c.size())))
-->                              common_type_t<ptrdiff_t, make_signed_t<decltype(__c.size())>>
-{ return            static_cast<common_type_t<ptrdiff_t, make_signed_t<decltype(__c.size())>>>(__c.size()); }
+->                            common_type_t<ptrdiff_t, make_signed_t<decltype(__c.size())>>
+{ return          static_cast<common_type_t<ptrdiff_t, make_signed_t<decltype(__c.size())>>>(__c.size()); }
 
 template <class _Tp, ptrdiff_t _Sz>
 _LIBCPP_INLINE_VISIBILITY
@@ -1778,8 +1778,8 @@ template <class _Cont>
 _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
 constexpr auto empty(const _Cont& __c)
 noexcept(noexcept(__c.empty()))
--> decltype        (__c.empty())
-{ return            __c.empty(); }
+-> decltype      (__c.empty())
+{ return          __c.empty(); }
 
 template <class _Tp, size_t _Sz>
 _LIBCPP_NODISCARD_AFTER_CXX17 _LIBCPP_INLINE_VISIBILITY
@@ -1791,14 +1791,15 @@ constexpr bool empty(initializer_list<_Ep> __il) noexcept { return __il.size() =
 
 template <class _Cont> constexpr
 _LIBCPP_INLINE_VISIBILITY
-auto data(_Cont& __c) noexcept(noexcept(__c.data())) -> decltype(__c.data())
-{ return __c.data(); }
+auto data(_Cont& __c) noexcept(noexcept(__c.data()))
+-> decltype(__c.data())
+{ return    __c.data(); }
 
 template <class _Cont> constexpr
 _LIBCPP_INLINE_VISIBILITY
 auto data(const _Cont& __c) noexcept(noexcept(__c.data()))
 -> decltype(__c.data())
-{ return __c.data(); }
+{ return    __c.data(); }
 
 template <class _Tp, size_t _Sz>
 _LIBCPP_INLINE_VISIBILITY

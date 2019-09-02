@@ -47,8 +47,8 @@ namespace std
     vector& operator=(const vector& x);
     vector& operator=(vector&& x)
       noexcept(
-               allocator_type::propagate_on_container_move_assignment::value ||
-               allocator_type::is_always_equal::value); // C++17
+          allocator_type::propagate_on_container_move_assignment::value ||
+          allocator_type::is_always_equal::value); // C++17
     vector& operator=(initializer_list<value_type> il);
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last);

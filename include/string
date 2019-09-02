@@ -120,8 +120,8 @@ namespace std
     basic_string& operator=(const T& t); // C++17
     basic_string& operator=(basic_string&& str)
       noexcept(
-               allocator_type::propagate_on_container_move_assignment::value ||
-               allocator_type::is_always_equal::value ); // C++17
+          allocator_type::propagate_on_container_move_assignment::value ||
+          allocator_type::is_always_equal::value ); // C++17
     basic_string& operator=(const value_type* s);
     basic_string& operator=(value_type c);
     basic_string& operator=(initializer_list<value_type>);

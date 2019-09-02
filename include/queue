@@ -424,7 +424,7 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     priority_queue()
         noexcept(is_nothrow_default_constructible<container_type>::value &&
-                   is_nothrow_default_constructible<value_compare>::value)
+                 is_nothrow_default_constructible<value_compare>::value)
         : c(), comp() {}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -437,13 +437,13 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     priority_queue(priority_queue&& __q)
         noexcept(is_nothrow_move_constructible<container_type>::value &&
-                   is_nothrow_move_constructible<value_compare>::value)
+                 is_nothrow_move_constructible<value_compare>::value)
         : c(_VSTD::move(__q.c)), comp(_VSTD::move(__q.comp)) {}
 
     _LIBCPP_INLINE_VISIBILITY
     priority_queue& operator=(priority_queue&& __q)
         noexcept(is_nothrow_move_assignable<container_type>::value &&
-                   is_nothrow_move_assignable<value_compare>::value)
+                 is_nothrow_move_assignable<value_compare>::value)
         {c = _VSTD::move(__q.c); comp = _VSTD::move(__q.comp); return *this;}
 
     _LIBCPP_INLINE_VISIBILITY
@@ -518,7 +518,7 @@ public:
     _LIBCPP_INLINE_VISIBILITY
     void swap(priority_queue& __q)
         noexcept(__is_nothrow_swappable<container_type>::value &&
-                   __is_nothrow_swappable<value_compare>::value);
+                 __is_nothrow_swappable<value_compare>::value);
 };
 
 #ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
@@ -726,7 +726,7 @@ inline
 void
 priority_queue<_Tp, _Container, _Compare>::swap(priority_queue& __q)
         noexcept(__is_nothrow_swappable<container_type>::value &&
-                   __is_nothrow_swappable<value_compare>::value)
+                 __is_nothrow_swappable<value_compare>::value)
 {
     using _VSTD::swap;
     swap(c, __q.c);

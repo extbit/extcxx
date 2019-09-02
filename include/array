@@ -411,7 +411,7 @@ typename enable_if
     void
 >::type
 swap(array<_Tp, _Size>& __x, array<_Tp, _Size>& __y)
-  noexcept(noexcept(__x.swap(__y)))
+    noexcept(noexcept(__x.swap(__y)))
 {
     __x.swap(__y);
 }

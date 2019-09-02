@@ -54,8 +54,8 @@ namespace std
     forward_list& operator=(const forward_list& x);
     forward_list& operator=(forward_list&& x)
       noexcept(
-               allocator_type::propagate_on_container_move_assignment::value &&
-               is_nothrow_move_assignable<allocator_type>::value);
+        allocator_type::propagate_on_container_move_assignment::value &&
+        is_nothrow_move_assignable<allocator_type>::value);
     forward_list& operator=(initializer_list<value_type> il);
 
     template <class InputIterator>
@@ -997,8 +997,8 @@ inline
 forward_list<_Tp, _Alloc>&
 forward_list<_Tp, _Alloc>::operator=(forward_list&& __x)
     noexcept(
-             __node_traits::propagate_on_container_move_assignment::value &&
-             is_nothrow_move_assignable<allocator_type>::value)
+        __node_traits::propagate_on_container_move_assignment::value &&
+        is_nothrow_move_assignable<allocator_type>::value)
 {
     __move_assign(__x, integral_constant<bool,
           __node_traits::propagate_on_container_move_assignment::value>());

@@ -52,8 +52,8 @@ struct _LIBCPP_TEMPLATE_VIS less<void>
     constexpr _LIBCPP_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
     noexcept(noexcept(_VSTD::forward<_T1>(__t) < _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) < _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) < _VSTD::forward<_T2>(__u); }
+    -> decltype      (_VSTD::forward<_T1>(__t) < _VSTD::forward<_T2>(__u))
+        { return      _VSTD::forward<_T1>(__t) < _VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 

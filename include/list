@@ -56,8 +56,8 @@ namespace std
     list& operator=(const list& x);
     list& operator=(list&& x)
       noexcept(
-               allocator_type::propagate_on_container_move_assignment::value &&
-               is_nothrow_move_assignable<allocator_type>::value);
+          allocator_type::propagate_on_container_move_assignment::value &&
+          is_nothrow_move_assignable<allocator_type>::value);
     list& operator=(initializer_list<value_type>);
     template <class Iter>
     void assign(Iter first, Iter last);
