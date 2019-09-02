@@ -1202,7 +1202,9 @@ __cxa_call_unexpected(void* arg)
         call_terminate(false, unwind_exception);
     __cxa_begin_catch(unwind_exception);
     bool native_old_exception = __isOurExceptionClass(unwind_exception);
+#if 0
     std::unexpected_handler u_handler;
+#endif
     std::terminate_handler t_handler;
     __cxa_exception* old_exception_header = 0;
     int64_t ttypeIndex;
@@ -1211,7 +1213,9 @@ __cxa_call_unexpected(void* arg)
     {
         old_exception_header = (__cxa_exception*)(unwind_exception+1) - 1;
         t_handler = old_exception_header->terminateHandler;
+#if 0
         u_handler = old_exception_header->unexpectedHandler;
+#endif
         // If std::__unexpected(u_handler) rethrows the same exception,
         //   these values get overwritten by the rethrow.  So save them now:
 #if defined(_LIBCXXABI_ARM_EHABI)
@@ -1225,8 +1229,11 @@ __cxa_call_unexpected(void* arg)
     else
     {
         t_handler = std::get_terminate();
+#if 0
         u_handler = std::get_unexpected();
+#endif
     }
+#if 0
     try
     {
         std::__unexpected(u_handler);
@@ -1316,6 +1323,7 @@ __cxa_call_unexpected(void* arg)
             }
         }
     }
+#endif
     std::__terminate(t_handler);
 }
 

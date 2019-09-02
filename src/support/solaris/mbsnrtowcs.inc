@@ -1,6 +1,4 @@
-
-
-/*-
+/*-*- c++ -*-
  * As noted in the source, some portions of this implementation are copied from
  * FreeBSD libc.  These are covered by the following copyright:
  *

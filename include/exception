@@ -8,10 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-/*
-    exception synopsis
-
+#if false&&0 // exception synopsis
 namespace std
 {
 
@@ -36,10 +33,10 @@ public:
     virtual const char* what() const noexcept;
 };
 
-typedef void (*unexpected_handler)();
-unexpected_handler set_unexpected(unexpected_handler  f ) noexcept;
-unexpected_handler get_unexpected() noexcept;
-[[noreturn]] void unexpected();
+typedef void (*unexpected_handler)(); // Removed since C++17
+unexpected_handler set_unexpected(unexpected_handler f) noexcept; // Removed since C++17
+unexpected_handler get_unexpected() noexcept; // Removed since C++17
+[[noreturn]] void unexpected(); // Removed since C++17
 
 typedef void (*terminate_handler)();
 terminate_handler set_terminate(terminate_handler  f ) noexcept;
@@ -72,8 +69,7 @@ template <class T> [[noreturn]] void throw_with_nested(T&& t);
 template <class E> void rethrow_if_nested(const E& e);
 
 }  // std
-
-*/
+#endif // exception synopsis
 
 #include <__config>
 #include <cstddef>
@@ -107,13 +103,11 @@ public:
 };
 #endif // !_LIBCPP_ABI_VCRUNTIME
 
-#if defined(_LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS) \
-    || defined(_LIBCPP_BUILDING_LIBRARY)
-typedef void (*unexpected_handler)();
-_LIBCPP_FUNC_VIS unexpected_handler set_unexpected(unexpected_handler) noexcept;
-_LIBCPP_FUNC_VIS unexpected_handler get_unexpected() noexcept;
-[[noreturn]] _LIBCPP_FUNC_VIS void unexpected();
-#endif
+[[deprecated("Removed in C++17")]]
+typedef void (*unexpected_handler)(); // zombie names
+unexpected_handler set_unexpected(unexpected_handler) noexcept = delete;
+unexpected_handler get_unexpected() noexcept = delete;
+[[noreturn]] _LIBCPP_FUNC_VIS void unexpected() = delete;
 
 typedef void (*terminate_handler)();
 _LIBCPP_FUNC_VIS terminate_handler set_terminate(terminate_handler) noexcept;

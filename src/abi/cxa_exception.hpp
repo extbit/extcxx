@@ -39,7 +39,11 @@ struct _LIBCXXABI_HIDDEN __cxa_exception {
     //  Manage the exception object itself.
     std::type_info *exceptionType;
     void (*exceptionDestructor)(void *);
+#if 0
     std::unexpected_handler unexpectedHandler;
+#else
+    void (*__unused_unexpected_handler)();
+#endif
     std::terminate_handler  terminateHandler;
 
     __cxa_exception *nextException;
@@ -76,7 +80,11 @@ struct _LIBCXXABI_HIDDEN __cxa_dependent_exception {
 
     std::type_info *exceptionType;
     void (*exceptionDestructor)(void *);
+#if 0
     std::unexpected_handler unexpectedHandler;
+#else
+    void (*__unused_unexpected_handler)();
+#endif
     std::terminate_handler terminateHandler;
 
     __cxa_exception *nextException;

@@ -15,9 +15,10 @@
 namespace std
 {
 
+#if 0
 _LIBCXXABI_HIDDEN _LIBCXXABI_NORETURN
-void
-__unexpected(unexpected_handler func);
+void __unexpected(unexpected_handler func);
+#endif
 
 _LIBCXXABI_HIDDEN _LIBCXXABI_NORETURN
 void __terminate(terminate_handler func) noexcept;
@@ -28,7 +29,9 @@ extern "C"
 {
 
 _LIBCXXABI_DATA_VIS extern void (*__cxa_terminate_handler)();
+#if 0
 _LIBCXXABI_DATA_VIS extern void (*__cxa_unexpected_handler)();
+#endif
 _LIBCXXABI_DATA_VIS extern void (*__cxa_new_handler)();
 
 /*

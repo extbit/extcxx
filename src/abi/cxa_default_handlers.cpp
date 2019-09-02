@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //
-// This file implements the default terminate_handler and unexpected_handler.
+// This file implements the default terminate_handler.
 //===----------------------------------------------------------------------===//
 
 #include <stdexcept>
@@ -75,18 +75,24 @@ static void demangling_terminate_handler()
     abort_message("terminating");
 }
 
+#if 0
 __attribute__((noreturn))
 static void demangling_unexpected_handler()
 {
     cause = "unexpected";
     std::terminate();
 }
+#endif
 
 static std::terminate_handler default_terminate_handler = demangling_terminate_handler;
+#if 0
 static std::terminate_handler default_unexpected_handler = demangling_unexpected_handler;
+#endif
 #else
 static std::terminate_handler default_terminate_handler = std::abort;
+#if 0
 static std::terminate_handler default_unexpected_handler = std::terminate;
+#endif
 #endif
 
 //
@@ -95,20 +101,8 @@ static std::terminate_handler default_unexpected_handler = std::terminate;
 _LIBCXXABI_DATA_VIS
 std::terminate_handler __cxa_terminate_handler = default_terminate_handler;
 
-_LIBCXXABI_DATA_VIS
-std::unexpected_handler __cxa_unexpected_handler = default_unexpected_handler;
-
 namespace std
 {
-
-unexpected_handler
-set_unexpected(unexpected_handler func) noexcept
-{
-    if (func == 0)
-        func = default_unexpected_handler;
-    return __libcpp_atomic_exchange(&__cxa_unexpected_handler, func,
-                                    _AO_Acq_Rel);
-}
 
 terminate_handler
 set_terminate(terminate_handler func) noexcept

@@ -6,7 +6,7 @@
 //
 //
 // This file implements the functionality associated with the terminate_handler,
-//   unexpected_handler, and new_handler.
+// unexpected_handler, and new_handler.
 //===----------------------------------------------------------------------===//
 
 #include <stdexcept>
@@ -22,6 +22,7 @@
 namespace std
 {
 
+#if 0
 unexpected_handler get_unexpected() noexcept
 {
     return __libcpp_atomic_load(&__cxa_unexpected_handler, _AO_Acquire);
@@ -39,6 +40,7 @@ void unexpected()
 {
     __unexpected(get_unexpected());
 }
+#endif
 
 terminate_handler get_terminate() noexcept
 {

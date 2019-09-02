@@ -1,4 +1,4 @@
-/*-
+/*-*- c++ -*-
  * Copyright (c) 2002-2004 Tim J. Robbins.
  *
  * Redistribution and use in source and binary forms, with or without
