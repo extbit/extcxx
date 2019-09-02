@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(propagate_const_synopsis)
+#if false&&0 // propagate_const synopsis
 namespace std { namespace experimental { inline namespace fundamentals_v2 {
 
     // [propagate_const]
@@ -101,7 +100,7 @@ namespace std { namespace experimental { inline namespace fundamentals_v2 {
   template <class T> struct greater_equal<experimental::fundamentals_v2::propagate_const<T>>;
 
 } // namespace std
-#endif // propagate_const_synopsis
+#endif // propagate_const synopsis
 
 #include <experimental/__config>
 

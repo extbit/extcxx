@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_coroutine_synopsis)
+#if false&&0 // experimental coroutine synopsis
 // C++next
 namespace std {
 namespace experimental {
@@ -38,8 +37,7 @@ template <class P> struct hash<coroutine_handle<P>>;
 } // namespace coroutines_v1
 } // namespace experimental
 } // namespace std
-
-#endif // experimental_coroutine_synopsis
+#endif // experimental coroutine synopsis
 
 #include <experimental/__config>
 #include <new>

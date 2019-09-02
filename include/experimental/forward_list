@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_forward_list_synopsis)
+#if false&&0 // experimental forward_list synopsis
 // C++1z
 namespace std {
 namespace experimental {
@@ -23,7 +22,7 @@ namespace pmr {
 } // namespace fundamentals_v1
 } // namespace experimental
 } // namespace std
-#endif // experimental_forward_list_synopsis
+#endif // experimental forward_list synopsis
 
 #include <experimental/__config>
 #include <forward_list>

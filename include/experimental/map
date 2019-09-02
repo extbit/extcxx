@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_map_synopsis)
+#if false&&0 // experimental map synopsis
 // C++1z
 namespace std {
 namespace experimental {
@@ -28,7 +27,7 @@ namespace pmr {
 } // namespace fundamentals_v1
 } // namespace experimental
 } // namespace std
-#endif // experimental_map_synopsis
+#endif // experimental map synopsis
 
 #include <experimental/__config>
 #include <map>

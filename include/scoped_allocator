@@ -8,9 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-/*
-    scoped_allocator synopsis
-
+#if false&&0 // scoped_allocator synopsis
 namespace std
 {
 
@@ -100,8 +98,7 @@ template <class OuterA1, class OuterA2, class... InnerAllocs>
                const scoped_allocator_adaptor<OuterA2, InnerAllocs...>& b) noexcept;
 
 }  // std
-
-*/
+#endif // scoped_allocator synopsis
 
 #include <__config>
 #include <memory>

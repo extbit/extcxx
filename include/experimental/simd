@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_simd_synopsis)
+#if false&&0 // experimental simd synopsis
 namespace std::experimental {
 
 inline namespace parallelism_v2 {
@@ -644,7 +643,7 @@ public:
 
 } // parallelism_v2
 } // std::experimental
-#endif // experimental_simd_synopsis
+#endif // experimental simd synopsis
 
 #include <experimental/__config>
 #include <algorithm>

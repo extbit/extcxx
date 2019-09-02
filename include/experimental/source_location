@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(experimental_source_location_synopsis)
+#if false&&0 // experimental source_location synopsis
 namespace std {
 namespace experimental {
 inline namespace fundamentals_v2 {
@@ -29,7 +29,7 @@ inline namespace fundamentals_v2 {
 } // namespace fundamentals_v2
 } // namespace experimental
 } // namespace std
-#endif
+#endif // experimental source_location synopsis
 
 #include <experimental/__config>
 #include <stdint.h>

@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_memory_resource_synopsis)
+#if false&&0 // experimental memory_resource synopsis
 // C++1y
 namespace std {
 namespace experimental {
@@ -57,7 +56,7 @@ namespace pmr {
 } // namespace fundamentals_v1
 } // namespace experimental
 } // namespace std
-#endif // experimental_memory_resource_synopsis
+#endif // experimental memory_resource synopsis
 
 #include <experimental/__config>
 #include <experimental/__memory>

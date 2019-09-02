@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(ratio_synopsis)
+#if false&&0 // ratio synopsis
 namespace std
 {
 

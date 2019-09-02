@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(filesystem_synopsis)
+#if false&&0 // filesystem synopsis
 namespace std { namespace experimental { namespace filesystem { inline namespace v1 {
 
     class path;
@@ -225,7 +224,7 @@ namespace std { namespace experimental { namespace filesystem { inline namespace
 
 
 } } } }  // namespaces std::experimental::filesystem::v1
-#endif // filesystem_synopsis
+#endif // filesystem synopsis
 
 #include <experimental/__config>
 #include <filesystem>

@@ -8,9 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_deque_synopsis)
-
+#if false&&0 // experimental deque synopsis
 // C++1z
 namespace std {
 namespace experimental {
@@ -24,8 +22,7 @@ namespace pmr {
 } // namespace fundamentals_v1
 } // namespace experimental
 } // namespace std
-
-#endif // experimental_deque_synopsis
+#endif // experimental deque synopsis
 
 #include <experimental/__config>
 #include <deque>

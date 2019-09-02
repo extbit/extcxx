@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(iterator_synopsis)
+#if false&&0 // iterator synopsis
 namespace std {
   namespace experimental {
     inline namespace fundamentals_v2 {
@@ -48,7 +47,7 @@ namespace std {
     } // inline namespace fundamentals_v2
   } // namespace experimental
 } // namespace std
-#endif // iterator_synopsis
+#endif // iterator synopsis
 
 #include <experimental/__config>
 

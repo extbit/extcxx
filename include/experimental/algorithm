@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_algorithm_synopsis)
+#if false&&0 // experimental algorithm synopsis
 namespace std { namespace experimental { inline namespace fundamentals_v1 {
 
       template <class ForwardIterator, class Searcher>
@@ -21,7 +20,7 @@ namespace std { namespace experimental { inline namespace fundamentals_v1 {
     } // namespace fundamentals_v1
   } // namespace experimental
 } // namespace std
-#endif experimental_algorithm_synopsis
+#endif // experimental algorithm synopsis
 
 #include <experimental/__config>
 #include <algorithm>

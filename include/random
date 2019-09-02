@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(random_synopsis)
+#if false&&0 // random synopsis
 #include <initializer_list>
 namespace std
 {

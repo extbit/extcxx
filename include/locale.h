@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(locale_h_synopsis)
+#if false&&0 // locale.h synopsis
 
 Macros:
 
@@ -28,8 +28,7 @@ Functions:
    setlocale
    localeconv
 
-#endif // locale_h_synopsis
+#endif // locale.h synopsis
 
 #include <__config>
-
 #include_next <locale.h>
