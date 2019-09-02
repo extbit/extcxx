@@ -59,8 +59,8 @@ namespace
 {
 
   typedef mutex mutex_type;
-  typedef lock_guard<mutex_type> WLock;
-  typedef lock_guard<mutex_type> RLock;
+  typedef scoped_lock<mutex_type> WLock;
+  typedef scoped_lock<mutex_type> RLock;
 
   mutex_type&
   mut()
