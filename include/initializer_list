@@ -8,10 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-/*
-    initializer_list synopsis
-
+#if false&&0 // initializer_list synopsis
 namespace std
 {
 
@@ -38,8 +35,7 @@ template<class E> const E* begin(initializer_list<E> il) noexcept; // constexpr 
 template<class E> const E* end(initializer_list<E> il) noexcept; // constexpr in C++14
 
 }  // std
-
-*/
+#endif // initializer_list synopsis
 
 #include <__config>
 #include <cstddef>

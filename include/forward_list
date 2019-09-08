@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(forward_list_synopsis)
+#if false&&0 // forward_list synopsis
 namespace std
 {
 
@@ -171,7 +170,7 @@ namespace std
   void erase_if(forward_list<T, Allocator>& c, Predicate pred);    // C++20
 
 } // std
-#endif // forward_list_synopsis
+#endif // forward_list synopsis
 
 #include <__config>
 #include <initializer_list>

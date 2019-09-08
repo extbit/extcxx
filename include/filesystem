@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(filesystem_synopsis)
+#if false&&0 // filesystem synopsis
 namespace std { namespace filesystem {
 
     class path;
@@ -223,9 +222,8 @@ namespace std { namespace filesystem {
     path weakly_canonical(path const& p);
     path weakly_canonical(path const& p, error_code& ec);
 
-
 } }  // namespaces std::filesystem
-#endif // filesystem_synopsis
+#endif // filesystem synopsis
 
 #include <__config>
 #include <cstddef>

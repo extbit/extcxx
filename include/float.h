@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(float_h_synopsis)
+#if false&&0 // float.h synopsis
 
 Macros:
 
@@ -65,7 +65,7 @@ Macros:
     DBL_TRUE_MIN        // C11
     LDBL_TRUE_MIN       // C11
 
-#endif // float_h_synopsis
+#endif // float.h synopsis
 
 #include <__config>
 

@@ -8,10 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-/*
-    future synopsis
-
+#if false&&0 // future synopsis
 namespace std
 {
 
@@ -357,8 +354,7 @@ template <class R>
 template <class R, class Alloc> struct uses_allocator<packaged_task<R>, Alloc>;
 
 }  // std
-
-*/
+#endif // future synopsis
 
 #include <__config>
 #include <system_error>

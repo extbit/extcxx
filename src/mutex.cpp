@@ -87,7 +87,7 @@ timed_mutex::timed_mutex()
 
 timed_mutex::~timed_mutex()
 {
-    lock_guard<mutex> _(__m_);
+    scoped_lock<mutex> _(__m_);
 }
 
 void
@@ -114,7 +114,7 @@ timed_mutex::try_lock() noexcept
 void
 timed_mutex::unlock() noexcept
 {
-    lock_guard<mutex> _(__m_);
+    scoped_lock<mutex> _(__m_);
     __locked_ = false;
     __cv_.notify_one();
 }
@@ -129,7 +129,7 @@ recursive_timed_mutex::recursive_timed_mutex()
 
 recursive_timed_mutex::~recursive_timed_mutex()
 {
-    lock_guard<mutex> _(__m_);
+    scoped_lock<mutex> _(__m_);
 }
 
 void

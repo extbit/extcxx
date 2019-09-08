@@ -9,7 +9,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(format_synopsis)
+#if false&&0 // format synopsis
 namespace std {
   // [format.error], class format_error
   class format_error;
@@ -84,7 +84,7 @@ namespace std {
   template<class... Args>
     size_t formatted_size(wstring_view fmt, const Args&... args);
 }
-#endif
+#endif // format synopsis
 
 #include <__config>
 #include <charconv>
