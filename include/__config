@@ -480,6 +480,8 @@ typedef __char32_t char32_t;
 #define _LIBCPP_HAS_NO_CXX20_CHRONO_LITERALS
 #endif
 
+#define _LIBCPP_DISABLE_EXTENSION_WARNING __extension__
+
 #elif defined(_LIBCPP_COMPILER_GCC)
 
 #define _ALIGNAS(x) __attribute__((__aligned__(x)))
@@ -515,6 +517,8 @@ typedef __char32_t char32_t;
 
 #define _LIBCPP_ALWAYS_INLINE __attribute__ ((__always_inline__))
 
+#define _LIBCPP_DISABLE_EXTENSION_WARNING __extension__
+
 #elif defined(_LIBCPP_COMPILER_MSVC)
 
 #define _LIBCPP_TOSTRING2(x) #x
@@ -540,6 +544,8 @@ typedef __char32_t char32_t;
 
 #define _LIBCPP_HAS_NO_VECTOR_EXTENSION
 
+#define _LIBCPP_DISABLE_EXTENSION_WARNING
+
 #elif defined(_LIBCPP_COMPILER_IBM)
 
 #define _ALIGNAS(x) __attribute__((__aligned__(x)))
@@ -559,6 +565,8 @@ typedef __char32_t char32_t;
 #define _LIBCPP_ALWAYS_INLINE __attribute__ ((__always_inline__))
 
 #define _LIBCPP_HAS_NO_VECTOR_EXTENSION
+
+#define _LIBCPP_DISABLE_EXTENSION_WARNING
 
 #endif // _LIBCPP_COMPILER_[CLANG|GCC|MSVC|IBM]
 
@@ -1141,6 +1149,13 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 #ifdef __CloudABI__
 #define _LIBCPP_HAS_NO_STDIN
 #define _LIBCPP_HAS_NO_STDOUT
+#endif
+
+// Some systems do not provide gets() in their C library, for security reasons.
+#ifndef _LIBCPP_C_HAS_NO_GETS
+#  if defined(_LIBCPP_MSVCRT) || (defined(__FreeBSD__) && __FreeBSD__ >= 13)
+#    define _LIBCPP_C_HAS_NO_GETS
+#  endif
 #endif
 
 #if defined(__BIONIC__) || defined(__CloudABI__) ||                            \
