@@ -8,11 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-/*
-
-    typeindex synopsis
-
+#if false&&0 // typeindex synopsis
 namespace std
 {
 
@@ -39,9 +35,8 @@ struct hash<type_index>
     size_t operator()(type_index index) const noexcept;
 };
 
-}  // std
-
-*/
+} // std
+#endif // typeindex synopsis
 
 #include <__config>
 #include <typeinfo>

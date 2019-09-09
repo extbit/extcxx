@@ -1277,10 +1277,10 @@ template<class _InputIterator,
          class _Hash = hash<__iter_key_type<_InputIterator>>,
          class _Pred = equal_to<__iter_key_type<_InputIterator>>,
          class _Allocator = allocator<__iter_to_alloc_type<_InputIterator>>,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<!__is_allocator<_Pred>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<!is_allocator_v<_Pred>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(_InputIterator, _InputIterator, typename allocator_traits<_Allocator>::size_type = 0,
               _Hash = _Hash(), _Pred = _Pred(), _Allocator = _Allocator())
   -> unordered_map<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>, _Hash, _Pred, _Allocator>;
@@ -1288,52 +1288,52 @@ unordered_map(_InputIterator, _InputIterator, typename allocator_traits<_Allocat
 template<class _Key, class _Tp, class _Hash = hash<remove_const_t<_Key>>,
          class _Pred = equal_to<remove_const_t<_Key>>,
          class _Allocator = allocator<pair<const _Key, _Tp>>,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<!__is_allocator<_Pred>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<!is_allocator_v<_Pred>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(initializer_list<pair<_Key, _Tp>>, typename allocator_traits<_Allocator>::size_type = 0,
               _Hash = _Hash(), _Pred = _Pred(), _Allocator = _Allocator())
   -> unordered_map<remove_const_t<_Key>, _Tp, _Hash, _Pred, _Allocator>;
 
 template<class _InputIterator, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(_InputIterator, _InputIterator, typename allocator_traits<_Allocator>::size_type, _Allocator)
   -> unordered_map<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>,
                    hash<__iter_key_type<_InputIterator>>, equal_to<__iter_key_type<_InputIterator>>, _Allocator>;
 
 template<class _InputIterator, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(_InputIterator, _InputIterator, _Allocator)
   -> unordered_map<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>,
                    hash<__iter_key_type<_InputIterator>>, equal_to<__iter_key_type<_InputIterator>>, _Allocator>;
 
 template<class _InputIterator, class _Hash, class _Allocator,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(_InputIterator, _InputIterator, typename allocator_traits<_Allocator>::size_type, _Hash, _Allocator)
   -> unordered_map<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>,
                    _Hash, equal_to<__iter_key_type<_InputIterator>>, _Allocator>;
 
 template<class _Key, class _Tp, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(initializer_list<pair<_Key, _Tp>>, typename allocator_traits<_Allocator>::size_type, _Allocator)
   -> unordered_map<remove_const_t<_Key>, _Tp,
                    hash<remove_const_t<_Key>>,
                    equal_to<remove_const_t<_Key>>, _Allocator>;
 
 template<class _Key, class _Tp, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(initializer_list<pair<_Key, _Tp>>, _Allocator)
   -> unordered_map<remove_const_t<_Key>, _Tp,
                    hash<remove_const_t<_Key>>,
                    equal_to<remove_const_t<_Key>>, _Allocator>;
 
 template<class _Key, class _Tp, class _Hash, class _Allocator,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_map(initializer_list<pair<_Key, _Tp>>, typename allocator_traits<_Allocator>::size_type, _Hash, _Allocator)
   -> unordered_map<remove_const_t<_Key>, _Tp, _Hash,
                    equal_to<remove_const_t<_Key>>, _Allocator>;
@@ -1897,7 +1897,6 @@ public:
                        "merging container with incompatible allocator");
         return __table_.__node_handle_merge_multi(__source.__table_);
     }
-#endif
 
     _LIBCPP_INLINE_VISIBILITY
     void swap(unordered_multimap& __u)
@@ -1985,10 +1984,10 @@ template<class _InputIterator,
          class _Hash = hash<__iter_key_type<_InputIterator>>,
          class _Pred = equal_to<__iter_key_type<_InputIterator>>,
          class _Allocator = allocator<__iter_to_alloc_type<_InputIterator>>,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<!__is_allocator<_Pred>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<!is_allocator_v<_Pred>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(_InputIterator, _InputIterator, typename allocator_traits<_Allocator>::size_type = 0,
                    _Hash = _Hash(), _Pred = _Pred(), _Allocator = _Allocator())
   -> unordered_multimap<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>, _Hash, _Pred, _Allocator>;
@@ -1996,52 +1995,52 @@ unordered_multimap(_InputIterator, _InputIterator, typename allocator_traits<_Al
 template<class _Key, class _Tp, class _Hash = hash<remove_const_t<_Key>>,
          class _Pred = equal_to<remove_const_t<_Key>>,
          class _Allocator = allocator<pair<const _Key, _Tp>>,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<!__is_allocator<_Pred>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<!is_allocator_v<_Pred>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(initializer_list<pair<_Key, _Tp>>, typename allocator_traits<_Allocator>::size_type = 0,
                    _Hash = _Hash(), _Pred = _Pred(), _Allocator = _Allocator())
   -> unordered_multimap<remove_const_t<_Key>, _Tp, _Hash, _Pred, _Allocator>;
 
 template<class _InputIterator, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(_InputIterator, _InputIterator, typename allocator_traits<_Allocator>::size_type, _Allocator)
   -> unordered_multimap<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>,
                         hash<__iter_key_type<_InputIterator>>, equal_to<__iter_key_type<_InputIterator>>, _Allocator>;
 
 template<class _InputIterator, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(_InputIterator, _InputIterator, _Allocator)
   -> unordered_multimap<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>,
                         hash<__iter_key_type<_InputIterator>>, equal_to<__iter_key_type<_InputIterator>>, _Allocator>;
 
 template<class _InputIterator, class _Hash, class _Allocator,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(_InputIterator, _InputIterator, typename allocator_traits<_Allocator>::size_type, _Hash, _Allocator)
   -> unordered_multimap<__iter_key_type<_InputIterator>, __iter_mapped_type<_InputIterator>,
                         _Hash, equal_to<__iter_key_type<_InputIterator>>, _Allocator>;
 
 template<class _Key, class _Tp, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(initializer_list<pair<_Key, _Tp>>, typename allocator_traits<_Allocator>::size_type, _Allocator)
   -> unordered_multimap<remove_const_t<_Key>, _Tp,
                         hash<remove_const_t<_Key>>,
                         equal_to<remove_const_t<_Key>>, _Allocator>;
 
 template<class _Key, class _Tp, class _Allocator,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(initializer_list<pair<_Key, _Tp>>, _Allocator)
   -> unordered_multimap<remove_const_t<_Key>, _Tp,
                         hash<remove_const_t<_Key>>,
                         equal_to<remove_const_t<_Key>>, _Allocator>;
 
 template<class _Key, class _Tp, class _Hash, class _Allocator,
-         class = _EnableIf<!__is_allocator<_Hash>::value>,
-         class = _EnableIf<!is_integral<_Hash>::value>,
-         class = _EnableIf<__is_allocator<_Allocator>::value>>
+         class = _EnableIf<!is_allocator_v<_Hash>>,
+         class = _EnableIf<!is_integral_v<_Hash>>,
+         class = _EnableIf<is_allocator_v<_Allocator>>>
 unordered_multimap(initializer_list<pair<_Key, _Tp>>, typename allocator_traits<_Allocator>::size_type, _Hash, _Allocator)
   -> unordered_multimap<remove_const_t<_Key>, _Tp, _Hash,
                         equal_to<remove_const_t<_Key>>, _Allocator>;

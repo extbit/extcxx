@@ -6,14 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#ifndef __LIBCPP_TYPEINFO
-#define __LIBCPP_TYPEINFO
-
-/*
-
-    typeinfo synopsis
-
+#pragma once
+#pragma GCC system_header
+#if false&&0 // typeinfo synopsis
 namespace std {
 
 class type_info
@@ -53,8 +48,7 @@ public:
 };
 
 }  // std
-
-*/
+#endif // typeinfo synopsis
 
 #include <__config>
 #include <exception>
@@ -64,17 +58,12 @@ public:
 #include <cstdlib>
 #endif
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 #if defined(_LIBCPP_ABI_VCRUNTIME)
 #include <vcruntime_typeinfo.h>
 #else
 
 namespace std  // purposefully not using versioning namespace
 {
-
 
 #if defined(_LIBCPP_ABI_MICROSOFT)
 
@@ -346,5 +335,3 @@ void __throw_bad_cast()
 #endif
 }
 _LIBCPP_END_NAMESPACE_STD
-
-#endif  // __LIBCPP_TYPEINFO

@@ -1457,18 +1457,18 @@ private:
 
     struct _DetachedTreeCache {
       _LIBCPP_INLINE_VISIBILITY
-      explicit _DetachedTreeCache(__tree *__t) _NOEXCEPT : __t_(__t),
+      explicit _DetachedTreeCache(__tree *__t) noexcept : __t_(__t),
         __cache_root_(__detach_from_tree(__t)) {
           __advance();
         }
 
       _LIBCPP_INLINE_VISIBILITY
-      __node_pointer __get() const _NOEXCEPT {
+      __node_pointer __get() const noexcept {
         return __cache_elem_;
       }
 
       _LIBCPP_INLINE_VISIBILITY
-      void __advance() _NOEXCEPT {
+      void __advance() noexcept {
         __cache_elem_ = __cache_root_;
         if (__cache_root_) {
           __cache_root_ = __detach_next(__cache_root_);
@@ -1490,9 +1490,9 @@ private:
 
     private:
       _LIBCPP_INLINE_VISIBILITY
-      static __node_pointer __detach_from_tree(__tree *__t) _NOEXCEPT;
+      static __node_pointer __detach_from_tree(__tree *__t) noexcept;
       _LIBCPP_INLINE_VISIBILITY
-      static __node_pointer __detach_next(__node_pointer) _NOEXCEPT;
+      static __node_pointer __detach_next(__node_pointer) noexcept;
 
       __tree *__t_;
       __node_pointer __cache_root_;
@@ -1536,7 +1536,7 @@ __tree<_Tp, _Compare, _Allocator>::__tree(const value_compare& __comp,
 // Precondition:  size() != 0
 template <class _Tp, class _Compare, class _Allocator>
 typename __tree<_Tp, _Compare, _Allocator>::__node_pointer
-__tree<_Tp, _Compare, _Allocator>::_DetachedTreeCache::__detach_from_tree(__tree *__t) _NOEXCEPT
+__tree<_Tp, _Compare, _Allocator>::_DetachedTreeCache::__detach_from_tree(__tree *__t) noexcept
 {
     __node_pointer __cache = static_cast<__node_pointer>(__t->__begin_node());
     __t->__begin_node() = __t->__end_node();
@@ -1557,7 +1557,7 @@ __tree<_Tp, _Compare, _Allocator>::_DetachedTreeCache::__detach_from_tree(__tree
 //    This is no longer a red-black tree
 template <class _Tp, class _Compare, class _Allocator>
 typename __tree<_Tp, _Compare, _Allocator>::__node_pointer
-__tree<_Tp, _Compare, _Allocator>::_DetachedTreeCache::__detach_next(__node_pointer __cache) _NOEXCEPT
+__tree<_Tp, _Compare, _Allocator>::_DetachedTreeCache::__detach_next(__node_pointer __cache) noexcept
 {
     if (__cache->__parent_ == nullptr)
         return nullptr;

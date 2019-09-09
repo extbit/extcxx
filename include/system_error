@@ -8,9 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-/*
-    system_error synopsis
-
+#if false && 0 // system_error synopsis
 namespace std
 {
 
@@ -137,8 +135,7 @@ template <> struct hash<std::error_code>;
 template <> struct hash<std::error_condition>;
 
 }  // std
-
-*/
+#endif // system_error synopsis
 
 #include <__errc>
 #include <type_traits>

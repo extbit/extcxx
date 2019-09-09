@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(thread_synopsis)
+#if false&&0 // thread synopsis
 namespace std
 {
 
@@ -74,7 +74,7 @@ namespace std
   }  // this_thread
 
 } // std
-#endif // thread_synopsis
+#endif // thread synopsis
 
 #include <__config>
 #include <iosfwd>
