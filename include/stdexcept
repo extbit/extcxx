@@ -8,10 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-/*
-    stdexcept synopsis
-
+#if false&&0 // stdexcept synopsis
 namespace std
 {
 
@@ -37,8 +34,7 @@ public:
 };
 
 }  // std
-
-*/
+#endif // stdexcept synopsis
 
 #include <__config>
 #include <exception>
