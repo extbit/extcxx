@@ -34,6 +34,7 @@ inline namespace fundamentals_v2 {
 #include <experimental/__config>
 #include <stdint.h>
 #include <ostream>
+#include <__formatter>
 
 _LIBCPP_BEGIN_NAMESPACE_LFTS_V2
 
@@ -68,30 +69,29 @@ private:
 _LIBCPP_END_NAMESPACE_LFTS_V2
 
 _LIBCPP_BEGIN_NAMESPACE_STD
+
+template<class Char>
+struct formatter<_VSTD_LFTS_V2::source_location,Char>
+{
+  template <typename FormatContext>
+  constexpr typename FormatContext::iterator
+  format(_VSTD_LFTS_V2::source_location __loc, FormatContext& __ctx)
+  {
+    formatter<const char*,Char> __cs;
+    formatter<unsigned,Char> __ui;
+    __ctx.advance_to(__cs.format(__loc.file_name(), __ctx));
+    __ctx.advance_to(__cs.format(":", __ctx));
+    __ctx.advance_to(__ui.format(__loc.line(), __ctx));
+    __ctx.advance_to(__cs.format(":", __ctx));
+    __ctx.advance_to(__ui.format(__loc.column(), __ctx));
+    __ctx.advance_to(__cs.format(":", __ctx));
+    return __ctx.out();
+  }
+};
+
 _LIBCPP_END_NAMESPACE_STD
 
 namespace std {
-  template<class T, class Char = char> struct formatter;
-
-  template<class Char>
-  struct formatter<_VSTD_LFTS_V2::source_location,Char>
-  {
-    template <typename FormatContext>
-    constexpr typename FormatContext::iterator
-    format(_VSTD_LFTS_V2::source_location __loc, FormatContext& __ctx)
-    {
-      formatter<const char*,Char> __cs;
-      formatter<unsigned,Char> __ui;
-      typename FormatContext::iterator __out;
-      __out = __cs.format(__loc.file_name(), __ctx);
-      __out = __cs.format(":", __ctx);
-      __out = __ui.format(__loc.line(), __ctx);
-      __out = __cs.format(":", __ctx);
-      __out = __ui.format(__loc.column(), __ctx);
-      __out = __cs.format(":", __ctx);
-      return __out;
-    }
-  };
 
   template<class _CharT, class _Traits>
   inline basic_ostream<_CharT, _Traits>&
