@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(vector_synopsis)
+#if false&&0 // vector synopsis
 namespace std
 {
 
@@ -263,7 +262,7 @@ namespace std
   void erase_if(vector<T, Allocator>& c, Predicate pred);    // C++20
 
 }  // std
-#endif // vector_synopsis
+#endif // vector synopsis
 
 #include <__config>
 #include <iosfwd> // for forward declaration of vector

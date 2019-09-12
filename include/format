@@ -701,7 +701,7 @@ namespace __format
   public:
     using FormatContext = basic_format_context<OutIter,Char>;
 
-    static_assert(is_same<OutIter,typename FormatContext::iterator>());
+    static_assert(is_same<OutIter,iterator_t<FormatContext>>());
 
   private:
     FormatContext& format_context;
@@ -1144,7 +1144,7 @@ namespace __format
   struct integral_formatter : builtin_formatter<Int,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(Int value, FormatContext& context)
     {
       auto __o = context.out();
@@ -1187,7 +1187,7 @@ namespace __format
   struct bool_formatter : builtin_formatter<T,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(T value, FormatContext& context)
     {
       auto __o = context.out();
@@ -1232,7 +1232,7 @@ namespace __format
   struct char_formatter : builtin_formatter<T,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(T value, FormatContext& context)
     {
       auto __o = context.out();
@@ -1263,7 +1263,7 @@ namespace __format
   struct floating_formatter : builtin_formatter<Float,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(Float __v, FormatContext& context)
     {
       return __fmt_spf(__v, context);
@@ -1271,7 +1271,7 @@ namespace __format
 
   private:
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     __fmt_tc(Float __v, FormatContext& context)
     {
       basic_string<Char> __s;
@@ -1280,7 +1280,7 @@ namespace __format
     }
 
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     __fmt_spf(Float __v, FormatContext& context)
     {
       if (this->percentage)
@@ -1299,7 +1299,7 @@ namespace __format
   struct pointer_formatter : builtin_formatter<P,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(P value, FormatContext& context)
     {
       using __traits = integral_traits<uintptr_t,16>;
@@ -1326,7 +1326,7 @@ namespace __format
     : builtin_formatter<basic_string_view<C>,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(basic_string_view<C> value, FormatContext& context)
     {
       auto len = distance(value.begin(), value.end());
@@ -1344,7 +1344,7 @@ namespace __format
     : string_formatter<basic_string_view<C>,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(const basic_string<C>& value, FormatContext& context)
     { return this->string_formatter<basic_string_view<C>,Char>::format(basic_string_view<C>(value), context); }
   };
@@ -1354,7 +1354,7 @@ namespace __format
     : string_formatter<basic_string_view<char>,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(const char* value, FormatContext& context)
     { return this->string_formatter<basic_string_view<char>,Char>::format(basic_string_view<char>(value), context); }
   };
@@ -1364,7 +1364,7 @@ namespace __format
     : string_formatter<basic_string_view<wchar_t>,Char>
   {
     template <typename FormatContext>
-    constexpr typename FormatContext::iterator
+    constexpr iterator_t<FormatContext>
     format(const wchar_t* value, FormatContext& context)
     { return this->string_formatter<basic_string_view<wchar_t>,Char>::format(basic_string_view<wchar_t>(value), context); }
   };
@@ -1405,7 +1405,7 @@ struct formatter<monostate,Char>
   : __format::builtin_formatter<monostate,Char>
 {
   template <typename FormatContext>
-  constexpr typename FormatContext::iterator
+  constexpr __format::iterator_t<FormatContext>
   format(monostate, FormatContext& context) { return context.out(); }
 };
 
@@ -1457,7 +1457,7 @@ template<typename T,typename Char>
 struct formatter<T*,Char> : formatter<const void*,Char>
 {
   template <typename FormatContext>
-  constexpr typename FormatContext::iterator
+  constexpr __format::iterator_t<FormatContext>
   format(T* value, FormatContext& context) {
     return this->formatter<const void*,Char>::format(reinterpret_cast<const void*>(value), context);
   }
