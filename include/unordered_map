@@ -8,10 +8,8 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(unordered_map_synopsis)
-
+#if false&&0 // unordered_map synopsis
 #include <initializer_list>
-
 namespace std
 {
 
@@ -396,7 +394,7 @@ namespace std
 
 }  // std
 
-#endif // unordered_map_synopsis
+#endif // unordered_map synopsis
 
 #include <__config>
 #include <__hash_table>

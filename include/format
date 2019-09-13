@@ -127,7 +127,6 @@ class basic_format_parse_context {
   basic_string_view<Char> fmt_;
   enum { unknown, manual, automatic } indexing_;
   size_t next_arg_id_;
-  size_t num_args_;
 
   basic_format_parse_context(const basic_format_parse_context&) = delete;
   basic_format_parse_context& operator=(const basic_format_parse_context&) = delete;
@@ -137,8 +136,8 @@ public:
   using const_iterator = typename basic_string_view<Char>::const_iterator;
   using iterator = const_iterator;
 
-  explicit constexpr basic_format_parse_context(basic_string_view<Char> fmt, size_t num_args = 0) noexcept
-    : fmt_(fmt), indexing_(unknown), next_arg_id_(0), num_args_(num_args) {}
+  explicit constexpr basic_format_parse_context(basic_string_view<Char> fmt) noexcept
+    : fmt_(fmt), indexing_(unknown), next_arg_id_(0) {}
 
   constexpr const_iterator begin() const noexcept { return fmt_.begin(); }
   constexpr const_iterator end() const noexcept { return fmt_.end(); }
@@ -147,6 +146,8 @@ public:
     // static_cast<make_unsigned_t<?>>(it - begin());
     fmt_.remove_prefix(static_cast<size_t>(it - begin()));
   }
+
+  constexpr void __reset_fmt(basic_string_view<Char> s) { fmt_ = s; }
 
   constexpr int next_arg_id() {
     if (indexing_ == manual)
@@ -503,6 +504,7 @@ namespace __format
   }
 # endif
 
+#if 0
   // Counts the number of digits in n. BITS = log2(radix).
   template <unsigned BITS, typename UInt>
   inline int count_digits(UInt n) {
@@ -598,6 +600,7 @@ namespace __format
     }
     spec.format_context.advance_to(out);
   }
+#endif // 0
 
   template<typename Char,unsigned Base>
   struct integral_prefix {
@@ -711,23 +714,23 @@ namespace __format
 
     void escape(Char character) {
       auto out = format_context.out();
-      *out = character;
-      ++out;
+      *out++ = character;
       format_context.advance_to(out);
     }
 
     template <typename ParseContext>
-    void chars(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end) {
-      auto out = copy(pos, end, format_context.out());
+    void chars(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> stop) {
+      auto out = copy(pos, stop, format_context.out());
       format_context.advance_to(out);
+      pos = stop;
     }
 
     template <typename ParseContext>
-    auto arg_id(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end) {
+    auto arg_id(ParseContext& parse_context, iterator_t<ParseContext>& pos) {
       size_t id;
       auto c = *pos;
       if ('0' <= c && c <= '9') {
-        id = positive_int<ParseContext>(pos, end);
+        id = positive_int<ParseContext>(pos, parse_context.end());
         parse_context.check_arg_id(id);
       } else {
         id = parse_context.next_arg_id();
@@ -736,40 +739,38 @@ namespace __format
     }
 
     template <typename ParseContext>
-    void replacement(ParseContext& parse_context, iterator_t<ParseContext>& pos, const iterator_t<ParseContext> end) {
-      const auto id = this->arg_id(parse_context, pos, end);
-      if (pos == end) {
-        __THROW_FORMAT_ERROR("malform format string");
-      } else if (*pos == ':') {
-        ++pos;
-      }
+    void replacement(ParseContext& parse_context, iterator_t<ParseContext>& pos) {
+      const auto id = this->arg_id(parse_context, pos);
+      if (*pos == ':') ++pos;
       parse_context.advance_to(pos);
-      replace_arg(parse_context, id);
-      pos = parse_context.begin();
+      pos = replace_arg(parse_context, id);
+      if (pos == parse_context.end())
+        __THROW_FORMAT_ERROR("unexpected format ending");
+      else if (*pos != '}')
+        __THROW_FORMAT_ERROR("unbalanced braces");        
+      else ++pos; // comsumes '}'
     }
 
     template <typename ParseContext>
-    void replace_arg(ParseContext& parse_context, size_t __id) {
-      visit_format_arg([this, &parse_context](const auto &__v){
-        replace(parse_context, __v);
+    auto replace_arg(ParseContext& parse_context, size_t __id) {
+      return visit_format_arg([this, &parse_context](const auto &__v)->auto {
+          return replace(parse_context, __v);
       }, format_context.arg(__id));
     }
 
     template <typename ParseContext, typename Value>
-    void replace(ParseContext& parse_context, const Value& __v) {
+    auto replace(ParseContext& parse_context, const Value& __v) {
       formatter<remove_cvref_t<decltype(__v)>> __f;
       auto pos = __f.parse(parse_context);
-      if (pos == parse_context.end())
-        __THROW_FORMAT_ERROR("malform format spec");
-      else if (*pos != '}')
-        __THROW_FORMAT_ERROR("format spec without right brace '}'");
-      parse_context.advance_to(++pos);
+      // optional: parse_context.advance_to(pos);
       format_context.advance_to(__f.format(__v, format_context));
+      return pos;
     }
 
     template <typename ParseContext>
-    void replace(ParseContext& parse_context, const handle_t<FormatContext>& __h) {
+    auto replace(ParseContext& parse_context, const handle_t<FormatContext>& __h) {
       __h.format(parse_context, format_context);
+      return parse_context.begin();
     }
 
   public:
@@ -777,45 +778,48 @@ namespace __format
 
     template <typename ParseContext>
     constexpr OutIter operator()(ParseContext& parse_context) {
-      auto const end = parse_context.end();
       auto pos = parse_context.begin();
       auto last = pos;
-      while (pos != end) {
+      while (pos != parse_context.end()) {
         switch (*pos) {
         case '{': {
-          if (last < pos) this->chars(parse_context, last, pos);
+          if (last < pos)
+            this->chars(parse_context, last, pos);
           auto next = pos + 1;
-          if (next == end) {
-            // finish
+          if (next == parse_context.end()) {
+            pos = parse_context.end(); // finish
           } else if (*next == '{') {
             ++next;
             this->escape(*pos);
             pos = next;
           } else {
-            if (++pos == end)
+            if (++pos == parse_context.end())
               __THROW_FORMAT_ERROR("malform format string");
-            this->replacement(parse_context, pos, end);
+            this->replacement(parse_context, pos);
           }
           last = pos;
         } break;
         case '}': { // unbalanced close brace
-          if (last < pos) this->chars(parse_context, last, pos);
+          if (last < pos)
+            this->chars(parse_context, last, pos);
           auto next = pos + 1;
-          if (next == end) {
-            pos = end; // finish
+          if (next == parse_context.end()) {
+            pos = parse_context.end(); // finish
           } else if (*next == '}') {
             ++next;
             this->escape(*pos);
             last = pos = next;
           } else {
             this->chars(parse_context, pos, next);
-            last = pos = end;
+            last = pos = parse_context.end();
+            __THROW_FORMAT_ERROR("unbalanced braces");
           }
         } break;
         default: ++pos;
         }
       }
-      if (last < pos) this->chars(parse_context, last, pos);
+      if (last < pos)
+        this->chars(parse_context, last, pos);
       parse_context.advance_to(pos);
       return format_context.out();
     }
@@ -823,14 +827,13 @@ namespace __format
     OutIter __lit(size_t __n)
     {
       basic_format_parse_context<char> __fake("}"); // mimics "{}"
-      const auto __begin = __fake.begin();
       for (auto __i = 0; __i < __n; ++__i) {
         if (__i > 0) {
           auto out = format_context.out();
           *out++ = static_cast<Char>(' ');
           format_context.advance_to(out);
         }
-        __fake.advance_to(__begin);
+        __fake.__reset_fmt("}");
         replace_arg(__fake, __i);
       }
       return format_context.out();
@@ -1076,13 +1079,13 @@ namespace __format
     template <typename ParseContext>
     constexpr auto parse(ParseContext& context) -> decltype(context.begin())
     {
-      auto pos = context.begin(), end = context.end();
-      if (pos == end) {
+      auto pos = context.begin();
+      if (pos == context.end()) {
         __THROW_FORMAT_ERROR("malform format spec");
       } else if (*pos == '}') {
         align = default_align;
         return pos;
-      } else if (auto next = pos + 1; next != end) {
+      } else if (auto next = pos + 1; next != context.end()) {
         if (set_align(*next)) {
           if ((fill = *pos) == '{')
             __THROW_FORMAT_ERROR("invalid fill character '{'");
@@ -1090,7 +1093,7 @@ namespace __format
         } else if (set_align(*pos)) {
           pos = next;
         }
-        if (pos == end)
+        if (pos == context.end())
           __THROW_FORMAT_ERROR("malform format spec");
         else switch (*pos) {
           case '+':
@@ -1106,31 +1109,31 @@ namespace __format
             ++pos;
             break;
           }
-        if (pos == end) {
+        if (pos == context.end()) {
           __THROW_FORMAT_ERROR("malform format spec");
         } else if (*pos == '#') {
           hash = true;
           ++pos;
         }
-        if (pos == end) {
+        if (pos == context.end()) {
           __THROW_FORMAT_ERROR("malform format spec");
         } else if (*pos == '0') {
           zero = true;
           ++pos;
         }
-        if (pos == end) {
+        if (pos == context.end()) {
           __THROW_FORMAT_ERROR("malform format spec");
         } else if ('1' <= *pos && *pos <= '9') {
-          width = positive_int<ParseContext>(pos, end);
+          width = positive_int<ParseContext>(pos, context.end());
         }
-        if (pos != end && *pos == '.') {
-          if (++pos == end) {
+        if (pos != context.end() && *pos == '.') {
+          if (++pos == context.end()) {
             __THROW_FORMAT_ERROR("malform format spec");
           } else {
-            precision = positive_int<ParseContext>(pos, end);
+            precision = positive_int<ParseContext>(pos, context.end());
           }
         }
-        if (pos == end)
+        if (pos == context.end())
           __THROW_FORMAT_ERROR("malform format spec");
         if (const auto type = *pos; type != '}') {
           ++pos; // presentation type
@@ -1312,14 +1315,10 @@ namespace __format
       auto res = __traits::chars(__buf, __buf+size, __v);
       if (res.ec != errc(0))
         __THROW_FORMAT_ERROR("format integer value error");
-      else {
-        auto out = context.out();
-        *out++ = static_cast<Char>('0');
-        *out++ = static_cast<Char>(this->upper ? 'X' : 'x');
-        out = copy(__buf, res.ptr, out);
-        context.advance_to(out);
-      }
-      return context.out();
+      auto out = context.out();
+      *out++ = static_cast<Char>('0');
+      *out++ = static_cast<Char>(this->upper ? 'X' : 'x');
+      return copy(__buf, res.ptr, out);
     }
   };
 
@@ -1332,12 +1331,11 @@ namespace __format
     constexpr iterator_t<FormatContext>
     format(basic_string_view<C> value, FormatContext& context)
     {
-      auto len = distance(value.begin(), value.end());
+      auto len = value.size(); //distance(value.begin(), value.end());
       auto out = context.out();
       out = this->padding_nonarith_prefix(out, len);
       out = copy(value.begin(), value.end(), out);
       out = this->padding_right(out, len, true);
-      context.advance_to(out);
       return out;
     }
   };
@@ -1462,7 +1460,7 @@ struct formatter<T*,Char> : formatter<const void*,Char>
   template <typename FormatContext>
   constexpr __format::iterator_t<FormatContext>
   format(T* value, FormatContext& context) {
-    return this->formatter<const void*,Char>::format(reinterpret_cast<const void*>(value), context);
+    return formatter<const void*,Char>::format(reinterpret_cast<const void*>(value), context);
   }
 };
 
