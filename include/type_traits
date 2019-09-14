@@ -2679,7 +2679,7 @@ struct _LIBCPP_TEMPLATE_VIS is_nothrow_constructible<_Tp[_Ns]>
 {
 };
 
-#endif  // _LIBCPP_HAS_NOnoexcept
+#endif  // !__has_keyword(__is_nothrow_constructible)
 
 
 template <class _Tp, class ..._Args> _LIBCPP_INLINE_VAR
@@ -2746,7 +2746,7 @@ struct _LIBCPP_TEMPLATE_VIS is_nothrow_assignable
 {
 };
 
-#endif  // _LIBCPP_HAS_NOnoexcept
+#endif  // !__has_keyword(__is_nothrow_assignable)
 
 template <class _Tp, class _Arg> _LIBCPP_INLINE_VAR
 constexpr bool is_nothrow_assignable_v

@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(string_synopsis)
+#if false&&0 // string synopsis
 namespace std
 {
 
@@ -46,7 +45,7 @@ namespace std
   template <> struct char_traits<char8_t>;  // c++20
 
 }  // std
-#endif // string_synopsis
+#endif // string synopsis
 
 #include <__config>
 #include <algorithm>  // for search and min

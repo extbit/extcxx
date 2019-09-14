@@ -39,8 +39,6 @@
 
 typedef ::timespec __libcpp_timespec_t;
 
-#include <__undef_macros>
-
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 #if defined(_LIBCPP_HAS_THREAD_API_PTHREAD)
