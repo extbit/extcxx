@@ -3211,7 +3211,7 @@ template <class _Tp> struct __is_nothrow_swappable;
 // swap, swap_ranges
 
 template <class _ForwardIterator1, class _ForwardIterator2>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator2
 swap_ranges(_ForwardIterator1 __first1, _ForwardIterator1 __last1, _ForwardIterator2 __first2);
 
@@ -3241,7 +3241,7 @@ swap(_Tp (&__a)[_Np], _Tp (&__b)[_Np]) noexcept(__is_nothrow_swappable<_Tp>::val
 }
 
 template <class _ForwardIterator1, class _ForwardIterator2>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY constexpr
 _ForwardIterator2
 swap_ranges(_ForwardIterator1 __first1, _ForwardIterator1 __last1, _ForwardIterator2 __first2)
 {
@@ -3256,9 +3256,8 @@ template <class _ForwardIterator1, class _ForwardIterator2>
 inline _LIBCPP_INLINE_VISIBILITY constexpr
 void
 iter_swap(_ForwardIterator1 __a, _ForwardIterator2 __b)
-// noexcept(noexcept(swap(*__a, *__b)))
   noexcept(noexcept(swap(*_VSTD::declval<_ForwardIterator1>(),
-                           *_VSTD::declval<_ForwardIterator2>())))
+                         *_VSTD::declval<_ForwardIterator2>())))
 {
     swap(*__a, *__b);
 }
