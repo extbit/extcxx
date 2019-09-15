@@ -221,6 +221,14 @@ namespace std
     iterator      erase(const_iterator position);
     iterator      erase(const_iterator first, const_iterator last);
 
+#if EXTBIT_ENABLE_STRING_REPLACE_X
+    template <typename X, typename Y>
+    basic_string& replace_first(const X& sub, const Y& rep);
+    template <typename X, typename Y>
+    basic_string& replace_last(const X& sub, const Y& rep);
+    template <typename X, typename Y>
+    basic_string& replace_all(const X& sub, const Y& rep);
+#endif // EXTBIT_ENABLE_STRING_REPLACE_X
     basic_string& replace(size_type pos1, size_type n1, const basic_string& str);
     template <class T>
     basic_string& replace(size_type pos1, size_type n1, const T& t);  // C++17
@@ -1129,6 +1137,17 @@ public:
     iterator      erase(const_iterator __pos);
     _LIBCPP_INLINE_VISIBILITY
     iterator      erase(const_iterator __first, const_iterator __last);
+
+#if EXTBIT_ENABLE_STRING_REPLACE_X
+    template <typename X, typename Y>
+    basic_string& replace_first(const X& sub, const Y& rep);
+
+    template <typename X, typename Y>
+    basic_string& replace_last(const X& sub, const Y& rep);
+
+    template <typename X, typename Y>
+    basic_string& replace_all(const X& sub, const Y& rep);
+#endif // EXTBIT_ENABLE_STRING_REPLACE_X
 
     _LIBCPP_INLINE_VISIBILITY
     basic_string& replace(size_type __pos1, size_type __n1, const basic_string& __str);
@@ -2713,6 +2732,48 @@ basic_string<_CharT, _Traits, _Allocator>::insert(const_iterator __pos, size_typ
 }
 
 // replace
+
+#if EXTBIT_ENABLE_STRING_REPLACE_X
+template <class _CharT, class _Traits, class _Allocator>
+template <typename X, typename Y>
+basic_string<_CharT, _Traits, _Allocator>&
+basic_string<_CharT, _Traits, _Allocator>::replace_first(const X& sub, const Y& rep) {
+  size_type pos = 0;
+  __self_view sv = sub, rv = rep;
+  if ((pos = __str_find<value_type, size_type, traits_type, npos>
+       (data(), size(), sv.data(), pos, sv.size())) != npos) {
+    replace(pos, sv.size(), rv.data(), rv.size());
+  }
+  return *this;
+}
+
+template <class _CharT, class _Traits, class _Allocator>
+template <typename X, typename Y>
+basic_string<_CharT, _Traits, _Allocator>&
+basic_string<_CharT, _Traits, _Allocator>::replace_last(const X& sub, const Y& rep) {
+  size_type pos = 0;
+  __self_view sv = sub, rv = rep;
+  if ((pos = __str_rfind<value_type, size_type, traits_type, npos>
+       (data(), size(), sv.data(), pos, sv.size())) != npos) {
+    replace(pos, sv.size(), rv.data(), rv.size());
+  }
+  return *this;
+}
+
+template <class _CharT, class _Traits, class _Allocator>
+template <typename X, typename Y>
+basic_string<_CharT, _Traits, _Allocator>&
+basic_string<_CharT, _Traits, _Allocator>::replace_all(const X& sub, const Y& rep) {
+  size_type pos = 0;
+  __self_view sv = sub, rv = rep;
+  while ((pos = __str_find<value_type, size_type, traits_type, npos>
+          (data(), size(), sv.data(), pos, sv.size())) != npos) {
+    replace(pos, sv.size(), rv.data(), rv.size());
+    pos += rep.size();
+  }
+  return *this;
+}
+#endif // EXTBIT_ENABLE_STRING_REPLACE_X
 
 template <class _CharT, class _Traits, class _Allocator>
 basic_string<_CharT, _Traits, _Allocator>&
