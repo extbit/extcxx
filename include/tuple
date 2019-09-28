@@ -647,16 +647,16 @@ public:
     template <bool _Dummy = true, enable_if_t<
         _CheckArgsConstructor<_Dummy>::template __enable_implicit_default<_Tp...>::value
     , void*> = nullptr>
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+    _LIBCPP_INLINE_VISIBILITY constexpr
     tuple()
-        _NOEXCEPT_(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
+        noexcept(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
 
     template <bool _Dummy = true, enable_if_t<
         _CheckArgsConstructor<_Dummy>::template __enable_explicit_default<_Tp...>::value
     , void*> = nullptr>
-    explicit _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+    explicit _LIBCPP_INLINE_VISIBILITY constexpr
     tuple()
-        _NOEXCEPT_(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
+        noexcept(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
 
     tuple(tuple const&) = default;
     tuple(tuple&&) = default;
