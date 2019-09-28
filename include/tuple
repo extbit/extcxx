@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(tuple_synopsis)
+#if false&&0 // tuple synopsis
 namespace std
 {
 
@@ -16,39 +16,39 @@ namespace std
   class tuple {
   public:
     constexpr tuple();
-    explicit(see-below) tuple(const T&...);  // constexpr in C++14
+    explicit(see_below) tuple(const T&...);  // constexpr in C++14
     template <class... U>
-    explicit(see-below) tuple(U&&...);  // constexpr in C++14
+    explicit(see_below) tuple(U&&...);  // constexpr in C++14
     tuple(const tuple&) = default;
     tuple(tuple&&) = default;
     template <class... U>
-        explicit(see-below) tuple(const tuple<U...>&);  // constexpr in C++14
+        explicit(see_below) tuple(const tuple<U...>&);  // constexpr in C++14
     template <class... U>
-        explicit(see-below) tuple(tuple<U...>&&);  // constexpr in C++14
+        explicit(see_below) tuple(tuple<U...>&&);  // constexpr in C++14
     template <class U1, class U2>
-        explicit(see-below) tuple(const pair<U1, U2>&); // iff sizeof...(T) == 2 // constexpr in C++14
+        explicit(see_below) tuple(const pair<U1, U2>&); // iff sizeof...(T) == 2 // constexpr in C++14
     template <class U1, class U2>
-        explicit(see-below) tuple(pair<U1, U2>&&); // iff sizeof...(T) == 2  // constexpr in C++14
+        explicit(see_below) tuple(pair<U1, U2>&&); // iff sizeof...(T) == 2  // constexpr in C++14
 
     // allocator-extended constructors
     template <class Alloc>
     tuple(allocator_arg_t, const Alloc& a);
     template <class Alloc>
-        explicit(see-below) tuple(allocator_arg_t, const Alloc& a, const T&...);
+        explicit(see_below) tuple(allocator_arg_t, const Alloc& a, const T&...);
     template <class Alloc, class... U>
-        explicit(see-below) tuple(allocator_arg_t, const Alloc& a, U&&...);
+        explicit(see_below) tuple(allocator_arg_t, const Alloc& a, U&&...);
     template <class Alloc>
     tuple(allocator_arg_t, const Alloc& a, const tuple&);
     template <class Alloc>
     tuple(allocator_arg_t, const Alloc& a, tuple&&);
     template <class Alloc, class... U>
-        explicit(see-below) tuple(allocator_arg_t, const Alloc& a, const tuple<U...>&);
+        explicit(see_below) tuple(allocator_arg_t, const Alloc& a, const tuple<U...>&);
     template <class Alloc, class... U>
-        explicit(see-below) tuple(allocator_arg_t, const Alloc& a, tuple<U...>&&);
+        explicit(see_below) tuple(allocator_arg_t, const Alloc& a, tuple<U...>&&);
     template <class Alloc, class U1, class U2>
-        explicit(see-below) tuple(allocator_arg_t, const Alloc& a, const pair<U1, U2>&);
+        explicit(see_below) tuple(allocator_arg_t, const Alloc& a, const pair<U1, U2>&);
     template <class Alloc, class U1, class U2>
-        explicit(see-below) tuple(allocator_arg_t, const Alloc& a, pair<U1, U2>&&);
+        explicit(see_below) tuple(allocator_arg_t, const Alloc& a, pair<U1, U2>&&);
 
     tuple& operator=(const tuple&);
     tuple&
@@ -65,18 +65,18 @@ namespace std
     void swap(tuple&) noexcept(AND(swap(declval<T&>(), declval<T&>())...));
   };
 
-template <class ...T>
-tuple(T...) -> tuple<T...>;                                         // since C++17
-template <class T1, class T2>
-tuple(pair<T1, T2>) -> tuple<T1, T2>;                               // since C++17
-template <class Alloc, class ...T>
-tuple(allocator_arg_t, Alloc, T...) -> tuple<T...>;                 // since C++17
-template <class Alloc, class T1, class T2>
-tuple(allocator_arg_t, Alloc, pair<T1, T2>) -> tuple<T1, T2>;       // since C++17
-template <class Alloc, class ...T>
-tuple(allocator_arg_t, Alloc, tuple<T...>) -> tuple<T...>;          // since C++17
+  template <class ...T>
+  tuple(T...) -> tuple<T...>;                                         // since C++17
+  template <class T1, class T2>
+  tuple(pair<T1, T2>) -> tuple<T1, T2>;                               // since C++17
+  template <class Alloc, class ...T>
+  tuple(allocator_arg_t, Alloc, T...) -> tuple<T...>;                 // since C++17
+  template <class Alloc, class T1, class T2>
+  tuple(allocator_arg_t, Alloc, pair<T1, T2>) -> tuple<T1, T2>;       // since C++17
+  template <class Alloc, class ...T>
+  tuple(allocator_arg_t, Alloc, tuple<T...>) -> tuple<T...>;          // since C++17
 
-inline constexpr unspecified ignore;
+  inline constexpr unspecified ignore;
 
   template <class... T> tuple<V...>  make_tuple(T&&...); // constexpr in C++14
   template <class... T> tuple<ATypes...> forward_as_tuple(T&&...) noexcept; // constexpr in C++14

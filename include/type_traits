@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(type_traits_synopsis)
+#if false&&0 // type_traits synopsis
 namespace std
 {
 

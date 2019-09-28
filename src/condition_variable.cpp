@@ -10,7 +10,6 @@
 #include "condition_variable"
 #include "thread"
 #include "system_error"
-#include "__undef_macros"
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 

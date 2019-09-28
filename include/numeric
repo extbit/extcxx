@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(numeric_synopsis)
+#if false&&0
 namespace std
 {
 

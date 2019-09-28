@@ -1275,7 +1275,7 @@ _LIBCPP_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 //#endif // _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES
 
 #if !defined(__cpp_deduction_guides) || __cpp_deduction_guides < 201611
-#define _LIBCPP_HAS_NO_DEDUCTION_GUIDES
+//#define _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 #endif
 
 #if !__has_keyword(__is_aggregate) && (_GNUC_VER_NEW < 7001)
