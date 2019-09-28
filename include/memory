@@ -657,7 +657,6 @@ namespace std
 #include <tuple>
 #include <stdexcept>
 #include <cstring>
-#include <cassert>
 #include <atomic>
 #include <version>
 

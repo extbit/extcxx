@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(utility_synopsis)
+#if false&&0 // utility synopsis
 #include <initializer_list>
 namespace std
 {
@@ -64,7 +64,7 @@ namespace std
 
     pair(const pair&) = default;
     pair(pair&&) = default;
-    constexpr pair();
+    explicit(see-below) constexpr pair();
     explicit(see-below) pair(const T1& x, const T2& y);                          // constexpr in C++14
     template <class U, class V> explicit(see-below) pair(U&& x, V&& y);          // constexpr in C++14
     template <class U, class V> explicit(see-below) pair(const pair<U, V>& p);   // constexpr in C++14
@@ -94,7 +94,7 @@ namespace std
   void
   swap(pair<T1, T2>& x, pair<T1, T2>& y) noexcept(noexcept(x.swap(y)));
 
-  struct piecewise_construct_t { };
+  struct piecewise_construct_t { explicit piecewise_construct_t() = default; };
   inline constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
 
   template <class T> struct tuple_size;
@@ -260,7 +260,7 @@ move_if_noexcept(_Tp& __x) noexcept
 template <class _Tp> constexpr add_const_t<_Tp>& as_const(_Tp& __t) noexcept { return __t; }
 template <class _Tp>                        void as_const(const _Tp&&) = delete;
 
-struct _LIBCPP_TEMPLATE_VIS piecewise_construct_t { };
+struct _LIBCPP_TEMPLATE_VIS piecewise_construct_t { explicit piecewise_construct_t() = default; };
 #if defined(_LIBCPP_BUILDING_LIBRARY)
 extern _LIBCPP_EXPORTED_FROM_ABI const piecewise_construct_t piecewise_construct;// = piecewise_construct_t();
 #else
@@ -297,9 +297,21 @@ struct _LIBCPP_TEMPLATE_VIS pair
 
     struct _CheckArgs {
       template <class _U1, class _U2>
-      static constexpr bool __enable_default() {
+      static constexpr bool __enable_explicit_default() {
           return is_default_constructible<_U1>::value
-              && is_default_constructible<_U2>::value;
+              && is_default_constructible<_U2>::value
+              && !__enable_implicit_default<_U1, _U2>();
+      }
+
+      template <class _U1, class _U2>
+      static constexpr bool __enable_implicit_default() {
+          // In C++03, there's no way to implement the resolution of LWG2510.
+#ifdef _LIBCPP_CXX03_LANG
+          return true;
+#else
+          return __is_implicitly_default_constructible<_U1>::value
+              && __is_implicitly_default_constructible<_U2>::value;
+#endif
       }
 
       template <class _U1, class _U2>
@@ -350,7 +362,15 @@ struct _LIBCPP_TEMPLATE_VIS pair
     >::type;
 
     template<bool _Dummy = true, _EnableB<
-            _CheckArgsDep<_Dummy>::template __enable_default<_T1, _T2>()
+            _CheckArgsDep<_Dummy>::template __enable_explicit_default<_T1, _T2>()
+    > = false>
+    explicit _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
+    pair() _NOEXCEPT_(is_nothrow_default_constructible<first_type>::value &&
+                      is_nothrow_default_constructible<second_type>::value)
+        : first(), second() {}
+
+    template<bool _Dummy = true, _EnableB<
+            _CheckArgsDep<_Dummy>::template __enable_implicit_default<_T1, _T2>()
     > = false>
     _LIBCPP_INLINE_VISIBILITY constexpr
     pair() noexcept(is_nothrow_default_constructible<first_type>::value &&
