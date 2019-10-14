@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(experimental_type_traits_synopsis)
+#if false&&0 // experimental type_traits synopsis
 
 // C++1y
 #include <type_traits>
