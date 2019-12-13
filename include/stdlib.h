@@ -6,8 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-//#pragma once
-#if defined(_stdlib_h_synopsis_)
+#if false&&0 // <stdlib.h> synopsis
 
 // Macros:
 //     EXIT_FAILURE
@@ -66,7 +65,7 @@ size_t wcstombs(char* restrict s, const wchar_t* restrict pwcs, size_t n);
 int at_quick_exit(void (*func)(void))                                     // C++11
 void quick_exit(int status);                                              // C++11
 void *aligned_alloc(size_t alignment, size_t size);                       // C11
-#  endif // _stdlib_h_synopsis_
+#  endif // <stdlib.h> synopsis
 
 #if defined(__need_malloc_and_calloc) || defined(_LIBCPP_STDLIB_INCLUDE_NEXT)
 #  if defined(_LIBCPP_STDLIB_INCLUDE_NEXT)

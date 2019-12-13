@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(iomanip_synopsis)
+#if false&&0 // iomanip synopsis
 namespace std {
 
   // types T1, T2, ... are unspecified implementation types
@@ -35,7 +35,7 @@ namespace std {
              charT delim=charT('"'), charT escape=charT('\\')); // C++14
 
 }  // std
-#endif // iomanip_synopsis
+#endif // iomanip synopsis
 
 #include <__config>
 #include <__string>

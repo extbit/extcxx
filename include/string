@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(_string_synopsis_)
+#if false&&0 // string synopsis
 namespace std
 {
 
@@ -501,7 +501,7 @@ namespace std
   basic_string<char32_t> operator "" s( const char32_t *str, size_t len ); // C++14
 
 }  // std
-#endif // _string_synopsis_
+#endif // string synopsis
 
 #include <__config>
 #include <string_view>

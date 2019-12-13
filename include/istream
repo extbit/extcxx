@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-
-#if defined(istream_synopsis)
+#if false&&0 // istream synopsis
 namespace std {
 
   template <class charT, class traits = char_traits<charT> >

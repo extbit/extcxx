@@ -8,8 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-/*
-    ios synopsis
+#if false&&0 // ios synopsis
 
 #include <iosfwd>
 
@@ -205,8 +204,7 @@ error_condition make_error_condition(io_errc e) noexcept;
 storage-class-specifier const error_category& iostream_category() noexcept;
 
 }  // std
-
-*/
+#endif // ios synopsis
 
 #include <__config>
 #include <iosfwd>

@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 #pragma GCC system_header
-#if defined(locale_synopsis)
+#if false&&0 // locale synopsis
 namespace std
 {
 
@@ -170,7 +170,7 @@ namespace std
   template <class charT> class messages_byname;
 
 }  // std
-#endif // locale_synopsis
+#endif // locale synopsis
 
 #include <__config>
 #include <__locale>
