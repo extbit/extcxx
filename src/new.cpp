@@ -29,7 +29,7 @@
 namespace std
 {
 
-#ifndef __GLIBCXX__
+#if !defined(__GLIBCXX__) && !defined(__BIONIC__)
 const nothrow_t nothrow{};
 #endif
 
