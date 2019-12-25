@@ -29,7 +29,7 @@
 namespace std
 {
 
-#if !defined(__GLIBCXX__) && !defined(__BIONIC__)
+#if !defined(__GLIBCXX__) && !(defined(__ANDROID__) && __ANDROID_API__ < 23)
 const nothrow_t nothrow{};
 #endif
 

@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 #pragma GCC system_header
-#if defined(_math_h_synopsis_)
+#if false&&0 // <math.h> synopsis
 
 // Macros:
 //
@@ -285,7 +285,7 @@ floating_point trunc (arithmetic x);
 float          truncf(float x);
 long double    truncl(long double x);
 
-#endif // _math_h_synopsis_
+#endif // <math.h> synopsis
 
 #ifndef _LIBCPP_MATH_H
 #define _LIBCPP_MATH_H
